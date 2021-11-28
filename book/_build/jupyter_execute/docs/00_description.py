@@ -5,7 +5,7 @@
 
 # ## Packages
 
-# In[2]:
+# In[4]:
 
 
 import numpy as np
@@ -39,12 +39,20 @@ profile.to_file("data_desc.html")
 # ## Types
 # 
 # 
-# On identifie
+# On identifie les types de chaque variable du jeu de données.
 
 # In[7]:
 
 
 train.dtypes
+
+
+# ## Valeurs manquantes
+
+# In[17]:
+
+
+train.isna().sum()
 
 
 # In[ ]:

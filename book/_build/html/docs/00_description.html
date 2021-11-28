@@ -52,6 +52,7 @@
     <link rel="shortcut icon" href="../_static/logo.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Régression logistique" href="02_log_reg.html" />
     <link rel="prev" title="Prédiction de cross-selling en assurance" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -93,6 +94,11 @@
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Description des données
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_log_reg.html">
+   Régression logistique
   </a>
  </li>
 </ul>
@@ -167,6 +173,11 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#types">
    Types
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#valeurs-manquantes">
+   Valeurs manquantes
   </a>
  </li>
 </ul>
@@ -335,7 +346,7 @@ Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00,
 </div>
 <div class="section" id="types">
 <h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
-<p>On identifie</p>
+<p>On identifie les types de chaque variable du jeu de données.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">dtypes</span>
@@ -355,6 +366,32 @@ Policy_Sales_Channel     int64
 Vintage                  int64
 Response                 int64
 dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="valeurs-manquantes">
+<h2>Valeurs manquantes<a class="headerlink" href="#valeurs-manquantes" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Gender                  0
+Age                     0
+Driving_License         0
+Region_Code             0
+Previously_Insured      0
+Vehicle_Age             0
+Vehicle_Damage          0
+Annual_Premium          0
+Policy_Sales_Channel    0
+Vintage                 0
+Response                0
+dtype: int64
 </pre></div>
 </div>
 </div>
@@ -393,6 +430,13 @@ dtype: object
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title">Prédiction de cross-selling en assurance</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="02_log_reg.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Régression logistique</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
         
