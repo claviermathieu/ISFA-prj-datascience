@@ -6,4 +6,12 @@ Création du rapport Jupyter-book.
 
 ## Requirements
 
-Python 3.8.10
+ Installer Python 3.8.10 avec pip.
+
+ Puis exécuter
+> pip install pip env
+
+Puis utiliser l'environnement virtuel avec
+
+> pipenv shell
+
