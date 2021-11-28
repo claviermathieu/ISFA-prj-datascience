@@ -2,5 +2,5 @@ format: jb-book
 root: docs/index
 chapters:
 - file: docs/00_description
-- file: docs/01_data_preparation
+- file: docs/01_data_prep
 - file: docs/02_log_reg
