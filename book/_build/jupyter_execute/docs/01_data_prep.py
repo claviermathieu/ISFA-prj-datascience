@@ -107,14 +107,6 @@ train.Policy_Sales_Channel.value_counts(sort=True).head(5)
 train
 
 
-# In[45]:
-
-
-ohe = OneHotEncoder(sparse=False)
-one_hot_VPolicy = ohe.fit_transform(np.asarray(train.Policy_Sales_Channel).reshape(-1,1))
-one_hot_VPolicy
-
-
 # In[46]:
 
 
@@ -129,6 +121,26 @@ train['VPolicy3'] = [one_hot_VPolicy[i][3] for i in range(len(one_hot_VPolicy))]
 
 train.drop(columns = 'Policy_Sales_Channel', inplace = True)
 train.head()
+
+
+# ## Export
+
+# On déplace la variable target en fin de dataframe.
+
+# In[53]:
+
+
+Response = train.Response
+train.drop('Response', axis = 1, inplace = True)
+train['Response'] = Response
+
+
+# Exportation des données
+
+# In[55]:
+
+
+train.to_csv('train_log.csv', index = False)
 
 
 # ## Package data
