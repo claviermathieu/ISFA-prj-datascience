@@ -1,4 +1,4 @@
-# ISFA - M2 Actuariat - Projet data science
+# ISFA - M2 Actuariat - Projet datascience
 
 ## Objectif
 

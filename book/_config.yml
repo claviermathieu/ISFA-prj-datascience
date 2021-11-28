@@ -25,9 +25,9 @@ html:
 notebook_interface            : "notebook"
 
 repository:
-  url           : "https://github.com/bronwojtek/neuralnets-in-raw-python/"
-  branch        : master
-  path_to_book  : nn_book
+  url           : "https://github.com/claviermathieu/ISFA-prj-datascience/"
+  branch        : main
+  path_to_book  : book
 
 # Launch button settings
 #launch_buttons:
@@ -46,23 +46,26 @@ launch_buttons:
 
 
 # LaTeX settings
-bibtex_bibfiles:
-   - _bibliography/references.bib
+
+
+
+# bibtex_bibfiles:
+#    - _bibliography/references.bib
    
-latex:
-  latex_engine                : "pdflatex"
-  use_jupyterbook_latex       : true # use jupyterbook-latex for pdf builds as default
-  latex_documents:
-    targetname: nn_book.tex
+# latex:
+#   latex_engine                : "pdflatex"
+#   use_jupyterbook_latex       : true # use jupyterbook-latex for pdf builds as default
+#   latex_documents:
+#     targetname: book.tex
     
-sphinx:
-  config:
-    html_show_copyright: false
-    latex_toplevel_sectioning: 'section'
-#    latex_show_urls: 'footnote'
-    latex_elements.papersize: a4paper
-    latex_elements.pointsize: 12pt
+# sphinx:
+#   config:
+#     html_show_copyright: false
+#     latex_toplevel_sectioning: 'section'
+# #    latex_show_urls: 'footnote'
+#     latex_elements.papersize: a4paper
+#     latex_elements.pointsize: 12pt
     
 
-google_analytics:
-  mytrackingcode: UA-205698170-1
+# google_analytics:
+#   mytrackingcode: UA-205698170-1
