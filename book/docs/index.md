@@ -14,7 +14,7 @@
 - CLAVIER Mathieu (FI)
 - GUICHARD Victor (FI)
 
-<a>Envoyer un mail au groupe</a>
+<a href="mailto: soraya.chebak@gmail.com; guichard.victor@outlook.fr; Théodore Beru <beru.theodore@gmail.com>; mathieu.clavier@outlook.com">Envoyer un mail au groupe</a>
 
 
 

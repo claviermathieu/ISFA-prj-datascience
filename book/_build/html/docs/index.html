@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Explaining neural networks in raw Python: lectures in Jupiter &#8212; Prédiction de cross-selling en assurance</title>
+    <title>Prédiction de cross-selling en assurance &#8212; Groupe 1</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -54,7 +54,7 @@
     <link rel="shortcut icon" href="../_static/logo.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Back propagation" href="backprop.html" />
+    <link rel="next" title="Description des données" href="description.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -83,28 +83,18 @@
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Prédiction de cross-selling en assurance</h1>
+      <h1 class="site-logo" id="site-title">Groupe 1</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="backprop.html">
-   Back propagation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="conclusion.html">
-   Concluding remarks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="appendix.html">
-   Appendix
+  <a class="reference internal" href="description.html">
+   Description des données
   </a>
  </li>
 </ul>
@@ -113,7 +103,7 @@
 </nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
 </div>
 
 </div>
@@ -140,37 +130,7 @@
             </button>
             
             
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/docs/index.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
             <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/claviermathieu/ISFA-prj-datascience/"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        
-        
-    </div>
-</div>
 
             <!-- Full screen (wrap in <a> to have style consistency -->
 
@@ -195,46 +155,41 @@
               <div>
                 
   <!-- #region -->
-<div class="tex2jax_ignore mathjax_ignore section" id="explaining-neural-networks-in-raw-python-br-lectures-in-jupiter">
-<h1>Explaining neural networks in raw Python: <br> lectures in Jupiter<a class="headerlink" href="#explaining-neural-networks-in-raw-python-br-lectures-in-jupiter" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://www.ujk.edu.pl/~broniows"><strong>Wojciech Broniowski</strong></a></p>
-<!--
-[**Jan Kochanowski University**](https://www.ujk.edu.pl), Kielce, Poland, and
-
-[**Institute of Nuclear Physics PAN**](https://www.ifj.edu.pl), Kraków
--->
-<!-- #endregion -->
-<p>These lectures were originally given to undergraduate students of computer engineering at the <a class="reference external" href="https://www.ujk.edu.pl">Jan Kochanowski University</a> in Kielce, Poland, and for
-the <a class="reference external" href="https://kisd.ifj.edu.pl/news/">Kraków School of Interdisciplinary PhD Studies</a>. They explain the very basic concepts of neural networks at a most elementary level, requiring only very rudimentary knowledge of Python, or actually any programming language. With simplicity in mind, the code for various algorithms of neural networks is written from absolute scratch, i.e. without any use of dedicated higher-level libraries. That way one can follow all the programming steps in an explicit manner.</p>
-<div class="note admonition">
-<p class="admonition-title">Brevity</p>
-<p>The text is brief (the pdf printout has ~130 pages including the appendix), so a diligent student can complete the course in a few afternoons!</p>
-</div>
-<div class="tip admonition">
-<p class="admonition-title">Links</p>
+<div class="tex2jax_ignore mathjax_ignore section" id="prediction-de-cross-selling-en-assurance">
+<h1>Prédiction de cross-selling en assurance<a class="headerlink" href="#prediction-de-cross-selling-en-assurance" title="Permalink to this headline">¶</a></h1>
+<p><strong>M1 Actuariat | Groupe 1</strong></p>
+<p><br><br></p>
+<p><strong>Composition du groupe</strong> :
+<br></p>
 <ul class="simple">
-<li><p>Jupyter Book:
-<a class="reference external" href="https://bronwojtek.github.io/neuralnets-in-raw-python/docs/index.html">https://bronwojtek.github.io/neuralnets-in-raw-python/docs/index.html</a></p></li>
-<li><p>pdf and codes: <a class="reference external" href="https://www.ifj.edu.pl/~broniows/nn">www.ifj.edu.pl/~broniows/nn</a> or <a class="reference external" href="https://www.ujk.edu.pl/~broniows/nn">www.ujk.edu.pl/~broniows/nn</a></p></li>
+<li><p>BÉRU Théodore (FI)</p></li>
+<li><p>CHEBAK Soraya (FC)</p></li>
+<li><p>CLAVIER Mathieu (FI)</p></li>
+<li><p>GUICHARD Victor (FI)</p></li>
+</ul>
+<p><a>Envoyer un mail au groupe</a></p>
+<div class="tip admonition">
+<p class="admonition-title">Liens</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/claviermathieu/ISFA-prj-datascience">Jupyter book</a></p></li>
+<li><p><a class="reference external" href="https://github.com/claviermathieu/ISFA-prj-datascience">Répertoire GitHub</a></p></li>
 </ul>
 </div>
 <div class="important admonition">
-<p class="admonition-title">How to run the book codes</p>
-<p>A major advantage of executable books is that the reader may enjoy running the source codes himself, modifying them and playing around. No downloading, installation or configuration are required. Simply go to</p>
-<p><a class="reference external" href="https://bronwojtek.github.io/neuralnets-in-raw-python/docs/index.html">https://bronwojtek.github.io/neuralnets-in-raw-python/docs/index.html</a>,</p>
-<p>in the left menu select any chapter below the Introduction, click the “rocket” icon at the top right of the screen, and choose “Binder”. After some initialization time (for the first time it is rather long) the notebook can be run.</p>
-<p>For local running, the codes for each chapter in the form of
-<a class="reference external" href="https://jupyter.org">Jupyter</a> notebooks can be downloaded by clicking the “arrow-down” icon at the top right of the screen. A complete set of files is also available from the links given above.</p>
-<p>Appendix <a class="reference internal" href="appendix.html#app-run"><span class="std std-ref">How to run the book codes</span></a> explains step-by-step how to proceed with the local execution of the codes.</p>
-</div>
+<p class="admonition-title">Exécuter le code</p>
+<p>Deux possibilité :</p>
+<ul class="simple">
+<li><p>A partir du répertoire GitHub</p></li>
+<li><p>A partir des documents Google Colab</p></li>
+</ul>
+<p>La méthode avec les google colab est plus directe et nécessite aucune installation.</p>
 <div class="admonition- admonition">
 <p class="admonition-title"><span class="math notranslate nohighlight">\(~\)</span></p>
-<p>Built with <a class="reference external" href="https://beta.jupyterbook.org/intro.html">Jupyter Book
-2.0</a> tool set, as part of the
+<p>Construit avec l’outil <a class="reference external" href="https://beta.jupyterbook.org/intro.html">Jupyter Book
+2.0</a>, faisant parti du projet
 <a class="reference external" href="https://ebp.jupyterbook.org/en/latest/">ExecutableBookProject</a>.</p>
 </div>
-<p>ISBN: <strong>978-83-962099-0-0</strong> (pdf version)</p>
-<p><img alt="" src="../_images/barcode.png" /></p>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -264,10 +219,10 @@ the <a class="reference external" href="https://kisd.ifj.edu.pl/news/">Kraków S
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="backprop.html" title="next page">
+    <a class='right-next' id="next-link" href="description.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Back propagation</p>
+        <p class="prev-next-title">Description des données</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -279,7 +234,7 @@ the <a class="reference external" href="https://kisd.ifj.edu.pl/news/">Kraków S
     <div class="container">
       <p>
         
-          By BÉRU Théodore, CHEBAK Soraya<br/>
+          By BÉRU Théodore, CHEBAK Soraya, CLAVIER Mathieu, GUICHARD Victor<br/>
         
             &copy; Copyright 2021.<br/>
       </p>

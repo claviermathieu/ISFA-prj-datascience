@@ -1,5 +1,5 @@
-title: "Prédiction de cross-selling en assurance"
-author: "BÉRU Théodore, CHEBAK Soraya"
+title: "Groupe 1"
+author: "BÉRU Théodore, CHEBAK Soraya, CLAVIER Mathieu, GUICHARD Victor"
 email: "mathieu.clavier@outlook.com"
 release: "1"
 logo: 'logo.png'
@@ -28,6 +28,17 @@ repository:
   url           : "https://github.com/claviermathieu/ISFA-prj-datascience/"
   branch        : main
   path_to_book  : book
+
+sphinx:
+    config:
+      html_theme_options:
+        use_download_button: false
+        repository_url: https://www.mclavier.com
+        use_issues_button: false
+        use_repository_button: false
+        use_edit_page_button: false
+
+
 
 # Launch button settings
 #launch_buttons:

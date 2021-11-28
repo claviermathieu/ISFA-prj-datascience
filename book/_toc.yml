@@ -1,4 +1,5 @@
 format: jb-book
 root: docs/index
 chapters:
-- file: docs/description
+- file: docs/00_description
+- file: docs/01_reg_lin
