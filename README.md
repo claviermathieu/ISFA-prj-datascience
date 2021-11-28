@@ -9,9 +9,10 @@ Création du rapport Jupyter-book.
  Installer Python 3.8.10 avec pip.
 
  Puis exécuter
-> pip install pip env
+> pip install pipenv
 
 Puis utiliser l'environnement virtuel avec
 
 > pipenv shell
+> pip install -r requirements.txt   (si nécessaire)
 
