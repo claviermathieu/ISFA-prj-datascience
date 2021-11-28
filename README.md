@@ -1,8 +1,8 @@
 # ISFA - M2 Actuariat - Projet datascience
 
-## Objectif
+## Objet
 
-Création du rapport Jupyter-book.
+Projet de datascience M2 Actuariat semestre 1.
 
 ## Requirements
 
