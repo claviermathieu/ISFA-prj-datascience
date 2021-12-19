@@ -47,3 +47,13 @@ Construit avec l'outil [Jupyter Book
 2.0](https://beta.jupyterbook.org/intro.html), faisant parti du projet
 [ExecutableBookProject](https://ebp.jupyterbook.org/en/latest/).  
 ```
+
+
+# Rappels du sujet
+
+Une compagnie d'assurances santé souhaite mettre à profit sa base de données clients afin de diversifier ses activités. Pour ce faire, elle contacte ses nouveaux assurés pour leur proposer de souscrire à une assurance auto. Un premier test a déjà été mis en place sur quelques dizaines de milliers d’assurés. 
+Durant cette campagne marketing, des données ont été récupérées et structurées pour savoir si la 
+personne était effectivement intéressée par une assurance auto, ou non. 
+
+L’équipe actuariat doit maintenant créer un modèle de prédiction à partir de cette base pour déterminer 
+si la personne contactée sera intéressée par la souscription d’une assurance auto.

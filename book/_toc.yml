@@ -4,3 +4,4 @@ chapters:
 - file: docs/00_description
 - file: docs/01_data_prep
 - file: docs/02_log_reg
+- file: docs/03_classification

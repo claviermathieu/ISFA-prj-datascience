@@ -5,7 +5,7 @@
 
 # ## Packages
 
-# In[32]:
+# In[1]:
 
 
 import numpy as np 
@@ -15,11 +15,20 @@ from sklearn.preprocessing import OneHotEncoder
 
 # ## Importation
 
-# In[33]:
+# In[2]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_train.csv")
 train.head()
+
+
+# In[ ]:
+
+
+
+
+
+scaler = StandardScaler()
 
 
 # ## Transformation

@@ -106,6 +106,11 @@
    Régression logistique
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_classification.html">
+   Définition des mesures
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -185,6 +190,11 @@
    Valeurs manquantes
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#interpretations-graphiques">
+   Interprétations graphiques
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -200,11 +210,15 @@
 <h1>Description des données<a class="headerlink" href="#description-des-donnees" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="packages">
 <h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
+<p>Voici la liste des packages utilisés pour étudier les données.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pandas_profiling</span> <span class="k">as</span> <span class="nn">pp</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 </pre></div>
 </div>
 </div>
@@ -212,6 +226,7 @@
 </div>
 <div class="section" id="importation">
 <h2>Importation<a class="headerlink" href="#importation" title="Permalink to this headline">¶</a></h2>
+<p>Dans un premier temps, nous importons les données.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/brut_test.csv&quot;</span><span class="p">)</span>
@@ -339,10 +354,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Summarize dataset: 100%|██████████| 49/49 [00:07&lt;00:00,  6.26it/s, Completed]
-Generate report structure: 100%|██████████| 1/1 [00:03&lt;00:00,  3.54s/it]
-Render HTML: 100%|██████████| 1/1 [00:01&lt;00:00,  1.11s/it]
-Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00, 83.08it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Summarize dataset: 100%|██████████| 49/49 [00:07&lt;00:00,  6.15it/s, Completed]                                         
+Generate report structure: 100%|██████████| 1/1 [00:03&lt;00:00,  3.84s/it]
+Render HTML: 100%|██████████| 1/1 [00:01&lt;00:00,  1.37s/it]
+Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00, 100.04it/s]
 </pre></div>
 </div>
 </div>
@@ -378,6 +393,7 @@ dtype: object
 </div>
 <div class="section" id="valeurs-manquantes">
 <h2>Valeurs manquantes<a class="headerlink" href="#valeurs-manquantes" title="Permalink to this headline">¶</a></h2>
+<p>Nous vérifions qu’il n’y ait pas de données absentes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -399,6 +415,37 @@ Response                0
 dtype: int64
 </pre></div>
 </div>
+</div>
+</div>
+</div>
+<div class="section" id="interpretations-graphiques">
+<h2>Interprétations graphiques<a class="headerlink" href="#interpretations-graphiques" title="Permalink to this headline">¶</a></h2>
+<p>Par la suite, nous créons différents graphique pour essayer de mieux comprendre les données en comprenant l’impact marginal des variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;violin&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Vehicle_Age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Vehicle_Damage&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">16</span><span class="o">/</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1f545e6ed90&gt;
+</pre></div>
+</div>
+<img alt="../_images/00_description_17_1.png" src="../_images/00_description_17_1.png" />
+</div>
+</div>
+<p>On remarque que la distribution des primes est significativement différentes pour les véhicules ayant plus de deux ans d’age en fonction qu’ils aient déjà eu ou non un accident.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">60000</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Vehicle_Age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Response&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;Vehicle_Age&#39;, ylabel=&#39;Annual_Premium&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/00_description_19_1.png" src="../_images/00_description_19_1.png" />
 </div>
 </div>
 </div>
