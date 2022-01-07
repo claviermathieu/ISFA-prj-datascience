@@ -275,10 +275,6 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pandas_profiling</span> <span class="k">as</span> <span class="nn">pp</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 </pre></div>
 </div>
 </div>
@@ -287,7 +283,7 @@
 <div class="section" id="importation">
 <h2>Importation<a class="headerlink" href="#importation" title="Permalink to this headline">¶</a></h2>
 <p>Importation des données brutes.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/brut_train.csv&quot;</span><span class="p">)</span>
 <span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -405,7 +401,7 @@
 <div class="section" id="pandas-profiling">
 <h2>Pandas profiling<a class="headerlink" href="#pandas-profiling" title="Permalink to this headline">¶</a></h2>
 <p>Avant de commencer une analyse manuelle des variables, nous utilisons la librairie <em>pandas_profiling</em> pour avoir une première analyse rapide de notre jeu de données.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">profile</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">ProfileReport</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;ISFA - Groupe 1 | Insurance cross-selling&quot;</span><span class="p">)</span>
 <span class="n">profile</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&quot;data_desc.html&quot;</span><span class="p">)</span>
@@ -413,10 +409,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Summarize dataset: 100%|██████████| 49/49 [00:07&lt;00:00,  6.15it/s, Completed]                                         
-Generate report structure: 100%|██████████| 1/1 [00:03&lt;00:00,  3.84s/it]
-Render HTML: 100%|██████████| 1/1 [00:01&lt;00:00,  1.37s/it]
-Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00, 100.04it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Summarize dataset: 100%|██████████| 49/49 [00:14&lt;00:00,  3.47it/s, Completed]                                         
+Generate report structure: 100%|██████████| 1/1 [00:06&lt;00:00,  6.80s/it]
+Render HTML: 100%|██████████| 1/1 [00:02&lt;00:00,  2.94s/it]
+Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00, 100.39it/s]
 </pre></div>
 </div>
 </div>
@@ -428,7 +424,7 @@ Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00,
 <div class="section" id="information">
 <h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
 <p>Voicil la liste des variables présentent dans le jeu de données</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
@@ -655,7 +651,7 @@ dtype: int64
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1f545e6ed90&gt;
 </pre></div>
 </div>
-<img alt="../../_images/10_description_24_1.png" src="../../_images/10_description_24_1.png" />
+<img alt="../../_images/10_description_25_1.png" src="../../_images/10_description_25_1.png" />
 </div>
 </div>
 <p>On remarque que la distribution des primes est significativement différentes pour les véhicules ayant plus de deux ans d’age en fonction qu’ils aient déjà eu ou non un accident.</p>
@@ -669,7 +665,7 @@ dtype: int64
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;Vehicle_Age&#39;, ylabel=&#39;Annual_Premium&#39;&gt;
 </pre></div>
 </div>
-<img alt="../../_images/10_description_26_1.png" src="../../_images/10_description_26_1.png" />
+<img alt="../../_images/10_description_27_1.png" src="../../_images/10_description_27_1.png" />
 </div>
 </div>
 </div>

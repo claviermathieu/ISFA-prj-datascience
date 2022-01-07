@@ -42,6 +42,8 @@
     <script src="../../_static/copybutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script>
         const thebe_selector = ".thebe"
@@ -207,6 +209,24 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#f1-score">
+   F1-Score
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#comparer-les-modeles">
+   Comparer les modèles
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -217,6 +237,47 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="mesure">
 <h1>Mesure<a class="headerlink" href="#mesure" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="f1-score">
+<h2>F1-Score<a class="headerlink" href="#f1-score" title="Permalink to this headline">¶</a></h2>
+<p>D’après les consignes pour le projet. Le critère quantitatif appliqué pour évaluer le pouvoir prédictif de nos modèles sera le F1-score :</p>
+<div class="math notranslate nohighlight">
+\[
+F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} + \text{rappel}}
+\]</div>
+<p>avec</p>
+<div class="math notranslate nohighlight">
+\[
+\text{précision} = \frac{VP}{(VP + FP)} \qquad et \qquad \text{rappel} = \frac{VP}{(VP + FN)}
+\]</div>
+<p><br><br></p>
+<p><strong>Sur Python</strong></p>
+<p>Le package <em>sklearn</em> permet d’introduire beaucoup de mesures. La mesure f1_score est notamment disponible.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">make_scorer</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Voici d’autres mesures disponibles avec le package <em>sklearn</em></p>
+<ul class="simple">
+<li><p>matthews_corrcoef</p></li>
+<li><p>roc_auc_score</p></li>
+<li><p>confusion_matrix</p></li>
+<li><p>accuracy_score</p></li>
+<li><p>r2_score</p></li>
+</ul>
+</div>
+<div class="section" id="comparer-les-modeles">
+<h2>Comparer les modèles<a class="headerlink" href="#comparer-les-modeles" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;bonjour&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
