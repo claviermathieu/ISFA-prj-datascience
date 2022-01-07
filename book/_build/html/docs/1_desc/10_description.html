@@ -233,21 +233,11 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#information">
-     Information
+    <a class="reference internal nav-link" href="#generalites">
+     Généralités
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#types">
-   Types
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#valeurs-manquantes">
-   Valeurs manquantes
-  </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#interpretations-graphiques">
@@ -273,7 +263,8 @@
 <p>Voici la liste des packages utilisés pour étudier les données.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pandas_profiling</span> <span class="k">as</span> <span class="nn">pp</span>
 </pre></div>
 </div>
@@ -282,7 +273,7 @@
 </div>
 <div class="section" id="importation">
 <h2>Importation<a class="headerlink" href="#importation" title="Permalink to this headline">¶</a></h2>
-<p>Importation des données brutes.</p>
+<p>Importation des données brutes. Voici un aperçu des 5 premières lignes du jeu de données.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/brut_train.csv&quot;</span><span class="p">)</span>
@@ -418,11 +409,22 @@ Export report to file: 100%|██████████| 1/1 [00:00&lt;00:00,
 </div>
 </div>
 <p>Le rapport de <em>pandas_profiling</em> est <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html">disponible ici</a>.</p>
+<p>Ce rapport permet de faire un état des lieux des variables et de se rendre compte de certains points à faire attention.</p>
+<p>Notamment :</p>
+<ul class="simple">
+<li><p>Des âges supérieur à 100 ans</p></li>
+<li><p>Des personnes sans permis de conduire</p></li>
+<li><p>La prédominance de certaines région (sans doute urbaines et rurales)</p></li>
+<li><p>La prédominance de certains canaux de vente sur d’autres</p></li>
+<li><p>Le taux de réponse positive : 20.6 %</p></li>
+<li><p>La corrélation de la variable réponse à : Age, Previously_Insured et Policy_Sales_Channel</p></li>
+</ul>
 </div>
 <div class="section" id="analyse-manuelle">
 <h2>Analyse manuelle<a class="headerlink" href="#analyse-manuelle" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="information">
-<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
+<p>En complément de l’analyse du rapport <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html">pandas_profiling</a>, nous réalisons quelques graphes pour mieux comprendre le jeux de données.</p>
+<div class="section" id="generalites">
+<h3>Généralités<a class="headerlink" href="#generalites" title="Permalink to this headline">¶</a></h3>
 <p>Voicil la liste des variables présentent dans le jeu de données</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -454,9 +456,10 @@ memory usage: 5.5+ MB
 </div>
 </div>
 <p>Nous pouvons constater qu’il y a 66 641 lignes et qu’il n’y a aucune valeur manquante.</p>
+<p>Nous appelons par la suite la fonction permettant d’avoir une description de nos variables quantitatives.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">[[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Driving_License&#39;</span><span class="p">,</span> <span class="s1">&#39;Previously_Insured&#39;</span><span class="p">,</span> <span class="s1">&#39;Annual_Premium&#39;</span><span class="p">,</span> <span class="s1">&#39;Response&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -481,11 +484,8 @@ memory usage: 5.5+ MB
       <th></th>
       <th>Age</th>
       <th>Driving_License</th>
-      <th>Region_Code</th>
       <th>Previously_Insured</th>
       <th>Annual_Premium</th>
-      <th>Policy_Sales_Channel</th>
-      <th>Vintage</th>
       <th>Response</th>
     </tr>
   </thead>
@@ -497,30 +497,21 @@ memory usage: 5.5+ MB
       <td>65641.00</td>
       <td>65641.00</td>
       <td>65641.00</td>
-      <td>65641.00</td>
-      <td>65641.00</td>
-      <td>65641.00</td>
     </tr>
     <tr>
       <th>mean</th>
       <td>39.92</td>
       <td>1.00</td>
-      <td>26.43</td>
       <td>0.42</td>
       <td>30595.49</td>
-      <td>109.97</td>
-      <td>170.46</td>
       <td>0.21</td>
     </tr>
     <tr>
       <th>std</th>
       <td>16.57</td>
       <td>0.05</td>
-      <td>13.08</td>
       <td>0.49</td>
       <td>16977.74</td>
-      <td>54.72</td>
-      <td>217.03</td>
       <td>0.40</td>
     </tr>
     <tr>
@@ -528,144 +519,119 @@ memory usage: 5.5+ MB
       <td>20.00</td>
       <td>0.00</td>
       <td>0.00</td>
-      <td>0.00</td>
       <td>2630.00</td>
-      <td>1.00</td>
-      <td>10.00</td>
       <td>0.00</td>
     </tr>
     <tr>
       <th>25%</th>
       <td>25.00</td>
       <td>1.00</td>
-      <td>15.00</td>
       <td>0.00</td>
       <td>24379.00</td>
-      <td>26.00</td>
-      <td>83.00</td>
       <td>0.00</td>
     </tr>
     <tr>
       <th>50%</th>
       <td>38.00</td>
       <td>1.00</td>
-      <td>28.00</td>
       <td>0.00</td>
       <td>31798.00</td>
-      <td>124.00</td>
-      <td>157.00</td>
       <td>0.00</td>
     </tr>
     <tr>
       <th>75%</th>
       <td>50.00</td>
       <td>1.00</td>
-      <td>35.00</td>
       <td>1.00</td>
       <td>39583.00</td>
-      <td>152.00</td>
-      <td>230.00</td>
       <td>0.00</td>
     </tr>
     <tr>
       <th>max</th>
       <td>156.00</td>
       <td>1.00</td>
-      <td>52.00</td>
       <td>1.00</td>
       <td>340439.00</td>
-      <td>163.00</td>
-      <td>5681.00</td>
       <td>1.00</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-</div>
-</div>
-<div class="section" id="types">
-<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
-<p>On identifie les types de chaque variable du jeu de données.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">dtypes</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Gender                  object
-Age                      int64
-Driving_License          int64
-Region_Code              int64
-Previously_Insured       int64
-Vehicle_Age             object
-Vehicle_Damage          object
-Annual_Premium           int64
-Policy_Sales_Channel     int64
-Vintage                  int64
-Response                 int64
-dtype: object
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="valeurs-manquantes">
-<h2>Valeurs manquantes<a class="headerlink" href="#valeurs-manquantes" title="Permalink to this headline">¶</a></h2>
-<p>Nous vérifions qu’il n’y ait pas de données absentes.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Gender                  0
-Age                     0
-Driving_License         0
-Region_Code             0
-Previously_Insured      0
-Vehicle_Age             0
-Vehicle_Damage          0
-Annual_Premium          0
-Policy_Sales_Channel    0
-Vintage                 0
-Response                0
-dtype: int64
-</pre></div>
-</div>
-</div>
+<p>Nous n’en faisons pas plus car toutes ces analyses classiques sont déjà réalisées dans <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html">pandas_profiling</a>. Nous recherchons plutôt quelques visualisations graphiques.</p>
 </div>
 </div>
 <div class="section" id="interpretations-graphiques">
 <h2>Interprétations graphiques<a class="headerlink" href="#interpretations-graphiques" title="Permalink to this headline">¶</a></h2>
-<p>Par la suite, nous créons différents graphique pour essayer de mieux comprendre les données en comprenant l’impact marginal des variables.</p>
-<div class="cell docutils container">
+<p>Nous cherchons quelques critères discriminant pour identifier la variable <em>Response</em>.</p>
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;violin&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Vehicle_Age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Vehicle_Damage&quot;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">16</span><span class="o">/</span><span class="mi">9</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> 
+            <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;violin&quot;</span><span class="p">,</span> 
+            <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Vehicle_Age&quot;</span><span class="p">,</span> 
+            <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">,</span> 
+            <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Response&quot;</span><span class="p">,</span> 
+            <span class="n">split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">14</span><span class="o">/</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1f545e6ed90&gt;
-</pre></div>
-</div>
-<img alt="../../_images/10_description_25_1.png" src="../../_images/10_description_25_1.png" />
+<img alt="../../_images/10_description_23_0.png" src="../../_images/10_description_23_0.png" />
 </div>
 </div>
 <p>On remarque que la distribution des primes est significativement différentes pour les véhicules ayant plus de deux ans d’age en fonction qu’ils aient déjà eu ou non un accident.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">60000</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Vehicle_Age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Response&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">60000</span><span class="p">],</span>
+            <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Vehicle_Age&quot;</span><span class="p">,</span> 
+            <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Annual_Premium&quot;</span><span class="p">,</span> 
+            <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Response&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;Vehicle_Age&#39;, ylabel=&#39;Annual_Premium&#39;&gt;
+<img alt="../../_images/10_description_25_0.png" src="../../_images/10_description_25_0.png" />
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/brut_train.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Léger changements revu à la prochaine page</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;Female&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;Male&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Vehicle_Age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Vehicle_Age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;&lt; 1 Year&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;1-2 Year&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;&gt; 2 Years&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Vehicle_Damage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Vehicle_Damage&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;Yes&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;No&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Driving_License&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span> <span class="o">&gt;</span><span class="mi">80</span> <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">nb_femmes</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">somme_f</span> <span class="o">=</span> <span class="n">nb_femmes</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Age&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">nb_femmes</span> <span class="o">=</span> <span class="n">somme_f</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span>
+<span class="n">nb_femmes</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nb_femmes</span><span class="p">)</span>
+
+<span class="n">nb_hommes</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">somme_h</span> <span class="o">=</span> <span class="n">nb_hommes</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Age&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">nb_hommes</span> <span class="o">=</span> <span class="n">somme_h</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span>
+<span class="n">nb_hommes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nb_hommes</span><span class="p">)</span>
+<span class="n">nb_hommes</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nb_femmes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">ages</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">nb_femmes</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">ages</span><span class="p">,</span><span class="n">nb_hommes</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;hommes&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">ages</span><span class="p">,</span><span class="n">nb_femmes</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;femmes&quot;</span><span class="p">)</span>
+<span class="n">xticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xticks</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/10_description_27_1.png" src="../../_images/10_description_27_1.png" />
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/10_description_26_0.png" src="../../_images/10_description_26_0.png" />
 </div>
 </div>
 </div>

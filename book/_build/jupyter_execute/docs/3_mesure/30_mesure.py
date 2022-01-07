@@ -27,7 +27,7 @@
 # In[1]:
 
 
-from sklearn.metrics import f1_score, make_scorer
+from sklearn.metrics import f1_score
 
 
 # Voici d'autres mesures disponibles avec le package *sklearn* 
