@@ -213,50 +213,28 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#packages">
-   Packages
+  <a class="reference internal nav-link" href="#renommage">
+   Renommage
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#importation">
-   Importation
+  <a class="reference internal nav-link" href="#filtre">
+   Filtre
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#transformation">
-   Transformation
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#vehicle-dammage">
-     Vehicle_Dammage
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gender">
-     Gender
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#age">
-     Age
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#policy-sales-channel">
-     Policy_Sales_Channel
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#export">
-   Export
+  <a class="reference internal nav-link" href="#export-1">
+   Export 1
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#package-data">
-   Package data
+  <a class="reference internal nav-link" href="#export-2">
+   Export 2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion">
+   Conclusion
   </a>
  </li>
 </ul>
@@ -272,27 +250,19 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="preparation-des-donnees">
 <h1>Préparation des données<a class="headerlink" href="#preparation-des-donnees" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="packages">
-<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
-</pre></div>
+<p>En fonction des modèles utilisées, il faut réaliser différentes préparation des données.</p>
+<p>Par exemple, pour une régression logistique il faut transformer les variable en One-Hot variable alors que pour un modèle xgboost ce n’est pas obligatoire.</p>
+<p>Ainsi, ce notebook a pour objectif d’exporter les différentes base de données avec le formalisme nécessaire à chaque type de modèle qui seront appliqués par la suite.</p>
+<p><br><br></p>
+<p><strong>Traitement global</strong></p>
+<p>Cependant, dans un premier temps, certains traitement sont communes à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d’obtenir une base de données plus lisible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Le nettoyage et le regroupement des données résulte de la description statistique précédente.</p>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="importation">
-<h2>Importation<a class="headerlink" href="#importation" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/brut_train.csv&quot;</span><span class="p">)</span>
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
+<p><br><br></p>
+<p><strong>Pour rappel</strong>, voici la base de donnée d’origine</p>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -368,430 +338,31 @@
       <td>195</td>
       <td>1</td>
     </tr>
-    <tr>
-      <th>3</th>
-      <td>Male</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>No</td>
-      <td>41420</td>
-      <td>26</td>
-      <td>121</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Male</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>Yes</td>
-      <td>32764</td>
-      <td>124</td>
-      <td>185</td>
-      <td>1</td>
-    </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="transformation">
-<h2>Transformation<a class="headerlink" href="#transformation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="vehicle-dammage">
-<h3>Vehicle_Dammage<a class="headerlink" href="#vehicle-dammage" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="renommage">
+<h2>Renommage<a class="headerlink" href="#renommage" title="Permalink to this headline">¶</a></h2>
+<p>Nous remplaçons les <em>No</em> et <em>Yes</em> de la variable Vehicle_Damage par des booleans.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;No&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Yes&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">new_damage</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Vehicle_Damage</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">dict_cat</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
-<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Vehicle_Damage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_damage</span>
-
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">train</span><span class="o">.</span><span class="n">Vehicle_Damage</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dict_cat</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Driving_License</th>
-      <th>Region_Code</th>
-      <th>Previously_Insured</th>
-      <th>Vehicle_Age</th>
-      <th>Vehicle_Damage</th>
-      <th>Annual_Premium</th>
-      <th>Policy_Sales_Channel</th>
-      <th>Vintage</th>
-      <th>Response</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Male</td>
-      <td>30</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>1</td>
-      <td>26891</td>
-      <td>155</td>
-      <td>270</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Male</td>
-      <td>28</td>
-      <td>1</td>
-      <td>28</td>
-      <td>1</td>
-      <td>&lt; 1 Year</td>
-      <td>0</td>
-      <td>45434</td>
-      <td>152</td>
-      <td>146</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Male</td>
-      <td>32</td>
-      <td>1</td>
-      <td>47</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>0</td>
-      <td>2630</td>
-      <td>157</td>
-      <td>195</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Male</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>26</td>
-      <td>121</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Male</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>124</td>
-      <td>185</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
-</div>
-<div class="section" id="gender">
-<h3>Gender<a class="headerlink" href="#gender" title="Permalink to this headline">¶</a></h3>
+<p>Ensuite, nous remplaçons les <em>Male</em> et <em>Female</em> par respectivement 0 et 1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Male&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">new_gender</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Gender</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">dict_cat</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
-
-<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_gender</span>
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">train</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dict_cat</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Driving_License</th>
-      <th>Region_Code</th>
-      <th>Previously_Insured</th>
-      <th>Vehicle_Age</th>
-      <th>Vehicle_Damage</th>
-      <th>Annual_Premium</th>
-      <th>Policy_Sales_Channel</th>
-      <th>Vintage</th>
-      <th>Response</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>30</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>1</td>
-      <td>26891</td>
-      <td>155</td>
-      <td>270</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>28</td>
-      <td>1</td>
-      <td>28</td>
-      <td>1</td>
-      <td>&lt; 1 Year</td>
-      <td>0</td>
-      <td>45434</td>
-      <td>152</td>
-      <td>146</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0</td>
-      <td>32</td>
-      <td>1</td>
-      <td>47</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>0</td>
-      <td>2630</td>
-      <td>157</td>
-      <td>195</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>26</td>
-      <td>121</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1-2 Year</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>124</td>
-      <td>185</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
 </div>
-</div>
-<div class="section" id="age">
-<h3>Age<a class="headerlink" href="#age" title="Permalink to this headline">¶</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ohe</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">one_hot_VAge</span> <span class="o">=</span> <span class="n">ohe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">Vehicle_Age</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-
-<span class="n">less_than_one</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
-<span class="n">one_to_two</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
-<span class="n">two_and_more</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
-
-<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">less_than_one</span>
-<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_to_two</span>
-<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">two_and_more</span>
-
-<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;Vehicle_Age&#39;</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Driving_License</th>
-      <th>Region_Code</th>
-      <th>Previously_Insured</th>
-      <th>Vehicle_Damage</th>
-      <th>Annual_Premium</th>
-      <th>Policy_Sales_Channel</th>
-      <th>Vintage</th>
-      <th>Response</th>
-      <th>VAge1</th>
-      <th>VAge2</th>
-      <th>VAge3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>30</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1</td>
-      <td>26891</td>
-      <td>155</td>
-      <td>270</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>28</td>
-      <td>1</td>
-      <td>28</td>
-      <td>1</td>
-      <td>0</td>
-      <td>45434</td>
-      <td>152</td>
-      <td>146</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0</td>
-      <td>32</td>
-      <td>1</td>
-      <td>47</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2630</td>
-      <td>157</td>
-      <td>195</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>26</td>
-      <td>121</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>124</td>
-      <td>185</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-</div>
-<div class="section" id="policy-sales-channel">
-<h3>Policy_Sales_Channel<a class="headerlink" href="#policy-sales-channel" title="Permalink to this headline">¶</a></h3>
+<p>Nous avons constaté que la variable <em>Policy_Sales_Channel</em> comportait beaucoup de catégorie alors que seulement 3 catégories dominent toutes les autres.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -809,8 +380,8 @@ Name: Policy_Sales_Channel, dtype: int64
 </div>
 </div>
 </div>
-<p>On constate au profiling, qu’il y a principelement 4 grandes catégorie.</p>
-<div class="cell docutils container">
+<p>Après agrégation, nous obtenons seulement 4 catégories de taille relativement homogènes.</p>
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="mi">152</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">26</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">124</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 
@@ -823,132 +394,8 @@ Name: Policy_Sales_Channel, dtype: int64
 <span class="n">new_damage</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">default_dict</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Policy_Sales_Channel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_damage</span>
 
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Driving_License</th>
-      <th>Region_Code</th>
-      <th>Previously_Insured</th>
-      <th>Vehicle_Damage</th>
-      <th>Annual_Premium</th>
-      <th>Policy_Sales_Channel</th>
-      <th>Vintage</th>
-      <th>Response</th>
-      <th>VAge1</th>
-      <th>VAge2</th>
-      <th>VAge3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>30</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1</td>
-      <td>26891</td>
-      <td>3</td>
-      <td>270</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>28</td>
-      <td>1</td>
-      <td>28</td>
-      <td>1</td>
-      <td>0</td>
-      <td>45434</td>
-      <td>0</td>
-      <td>146</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0</td>
-      <td>32</td>
-      <td>1</td>
-      <td>47</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2630</td>
-      <td>3</td>
-      <td>195</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>1</td>
-      <td>121</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>2</td>
-      <td>185</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -962,9 +409,166 @@ Name: Policy_Sales_Channel, dtype: int64
 </div>
 </div>
 </div>
+<p>Enfin, nous modifions la variable <em>Vehicle_Age</em> pour la transformer en variable numérique.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_age</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1-2 Year&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;&lt; 1 Year&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&gt; 2 Years&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">train</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dict_age</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finalement, on obtient une base données comportant uniquement des variables de types int64.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Age</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>3</td>
+      <td>270</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>0</td>
+      <td>146</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>3</td>
+      <td>195</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ceci n’est pas obligatoire pour tous les modèles mais c’est une bonne pratique pour limiter le risque d’erreur.</p>
+</div>
+</div>
+<div class="section" id="filtre">
+<h2>Filtre<a class="headerlink" href="#filtre" title="Permalink to this headline">¶</a></h2>
+<p>Nous avons remarquer que certains âges étaient aberrant. Comme dans la base de données test l’âge maximum est de 84 ans, nous filtrons notre base de données d’entraînement à un âge proche : 85 ans.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">train</span><span class="o">.</span><span class="n">Age</span> <span class="o">&lt;=</span> <span class="mi">85</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Le reste de la base de données étant très propre, aucun autre filtre ne parait nécessaire. Les lignes représentant des personnes sans permis pourraient paraître superflux mais quelques individus (peut-être des voitures de collections) ont tout de même une assurance. Ces personnes là existent aussi dans la base de données test. Nous ne faisons donc aucune manipulation dessus.</p>
+</div>
+<div class="section" id="export-1">
+<h2>Export 1<a class="headerlink" href="#export-1" title="Permalink to this headline">¶</a></h2>
+<p>La base de données obtenue avec les manipulations précédentes est suffisante pour 6 modèles que nous allons étudier par la suite.</p>
+<ul class="simple">
+<li><p>SVC</p></li>
+<li><p>CART</p></li>
+<li><p>Random Forest</p></li>
+<li><p>Neural Network</p></li>
+<li><p>Gradient boosting</p></li>
+<li><p>XGBoost</p></li>
+</ul>
+<br>
+<p>Nous exportons donc cette base de données que nous nommons <em>train_v1</em> et qui est héberger <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/">sur serveur</a> pour facilité l’accessibilité.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;train_v1.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="export-2">
+<h2>Export 2<a class="headerlink" href="#export-2" title="Permalink to this headline">¶</a></h2>
+<p>Pour la régression logistique, il est fortement recommender de OneHot au maximum les variables pouvant l’être.</p>
+<p>Pour cela nous utilisons sklearn.preprocessing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Nous commençons par OneHot la variable Age.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ohe</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">one_hot_VAge</span> <span class="o">=</span> <span class="n">ohe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">Vehicle_Age</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">less_than_one</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
+<span class="n">one_to_two</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
+<span class="n">two_and_more</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
+
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">less_than_one</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_to_two</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">two_and_more</span>
+
+<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;Vehicle_Age&#39;</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1015,8 +619,8 @@ Name: Policy_Sales_Channel, dtype: int64
       <td>3</td>
       <td>270</td>
       <td>1</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -1031,8 +635,8 @@ Name: Policy_Sales_Channel, dtype: int64
       <td>0</td>
       <td>146</td>
       <td>0</td>
-      <td>1.0</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -1047,144 +651,16 @@ Name: Policy_Sales_Channel, dtype: int64
       <td>3</td>
       <td>195</td>
       <td>1</td>
-      <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>1</td>
-      <td>121</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>2</td>
-      <td>185</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>65636</th>
-      <td>0</td>
-      <td>22</td>
-      <td>1</td>
-      <td>8</td>
-      <td>1</td>
-      <td>0</td>
-      <td>34240</td>
-      <td>0</td>
-      <td>240</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>65637</th>
-      <td>1</td>
-      <td>66</td>
-      <td>1</td>
-      <td>8</td>
-      <td>1</td>
-      <td>0</td>
-      <td>35636</td>
-      <td>1</td>
-      <td>119</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>65638</th>
-      <td>0</td>
-      <td>28</td>
-      <td>1</td>
-      <td>6</td>
-      <td>0</td>
-      <td>1</td>
-      <td>56519</td>
-      <td>3</td>
-      <td>226</td>
-      <td>0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>65639</th>
-      <td>1</td>
-      <td>44</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>41622</td>
-      <td>3</td>
-      <td>152</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>65640</th>
-      <td>1</td>
-      <td>42</td>
-      <td>1</td>
-      <td>46</td>
-      <td>0</td>
-      <td>0</td>
-      <td>18698</td>
-      <td>1</td>
-      <td>257</td>
-      <td>0</td>
-      <td>0.0</td>
-      <td>1.0</td>
       <td>0.0</td>
     </tr>
   </tbody>
 </table>
-<p>65641 rows × 13 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<p>Puis la variable <em>Policy_Sales_Channel</em></p>
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ohe</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">one_hot_VPolicy</span> <span class="o">=</span> <span class="n">ohe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
@@ -1196,7 +672,7 @@ Name: Policy_Sales_Channel, dtype: int64
 <span class="n">train</span><span class="p">[</span><span class="s1">&#39;VPolicy3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VPolicy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VPolicy</span><span class="p">))]</span>
 
 <span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;Policy_Sales_Channel&#39;</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1249,8 +725,8 @@ Name: Policy_Sales_Channel, dtype: int64
       <td>26891</td>
       <td>270</td>
       <td>1</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -1268,8 +744,8 @@ Name: Policy_Sales_Channel, dtype: int64
       <td>45434</td>
       <td>146</td>
       <td>0</td>
-      <td>1.0</td>
       <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -1287,82 +763,33 @@ Name: Policy_Sales_Channel, dtype: int64
       <td>2630</td>
       <td>195</td>
       <td>1</td>
-      <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>121</td>
-      <td>0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>185</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-</div>
-</div>
-<div class="section" id="export">
-<h2>Export<a class="headerlink" href="#export" title="Permalink to this headline">¶</a></h2>
-<p>On déplace la variable target en fin de dataframe.</p>
+<p>La base de données pour la régression logistique peut à présent être exportée.</p>
+<br>
+<p>Elle est nommée <em>train_v2</em> et est aussi hébergée <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/">sur un serveur</a> pour facilité l’accessibilité.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Response</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Response</span>
-<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Response&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Response</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Exportation des données</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;train_log.csv&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;train_v2.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="section" id="package-data">
-<h2>Package data<a class="headerlink" href="#package-data" title="Permalink to this headline">¶</a></h2>
-<p>Les fonctions de préparation des données présentées ci-dessous ont été regroupées dans un fichier <a class="reference external" href="http://data.py">data.py</a> afin de permettre l’obtention rapide, et au bon format, des données pour tester différents modèles.</p>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>Avec la création des bdd <em>train_v1.csv</em> et <em>train_v2.csv</em> le plus gros nettoyage a été réalisé.</p>
+<p>Il n’y aura plus que quelques travaux de pre-processing de format en fonction des modèles implémentés.</p>
 </div>
 </div>
 
