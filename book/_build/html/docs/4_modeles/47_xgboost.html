@@ -42,6 +42,8 @@
     <script src="../../_static/copybutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script>
         const thebe_selector = ".thebe"
@@ -138,7 +140,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="45_rn.html">
-     Réseaux de neuronnes
+     Réseau de neurones
     </a>
    </li>
    <li class="toctree-l2">
@@ -217,6 +219,85 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="xgboost">
 <h1>XGBoost<a class="headerlink" href="#xgboost" title="Permalink to this headline">¶</a></h1>
+<p>Le Boosting de Gradient est un algorithme d’apprentissage supervisé dont le principe est de combiner les résultats d’un ensemble de modèles moins performants afin de fournir la meilleure prédiction possible.</p>
+<p>Un exemple classique est le modèle linéaire défini comme ci-suit  <span class="math notranslate nohighlight">\(\hat{y}_i = \sum_j \theta_j x_{ij}\)</span> qui représente une combinaison de plusieurs variables plus ou moins significatives.</p>
+<p>En choisissant judicieusement notre <span class="math notranslate nohighlight">\(y_i\)</span>, nous pouvons à partir de notre jeu de données faire des régressions et de la classification.</p>
+<p>Lorque nous entrainons notre modèle, nous cherchons à définir le meilleur paramètre <span class="math notranslate nohighlight">\( \theta  \)</span> qui ajustera nos données <span class="math notranslate nohighlight">\(x_i\)</span> et nous permettra d’obtenir les meilleurs prédictions de <span class="math notranslate nohighlight">\(y_i\)</span>. Pour entrainer notre modèle, nous avons besoin d’une fonction dite d’objectif afin d’estimer si notre modèle est performant ou non. <br />
+Notre fonction dite d’objectif est définie de la manière suivante :
+$<span class="math notranslate nohighlight">\(\text{obj}(\theta) = L(\theta) + \Omega(\theta)\)</span>$</p>
+<p>Dans cette expression nous retrouvons deux composants :<br />
+Le premier <span class="math notranslate nohighlight">\(L\)</span>, la fonction d’entrainement, le second <span class="math notranslate nohighlight">\(\Omega\)</span> qui est le terme de régulation.<br />
+<span class="math notranslate nohighlight">\(L\)</span> va donc estimer la performance prédicitive de notre modèle.<br />
+Un choix classique pour <span class="math notranslate nohighlight">\(L\)</span> est la mesure la mean squared error (MSE) donnée par : $<span class="math notranslate nohighlight">\( L(\theta) = \sum_i (y_i-\hat{y}_i)^2  \)</span>$</p>
+<p>Il existe également la fonction de logistic loss qui peut également être utilisée comme fonction d’entrainement:</p>
+<div class="math notranslate nohighlight">
+\[ L(\theta) = \sum_i[ y_i\ln (1+e^{-\hat{y}_i}) + (1-y_i)\ln (1+e^{\hat{y}_i})]  \]</div>
+<p>Le terme de régulation est assez souvent oublié; c’est pourtant lui qui contrôle la compléxité du modèle et nous empêche d’entrainer notre modèle en overfittant.</p>
+<p><img alt="Texte alternatif" src="https://drive.google.com/uc?id=1ks-oizjnu3-rThY-gecix6BpKFWy__FM" /></p>
+<p>La présentation de la méthode XGBoost ne peut se faire sans introduire la notion d’arbre de décision.</p>
+<p><img alt="Texte alternatif" src="https://drive.google.com/uc?id=1R7HcQg2z2cJ14GSCOL45VsWfHGT0-f37" /></p>
+<p>Dans notre exemple, il s’agit d’un modèle qui doit classifier suivant deux variables l’âge ainsi que l’utilisation quotidienne d’un ordinateur. Le modèle alloue a chaque échantillon un score de prédiction.</p>
+<p>Mathématiquement, le score peut s’écrire sous la forme :</p>
+<div class="math notranslate nohighlight">
+\[\hat{y}_i = \sum_{k=1}^K f_k(x_i), f_k \in \mathcal{F}\]</div>
+<p>où <span class="math notranslate nohighlight">\(K\)</span> est le nombre d’arbres, <span class="math notranslate nohighlight">\(f\)</span> une fonction dans <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> et <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> est l’ensemble des arbres de classification et de regression.<br />
+L’objectif est d’optimiser la fonction suivante :</p>
+<div class="math notranslate nohighlight">
+\[ \text{obj}(\theta) = \sum_i^n l(y_i, \hat{y}_i) + \sum_{k=1}^K \Omega(f_k)\]</div>
+<p>Mainteant que nous avons introduit le modèle, nous pouvons passer à l’entrainement de ce dernier. Nous allons définir une fonction d’objectif que nous optimiserons.<br />
+Notre fonction d’objectif est défini comme étant :</p>
+<div class="math notranslate nohighlight">
+\[ \text{obj} = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\Omega(f_i) \]</div>
+<p>Nous devons chercher premièrement les paramètres de notre arbre. Les structures de nos arbres sont contenus dans les fonctions <span class="math notranslate nohighlight">\(f_i\)</span>. Il s’avère complexe d’optimiser la structure d’un arbre, il ne s’agit pas simplement de problèmes de gradients.<br />
+Ici nous fixons ce que nous avons à apprendre puis nous ajoutons un arbre à la fois. Notre valeur de prédiction avec un pas de <span class="math notranslate nohighlight">\(t\)</span> pour la fonction <span class="math notranslate nohighlight">\(\hat{y}_i^{(t)}\)</span> s’écrit :</p>
+<p>\begin{split}\hat{y}_i^{(0)} &amp;= 0\
+\hat{y}_i^{(1)} &amp;= f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)\
+\hat{y}_i^{(2)} &amp;= f_1(x_i) + f_2(x_i)= \hat{y}_i^{(1)} + f_2(x_i)\
+&amp;\dots\
+\hat{y}<em>i^{(t)} &amp;= \sum</em>{k=1}^t f_k(x_i)= \hat{y}_i^{(t-1)} + f_t(x_i)\end{split}</p>
+<p>La question qui se pose alors est : quel arbre ajouté après un pas ?. La réponse est l’arbre qui optimise le mieux notre prédiction.</p>
+<p>\begin{split}\text{obj}^{(t)} &amp; = \sum_{i=1}^n l(y_i, \hat{y}<em>i^{(t)}) + \sum</em>{i=1}^t\Omega(f_i) \
+&amp; = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t) + \mathrm{constant}\end{split}</p>
+<p>Lorsque la mean squared error (MSE) est utilisée, notre fonction d’objectif devient</p>
+<p>\begin{split}\text{obj}^{(t)} &amp; = \sum_{i=1}^n (y_i - (\hat{y}<em>i^{(t-1)} + f_t(x_i)))^2 + \sum</em>{i=1}^t\Omega(f_i) \
+&amp; = \sum_{i=1}^n [2(\hat{y}_i^{(t-1)} - y_i)f_t(x_i) + f_t(x_i)^2] + \Omega(f_t) + \mathrm{constant}\end{split}</p>
+<p>L’utilisation de la MSE est assez courante avec un résidu et un terme quadratique.
+La fonction d’objectif devient alors :</p>
+<div class="math notranslate nohighlight">
+\[ \text{obj}^{(t)} = \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) + \mathrm{constant} \]</div>
+<p>où <span class="math notranslate nohighlight">\(g_i\)</span> et <span class="math notranslate nohighlight">\(h_i\)</span> sont :</p>
+<p>\begin{split}g_i &amp;= \partial_{\hat{y}_i^{(t-1)}} l(y_i, \hat{y}<em>i^{(t-1)})\
+h_i &amp;= \partial</em>{\hat{y}_i^{(t-1)}}^2 l(y_i, \hat{y}_i^{(t-1)})\end{split}</p>
+<p>Après supression de toutes les constantes, nous obtenons :</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)\]</div>
+<p>Cette expression devient notre objectif pour les nouveaux arbres. La valeur de notre prédiction ne va alors dépendre que de <span class="math notranslate nohighlight">\(g_i\)</span> et <span class="math notranslate nohighlight">\(h_i\)</span>. Il est possible d’optimiser chaque loss function en utilisant simplement les mêmes entrées <span class="math notranslate nohighlight">\(g_i\)</span>et <span class="math notranslate nohighlight">\(h_i\)</span>.</p>
+<p>Maintenant que le terme d’entrainement est déterminé, il est nécessaire de définir le terme de régulation qui intervient dans la gestion de la complexité du modèle.<br />
+La complexité de notre arbre est représentée par <span class="math notranslate nohighlight">\(\Omega(f)\)</span> qui est defini par la fonction <span class="math notranslate nohighlight">\(f(x)\)</span> :</p>
+<div class="math notranslate nohighlight">
+\[f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} .\]</div>
+<p>où <span class="math notranslate nohighlight">\(w\)</span> est le  vecteur de score, <span class="math notranslate nohighlight">\(q\)</span> est la fonction qui alloue la bonne feuille et <span class="math notranslate nohighlight">\(T\)</span> le nombre de feuilles.
+Pour la methode XGBoost, nous pouvons définir la complexité du modèle comme étant :</p>
+<div class="math notranslate nohighlight">
+\[ \Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2 \]</div>
+<p>Il existe d’autres façons de définir la complexité du modèle; cependant celle énoncée précédemment s’avère être fonctionnelle et efficace. L’aspect de régulation est souvent sous-estimé voir même ingoré. En définissant la complexité de façon formelle, nous avons un meilleur aperçu de notre modèle et de son niveau de performance.</p>
+<p>Structure du score :</p>
+<p>Mainteant que nous avons défini notre modèle, notre valeur objectif peut s’écrire de la façon suivante :</p>
+<p>\begin{split}\text{obj}^{(t)} &amp;\approx \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w_{q(x_i)}^2] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\
+&amp;= \sum^T_{j=1} [(\sum_{i\in I_j} g_i) w_j + \frac{1}{2} (\sum_{i\in I_j} h_i + \lambda) w_j^2 ] + \gamma T\end{split}</p>
+<p>où <span class="math notranslate nohighlight">\(I_j = \{i|q(x_i)=j\}\)</span>représentent les indices des nos points dans notre arbre.<br />
+L’expression de notre valeur objectif peut être simplifiée.
+Nous définissons <span class="math notranslate nohighlight">\(G_j = \sum_{i\in I_j} g_i\)</span> et <span class="math notranslate nohighlight">\(H_j = \sum_{i\in I_j} h_i\)</span>; l’expression de notre valeur objectif devient alors :</p>
+<div class="math notranslate nohighlight">
+\[\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T\]</div>
+<p>où les <span class="math notranslate nohighlight">\(w_j\)</span> sont indépendants, <span class="math notranslate nohighlight">\(G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2\)</span> est une expression de la forme quadratique. Pour le meilleur <span class="math notranslate nohighlight">\(w_j\)</span> possible, nous pouvons ecrire :</p>
+<p>\begin{split}w_j^\ast &amp;= -\frac{G_j}{H_j+\lambda}\
+\text{obj}^\ast &amp;= -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T\end{split}</p>
+<p>C’est la dernière expression qui va déterminer la qualité de notre modèle en évaluant la qualité de la prédiction.</p>
+<p>Après avoir mesuré la qualité de notre modèle, nous allons énumerer le nombre d’arbres possibles afin de choisir le meilleur. C’est probablement impossible à réaliser avec l’infinité de combinaisons possibles. Il faut donc chercher à optimiser l’arbre niveau par niveau. Nous calculons de ce fait le gain entre un arbre et l’autre à l’aide de la formule suivante :</p>
+<div class="math notranslate nohighlight">
+\[ Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma \]</div>
+<p>Ici, nous comparons le gain entre deux nouveaux arbres et celui que nous utilisons actuellement. Si le gain est inferieur au <span class="math notranslate nohighlight">\(\gamma\)</span> il est plus préférable de ne pas ajouter le nouvel arbre.</p>
 </div>
 
     <script type="text/x-thebe-config">

@@ -1,0 +1,85 @@
+from sklearn import model_selection
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.decomposition import PCA
+
+X = data.iloc[:, :-1]
+Y = data['Response']
+
+model = PCA(n_components=3)
+model.fit(data.drop(['Response'], axis=1))
+reduc = model.transform(data.drop(['Response'], axis=1))
+
+X2_train, X2_test, Y2_train, Y2_test = model_selection.train_test_split(reduc,Y,train_size=60000)
+#initialisation du classifieur
+rna = MLPClassifier(hidden_layer_sizes=(3,),activation="logistic",solver="lbfgs")
+
+#apprentissage
+rna.fit(X2_train,Y2_train)
+
+#affichage des coefficients
+print(rna.coefs_)
+print(rna.intercepts_)
+
+#prédiction sur la base train après retraitements
+pred = rna.predict(X2_test)
+print(pred)
+
+#mesure des performances
+from sklearn import metrics
+ 
+print(metrics.confusion_matrix(Y2_test,pred))
+print("Taux de reconnaissance = " + str(metrics.accuracy_score(Y2_test,pred)))
+
+from keras.models import Sequential
+from keras.layers import Dense
+
+modelSimple=Sequential()
+
+modelSimple.add(Dense(units=1,input_dim=3,activation="sigmoid"))
+
+print(modelSimple.get_config())
+
+modelSimple.compile(loss="binary_crossentropy",optimizer ="Adamax",metrics=["accuracy"])
+
+#subdivision en apprentissage et test
+from sklearn import model_selection
+X2_train,X2_test,Y2_train,Y2_test = model_selection.train_test_split(reduc,Y,train_size=60000)
+#apprentisage
+modelSimple.fit(X2_train,Y2_train,epochs=150,batch_size=100)
+
+print(modelSimple.get_weights())
+
+predSimple=modelSimple.predict(X2_test) 
+classes_x=np.argmax(predSimple,axis=1)
+#predSimple = modelSimple.predict_classes(X2_test)
+
+print(metrics.confusion_matrix(Y2_test,classes_x))
+score = modelSimple.evaluate(X2_test,Y2_test)
+print(score)
+
+import tensorflow as tf
+def get_callbacks():
+    return [tf.keras.callbacks.EarlyStopping(monitor='val_accuracy',patience=70,restore_best_weights=True)]
+
+history = modelSimple.fit(X2_train,Y2_train, validation_data=(X2_test, Y2_test), epochs=150, batch_size=100,   callbacks=get_callbacks(),verbose=0)
+
+plt.plot(history.history['accuracy']) 
+plt.plot(history.history['val_accuracy']) 
+plt.title('model accuracy') 
+plt.ylabel('accuracy')
+plt.xlabel('epoch') 
+plt.legend(['train', 'test'], loc='upper left') 
+plt.show() 
+
+modelMc = Sequential()
+modelMc.add(Dense(units=6,input_dim=3,activation="sigmoid"))
+modelMc.add(Dense(units=3,activation="sigmoid"))
+modelMc.add(Dense(units=1,activation="sigmoid"))
+
+modelMc.compile(loss="binary_crossentropy",optimizer="adam",metrics=["accuracy"])
+#apprentissage
+modelMc.fit(X2_train,Y2_train,epochs=150,batch_size=10)
+
+score = modelMc.evaluate(X2_test,Y2_test)
+print(score)
