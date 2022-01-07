@@ -1,6 +1,25 @@
 format: jb-book
 root: docs/index
-chapters:
-- file: docs/00_description
-- file: docs/01_data_prep
-- file: docs/02_log_reg
+
+# part: Modèles
+chapters: 
+- file: docs/1_desc/10_description
+- file: docs/2_prep/20_generale
+- file: docs/3_mesure/30_mesure
+- file: docs/4_modeles/40_modeles
+  sections:
+  - file: docs/4_modeles/41_logistique
+  - file: docs/4_modeles/42_svc
+  - file: docs/4_modeles/43_cart
+  - file: docs/4_modeles/44_rf
+  - file: docs/4_modeles/45_rn
+  - file: docs/4_modeles/46_grad_boost
+  - file: docs/4_modeles/47_xgboost
+- file: docs/5_retenu/50_mod_final
+
+
+
+# - part: Modèles
+#   chapters:
+#   - file: docs/3_modeles/31_logistique
+#   - file: docs/3_modeles/32_classif

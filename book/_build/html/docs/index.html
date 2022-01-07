@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prédiction de cross-selling en assurance &#8212; Groupe 1</title>
+    <title>G1 - Projet apprentissage statistique &#8212; G1 - Apprentissage statistique</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -54,7 +54,7 @@
     <link rel="shortcut icon" href="../_static/logo.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Description des données" href="00_description.html" />
+    <link rel="next" title="Description des données" href="1_desc/10_description.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -83,7 +83,7 @@
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Groupe 1</h1>
+      <h1 class="site-logo" id="site-title">G1 - Apprentissage statistique</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -93,18 +93,70 @@
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="00_description.html">
+  <a class="reference internal" href="1_desc/10_description.html">
    Description des données
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="01_data_prep.html">
+  <a class="reference internal" href="2_prep/20_generale.html">
    Préparation des données
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="02_log_reg.html">
-   Régression logistique
+  <a class="reference internal" href="3_mesure/30_mesure.html">
+   Mesure
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="4_modeles/40_modeles.html">
+   Implémentation des modèles
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/41_logistique.html">
+     Logistique
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/42_svc.html">
+     SVC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/43_cart.html">
+     CART
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/44_rf.html">
+     Random Forest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/45_rn.html">
+     Réseau de neurones
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/46_grad_boost.html">
+     Gradient Boosting
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_modeles/47_xgboost.html">
+     XGBoost
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="5_retenu/50_mod_final.html">
+   Modèle finale
   </a>
  </li>
 </ul>
@@ -156,6 +208,39 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   G1 - Projet apprentissage statistique
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#composition-du-groupe">
+   Composition du groupe
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#rappels-du-sujet">
+   Rappels du sujet
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plan-du-rapport">
+   Plan du rapport
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#informations-sur-le-support">
+   Informations sur le support
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -165,19 +250,47 @@
               <div>
                 
   <!-- #region -->
-<div class="tex2jax_ignore mathjax_ignore section" id="prediction-de-cross-selling-en-assurance">
-<h1>Prédiction de cross-selling en assurance<a class="headerlink" href="#prediction-de-cross-selling-en-assurance" title="Permalink to this headline">¶</a></h1>
-<p><strong>M1 Actuariat | Groupe 1</strong></p>
+<div class="tex2jax_ignore mathjax_ignore section" id="g1-projet-apprentissage-statistique">
+<h1>G1 - Projet apprentissage statistique<a class="headerlink" href="#g1-projet-apprentissage-statistique" title="Permalink to this headline">¶</a></h1>
 <p><br><br></p>
-<p><strong>Composition du groupe</strong> :
-<br></p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="composition-du-groupe">
+<h1>Composition du groupe<a class="headerlink" href="#composition-du-groupe" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>BÉRU Théodore (FI)</p></li>
 <li><p>CHEBAK Soraya (FC)</p></li>
 <li><p>CLAVIER Mathieu (FI)</p></li>
 <li><p>GUICHARD Victor (FI)</p></li>
 </ul>
-<p><a href="mailto: soraya.chebak@gmail.com; guichard.victor@outlook.fr; Théodore Beru <beru.theodore@gmail.com>; mathieu.clavier@outlook.com">Envoyer un mail au groupe</a></p>
+<p>Lien pour
+<a href="mailto: soraya.chebak@gmail.com; guichard.victor@outlook.fr; Théodore Beru <beru.theodore@gmail.com>; mathieu.clavier@outlook.com">envoyer un mail au groupe</a></p>
+<br>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="rappels-du-sujet">
+<h1>Rappels du sujet<a class="headerlink" href="#rappels-du-sujet" title="Permalink to this headline">¶</a></h1>
+<p><strong>Sujet :</strong> Prédiction de cross-selling en assurance</p>
+<p>Une compagnie d’assurances santé souhaite mettre à profit sa base de données clients afin de diversifier ses activités. Pour ce faire, elle contacte ses nouveaux assurés pour leur proposer de souscrire à une assurance auto. Un premier test a déjà été mis en place sur quelques dizaines de milliers d’assurés. Durant cette campagne marketing, des données ont été récupérées et structurées pour savoir si la
+personne était effectivement intéressée par une assurance auto, ou non.</p>
+<p>L’équipe actuariat doit maintenant créer un modèle de prédiction à partir de cette base pour déterminer
+si la personne contactée sera intéressée par la souscription d’une assurance auto.</p>
+<br>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="plan-du-rapport">
+<h1>Plan du rapport<a class="headerlink" href="#plan-du-rapport" title="Permalink to this headline">¶</a></h1>
+<p>Le rapport se décompose en 5 grandes parties :</p>
+<ol class="simple">
+<li><p>Description des données</p></li>
+<li><p>Préparation des données</p></li>
+<li><p>Comparatif des modèles</p></li>
+<li><p>Implémentation des modèles</p></li>
+<li><p>Modèle retenu</p></li>
+</ol>
+<br>
+<p>À la fin de chaque page, un bouton <strong>Next page</strong> permet de changer de notebook et de lire le rapport comme un livre. Il est possible aussi de naviguer à l’aide du sommaire rétractable sur le côté gauche du site.</p>
+<p><br><br><br><br><br><br><br><br><br></p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="informations-sur-le-support">
+<h1>Informations sur le support<a class="headerlink" href="#informations-sur-le-support" title="Permalink to this headline">¶</a></h1>
 <div class="tip admonition">
 <p class="admonition-title">Liens</p>
 <ul class="simple">
@@ -229,7 +342,7 @@
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="00_description.html" title="next page">
+    <a class='right-next' id="next-link" href="1_desc/10_description.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Description des données</p>

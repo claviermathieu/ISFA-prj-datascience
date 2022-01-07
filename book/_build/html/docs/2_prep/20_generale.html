@@ -1,0 +1,1431 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Préparation des données &#8212; G1 - Apprentissage statistique</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script>
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../../_static/logo.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Mesure" href="../3_mesure/30_mesure.html" />
+    <link rel="prev" title="Description des données" href="../1_desc/10_description.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">G1 - Apprentissage statistique</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../1_desc/10_description.html">
+   Description des données
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Préparation des données
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../3_mesure/30_mesure.html">
+   Mesure
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../4_modeles/40_modeles.html">
+   Implémentation des modèles
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/41_logistique.html">
+     Logistique
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/42_svc.html">
+     SVC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/43_cart.html">
+     CART
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/44_rf.html">
+     Random Forest
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/45_rn.html">
+     Réseau de neurones
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/46_grad_boost.html">
+     Gradient Boosting
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../4_modeles/47_xgboost.html">
+     XGBoost
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../5_retenu/50_mod_final.html">
+   Modèle finale
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#packages">
+   Packages
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#importation">
+   Importation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transformation">
+   Transformation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vehicle-dammage">
+     Vehicle_Dammage
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gender">
+     Gender
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#age">
+     Age
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#policy-sales-channel">
+     Policy_Sales_Channel
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#export">
+   Export
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#package-data">
+   Package data
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="preparation-des-donnees">
+<h1>Préparation des données<a class="headerlink" href="#preparation-des-donnees" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="packages">
+<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="importation">
+<h2>Importation<a class="headerlink" href="#importation" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/brut_train.csv&quot;</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Age</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Male</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>Yes</td>
+      <td>26891</td>
+      <td>155</td>
+      <td>270</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Male</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>&lt; 1 Year</td>
+      <td>No</td>
+      <td>45434</td>
+      <td>152</td>
+      <td>146</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Male</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>No</td>
+      <td>2630</td>
+      <td>157</td>
+      <td>195</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Male</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>No</td>
+      <td>41420</td>
+      <td>26</td>
+      <td>121</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Male</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>Yes</td>
+      <td>32764</td>
+      <td>124</td>
+      <td>185</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="transformation">
+<h2>Transformation<a class="headerlink" href="#transformation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="vehicle-dammage">
+<h3>Vehicle_Dammage<a class="headerlink" href="#vehicle-dammage" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;No&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Yes&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">new_damage</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Vehicle_Damage</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">dict_cat</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Vehicle_Damage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_damage</span>
+
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Age</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Male</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>155</td>
+      <td>270</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Male</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>&lt; 1 Year</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>152</td>
+      <td>146</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Male</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>157</td>
+      <td>195</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Male</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>0</td>
+      <td>41420</td>
+      <td>26</td>
+      <td>121</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Male</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>1</td>
+      <td>32764</td>
+      <td>124</td>
+      <td>185</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="gender">
+<h3>Gender<a class="headerlink" href="#gender" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Male&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">new_gender</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Gender</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">dict_cat</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_gender</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Age</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>155</td>
+      <td>270</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>&lt; 1 Year</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>152</td>
+      <td>146</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>157</td>
+      <td>195</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>0</td>
+      <td>41420</td>
+      <td>26</td>
+      <td>121</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1-2 Year</td>
+      <td>1</td>
+      <td>32764</td>
+      <td>124</td>
+      <td>185</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="age">
+<h3>Age<a class="headerlink" href="#age" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ohe</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">one_hot_VAge</span> <span class="o">=</span> <span class="n">ohe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">Vehicle_Age</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">less_than_one</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
+<span class="n">one_to_two</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
+<span class="n">two_and_more</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VAge</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VAge</span><span class="p">))]</span>
+
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">less_than_one</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_to_two</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VAge3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">two_and_more</span>
+
+<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;Vehicle_Age&#39;</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+      <th>VAge1</th>
+      <th>VAge2</th>
+      <th>VAge3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>155</td>
+      <td>270</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>152</td>
+      <td>146</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>157</td>
+      <td>195</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>41420</td>
+      <td>26</td>
+      <td>121</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1</td>
+      <td>32764</td>
+      <td>124</td>
+      <td>185</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="policy-sales-channel">
+<h3>Policy_Sales_Channel<a class="headerlink" href="#policy-sales-channel" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>152    21343
+26     14557
+124    13498
+160     3513
+156     1995
+Name: Policy_Sales_Channel, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>On constate au profiling, qu’il y a principelement 4 grandes catégorie.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="mi">152</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">26</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">124</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">default_dict</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dict_cat</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dict_cat</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">3</span>
+
+<span class="n">new_damage</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">default_dict</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Policy_Sales_Channel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_damage</span>
+
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+      <th>VAge1</th>
+      <th>VAge2</th>
+      <th>VAge3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>3</td>
+      <td>270</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>0</td>
+      <td>146</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>3</td>
+      <td>195</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>41420</td>
+      <td>1</td>
+      <td>121</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1</td>
+      <td>32764</td>
+      <td>2</td>
+      <td>185</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    21343
+3    16243
+1    14557
+2    13498
+Name: Policy_Sales_Channel, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Policy_Sales_Channel</th>
+      <th>Vintage</th>
+      <th>Response</th>
+      <th>VAge1</th>
+      <th>VAge2</th>
+      <th>VAge3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>3</td>
+      <td>270</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>0</td>
+      <td>146</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>3</td>
+      <td>195</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>41420</td>
+      <td>1</td>
+      <td>121</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1</td>
+      <td>32764</td>
+      <td>2</td>
+      <td>185</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>65636</th>
+      <td>0</td>
+      <td>22</td>
+      <td>1</td>
+      <td>8</td>
+      <td>1</td>
+      <td>0</td>
+      <td>34240</td>
+      <td>0</td>
+      <td>240</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>65637</th>
+      <td>1</td>
+      <td>66</td>
+      <td>1</td>
+      <td>8</td>
+      <td>1</td>
+      <td>0</td>
+      <td>35636</td>
+      <td>1</td>
+      <td>119</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>65638</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>56519</td>
+      <td>3</td>
+      <td>226</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>65639</th>
+      <td>1</td>
+      <td>44</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>41622</td>
+      <td>3</td>
+      <td>152</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>65640</th>
+      <td>1</td>
+      <td>42</td>
+      <td>1</td>
+      <td>46</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18698</td>
+      <td>1</td>
+      <td>257</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>65641 rows × 13 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ohe</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">one_hot_VPolicy</span> <span class="o">=</span> <span class="n">ohe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VPolicy0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VPolicy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VPolicy</span><span class="p">))]</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VPolicy1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VPolicy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VPolicy</span><span class="p">))]</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VPolicy2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VPolicy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VPolicy</span><span class="p">))]</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;VPolicy3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_hot_VPolicy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one_hot_VPolicy</span><span class="p">))]</span>
+
+<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;Policy_Sales_Channel&#39;</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Driving_License</th>
+      <th>Region_Code</th>
+      <th>Previously_Insured</th>
+      <th>Vehicle_Damage</th>
+      <th>Annual_Premium</th>
+      <th>Vintage</th>
+      <th>Response</th>
+      <th>VAge1</th>
+      <th>VAge2</th>
+      <th>VAge3</th>
+      <th>VPolicy0</th>
+      <th>VPolicy1</th>
+      <th>VPolicy2</th>
+      <th>VPolicy3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>30</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>26891</td>
+      <td>270</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>28</td>
+      <td>1</td>
+      <td>28</td>
+      <td>1</td>
+      <td>0</td>
+      <td>45434</td>
+      <td>146</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2630</td>
+      <td>195</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>54</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0</td>
+      <td>0</td>
+      <td>41420</td>
+      <td>121</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>45</td>
+      <td>1</td>
+      <td>36</td>
+      <td>0</td>
+      <td>1</td>
+      <td>32764</td>
+      <td>185</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="export">
+<h2>Export<a class="headerlink" href="#export" title="Permalink to this headline">¶</a></h2>
+<p>On déplace la variable target en fin de dataframe.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Response</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">Response</span>
+<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Response&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">train</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Response</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Exportation des données</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;train_log.csv&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="package-data">
+<h2>Package data<a class="headerlink" href="#package-data" title="Permalink to this headline">¶</a></h2>
+<p>Les fonctions de préparation des données présentées ci-dessous ont été regroupées dans un fichier <a class="reference external" href="http://data.py">data.py</a> afin de permettre l’obtention rapide, et au bon format, des données pour tester différents modèles.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./docs\2_prep"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="../1_desc/10_description.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Description des données</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../3_mesure/30_mesure.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Mesure</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By BÉRU Théodore, CHEBAK Soraya, CLAVIER Mathieu, GUICHARD Victor<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
