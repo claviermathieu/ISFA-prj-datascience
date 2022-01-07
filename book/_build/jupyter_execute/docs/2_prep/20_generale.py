@@ -172,6 +172,8 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 from sklearn.preprocessing import OneHotEncoder
 
 
+# <br>
+# 
 # Nous commençons par OneHot la variable Age.
 
 # In[68]:
@@ -192,6 +194,8 @@ train.drop(columns = 'Vehicle_Age', inplace = True)
 train.head(3)
 
 
+# <br>
+# 
 # Puis la variable *Policy_Sales_Channel*
 
 # In[69]:
@@ -210,10 +214,9 @@ train.drop(columns = 'Policy_Sales_Channel', inplace = True)
 train.head(3)
 
 
-# La base de données pour la régression logistique peut à présent être exportée.
-# 
-# 
 # <br>
+# 
+# La base de données pour la régression logistique peut à présent être exportée.
 # 
 # Elle est nommée *train_v2* et est aussi hébergée [sur un serveur](https://www.data.mclavier.com/prj_datascience/) pour facilité l'accessibilité.
 
@@ -228,3 +231,8 @@ train.to_csv("train_v2.csv", index = False)
 # Avec la création des bdd *train_v1.csv* et *train_v2.csv* le plus gros nettoyage a été réalisé.
 # 
 # Il n'y aura plus que quelques travaux de pre-processing de format en fonction des modèles implémentés.
+# 
+# 
+# <br><br><br><br>
+
+# 

@@ -52,7 +52,7 @@
     <link rel="shortcut icon" href="../../_static/logo.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="XGBoost" href="47_xgboost.html" />
+    <link rel="next" title="Gradient Boosting" href="47_xgboost.html" />
     <link rel="prev" title="Réseau de neurones" href="45_rn.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -148,7 +148,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="47_xgboost.html">
-     XGBoost
+     Gradient Boosting
     </a>
    </li>
   </ul>
@@ -207,6 +207,29 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#telechargement-des-donnees">
+   Téléchargement des données
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-processing">
+   Pre-processing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modele">
+   Modèle
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -217,6 +240,92 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="gradient-boosting">
 <h1>Gradient Boosting<a class="headerlink" href="#gradient-boosting" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="telechargement-des-donnees">
+<h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/train_v1.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pre-processing">
+<h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h2>
+<p>On sépare dans un premier temps les variables explicatives et la variable à expliquer.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Variables explicative</span>
+<span class="n">exp_var</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Décomposition features / target</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">exp_var</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
+
+<span class="n">scaler</span><span class="o">=</span><span class="n">StandardScaler</span><span class="p">()</span> 
+
+<span class="n">X_scal_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_scal_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> 
+
+<span class="n">X_scal_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_scal_train</span><span class="p">,</span><span class="n">index</span><span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">exp_var</span><span class="p">)</span>
+<span class="n">X_scal_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_scal_test</span><span class="p">,</span><span class="n">index</span><span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">exp_var</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="modele">
+<h2>Modèle<a class="headerlink" href="#modele" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="s2">&quot;deviance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gbr</span> <span class="o">=</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">gbr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GradientBoostingClassifier(max_depth=4, min_samples_split=5, n_estimators=600)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_model</span><span class="p">(</span><span class="n">gbr</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.37855724685638653
+</pre></div>
+</div>
+<img alt="../../_images/46_grad_boost_12_1.png" src="../../_images/46_grad_boost_12_1.png" />
+</div>
+</div>
+<p>Puis, nous pouvons directement entrainer le modèle et l’afficher grâce à notre fonction <em>result_model</em>.</p>
+<p><br><br><br><br></p>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
@@ -254,7 +363,7 @@
     <a class='right-next' id="next-link" href="47_xgboost.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">XGBoost</p>
+        <p class="prev-next-title">Gradient Boosting</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

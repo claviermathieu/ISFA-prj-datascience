@@ -3,6 +3,16 @@
 
 # # Mesure
 
+# In[6]:
+
+
+# Non affiché
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
 # ## F1-Score
 
 # D'après les consignes pour le projet. Le critère quantitatif appliqué pour évaluer le pouvoir prédictif de nos modèles sera le F1-score : 
@@ -17,9 +27,13 @@
 # \text{précision} = \frac{VP}{(VP + FP)} \qquad et \qquad \text{rappel} = \frac{VP}{(VP + FN)}
 # $$
 
+# <br>
+# 
+# Nous chercherons donc par la suite à optimiser le F1-Score.
+
 # <br><br>
 # 
-# **Sur Python**
+# **Implémentation Python**
 # 
 # 
 # Le package *sklearn* permet d'introduire beaucoup de mesures. La mesure f1_score est notamment disponible.
@@ -38,12 +52,49 @@ from sklearn.metrics import f1_score
 # - accuracy_score
 # - r2_score
 
+# Nous utiliserons simplement en plus la matrice de confusion pour avoir un élément plus visuel.
+
+# In[8]:
+
+
+from sklearn.metrics import confusion_matrix
+
+
 # ## Comparer les modèles
 
-# In[3]:
+# Nous implémentons dans un premier temps une fonction permettant de facilement calculer le F1-Score en donnant à la fonction : 
+# 
+# - Un modèle
+# - X test
+# - Y test
+# 
+# Nous affichons par la même occation la matrice de confusion.
+
+# In[7]:
 
 
-a = 'bonjour'
+def result_model(model,X,Y) :
+    Y_model =model.predict(X)
 
+    f1_scor = f1_score(Y,Y_model)
+    print('Le f1 score vaut',f1_scor)
+    
+   # Matrice de confusion
+    cm_model = confusion_matrix(Y, Y_model)
+    plt.rcParams['figure.figsize'] = (5, 5)
+    sns.heatmap(cm_model, annot = True)
+    plt.title(str(model))
+    plt.show()
+    
+    return(Y_model)
+
+
+# On rappelle qu'une matrice de confusion donne abscisse les valeurs réelles et en ordonnées les prédites ce qui permet de connaître les faux positif, les vrais positifs etc...
+
+# ## Conclusion
+# 
+# Maintenant que nous avons les outils pour mesurer l'efficacité de nos modèles et les base de données préparées, nous pouvons passer à l'implémentation.
+# 
+# <br><br><br><br>
 
 # 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>XGBoost &#8212; G1 - Apprentissage statistique</title>
+    <title>Gradient Boosting &#8212; G1 - Apprentissage statistique</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -42,8 +42,6 @@
     <script src="../../_static/copybutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script>
         const thebe_selector = ".thebe"
@@ -150,7 +148,7 @@
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     XGBoost
+     Gradient Boosting
     </a>
    </li>
   </ul>
@@ -215,9 +213,46 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#principe-generale">
-   Principe générale
+  <a class="reference internal nav-link" href="#telechargement-des-donnees">
+   Téléchargement des données
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-processing">
+   Pre-processing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modele">
+   Modèle
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tunning">
+   Tunning
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-2">
+     Etape 2
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-3-gamma">
+     Etape 3 : Gamma
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-4-tune-subsample-et-colsample-bytree">
+     Etape 4 : Tune subsample et colsample_bytree
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-5-tuning-regularization-parameters">
+     Step 5: Tuning Regularization Parameters
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -230,101 +265,457 @@
         
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="xgboost">
-<h1>XGBoost<a class="headerlink" href="#xgboost" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="principe-generale">
-<h2>Principe générale<a class="headerlink" href="#principe-generale" title="Permalink to this headline">¶</a></h2>
-<p>Le Boosting de Gradient est un algorithme d’apprentissage supervisé dont le principe est de combiner les résultats d’un ensemble de modèles moins performants afin de fournir la meilleure prédiction possible.</p>
-<p>Un exemple classique est le modèle linéaire défini comme ci-suit  <span class="math notranslate nohighlight">\(\hat{y}_i = \sum_j \theta_j x_{ij}\)</span> qui représente une combinaison de plusieurs variables plus ou moins significatives.</p>
-<p>En choisissant judicieusement notre <span class="math notranslate nohighlight">\(y_i\)</span>, nous pouvons à partir de notre jeu de données faire des régressions et de la classification.</p>
-<p>Lorque nous entrainons notre modèle, nous cherchons à définir le meilleur paramètre <span class="math notranslate nohighlight">\( \theta  \)</span> qui ajustera nos données <span class="math notranslate nohighlight">\(x_i\)</span> et nous permettra d’obtenir les meilleurs prédictions de <span class="math notranslate nohighlight">\(y_i\)</span>. Pour entrainer notre modèle, nous avons besoin d’une fonction dite d’objectif afin d’estimer si notre modèle est performant ou non. <br />
-Notre fonction dite d’objectif est définie de la manière suivante :
-$<span class="math notranslate nohighlight">\(\text{obj}(\theta) = L(\theta) + \Omega(\theta)\)</span>$</p>
-<p>Dans cette expression nous retrouvons deux composants :<br />
-Le premier <span class="math notranslate nohighlight">\(L\)</span>, la fonction d’entrainement, le second <span class="math notranslate nohighlight">\(\Omega\)</span> qui est le terme de régulation.<br />
-<span class="math notranslate nohighlight">\(L\)</span> va donc estimer la performance prédicitive de notre modèle.<br />
-Un choix classique pour <span class="math notranslate nohighlight">\(L\)</span> est la mesure la mean squared error (MSE) donnée par : $<span class="math notranslate nohighlight">\( L(\theta) = \sum_i (y_i-\hat{y}_i)^2  \)</span>$</p>
-<p>Il existe également la fonction de logistic loss qui peut également être utilisée comme fonction d’entrainement:</p>
-<div class="math notranslate nohighlight">
-\[ L(\theta) = \sum_i[ y_i\ln (1+e^{-\hat{y}_i}) + (1-y_i)\ln (1+e^{\hat{y}_i})]  \]</div>
-<p>Le terme de régulation est assez souvent oublié; c’est pourtant lui qui contrôle la compléxité du modèle et nous empêche d’entrainer notre modèle en overfittant.</p>
-<p><img alt="Texte alternatif" src="https://drive.google.com/uc?id=1ks-oizjnu3-rThY-gecix6BpKFWy__FM" /></p>
-<p>La présentation de la méthode XGBoost ne peut se faire sans introduire la notion d’arbre de décision.</p>
-<p><img alt="Texte alternatif" src="https://drive.google.com/uc?id=1R7HcQg2z2cJ14GSCOL45VsWfHGT0-f37" /></p>
-<p>Dans notre exemple, il s’agit d’un modèle qui doit classifier suivant deux variables l’âge ainsi que l’utilisation quotidienne d’un ordinateur. Le modèle alloue a chaque échantillon un score de prédiction.</p>
-<p>Mathématiquement, le score peut s’écrire sous la forme :</p>
-<div class="math notranslate nohighlight">
-\[\hat{y}_i = \sum_{k=1}^K f_k(x_i), f_k \in \mathcal{F}\]</div>
-<p>où <span class="math notranslate nohighlight">\(K\)</span> est le nombre d’arbres, <span class="math notranslate nohighlight">\(f\)</span> une fonction dans <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> et <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> est l’ensemble des arbres de classification et de regression.<br />
-L’objectif est d’optimiser la fonction suivante :</p>
-<div class="math notranslate nohighlight">
-\[ \text{obj}(\theta) = \sum_i^n l(y_i, \hat{y}_i) + \sum_{k=1}^K \Omega(f_k)\]</div>
-<p>Mainteant que nous avons introduit le modèle, nous pouvons passer à l’entrainement de ce dernier. Nous allons définir une fonction d’objectif que nous optimiserons.<br />
-Notre fonction d’objectif est défini comme étant :</p>
-<div class="math notranslate nohighlight">
-\[ \text{obj} = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\Omega(f_i) \]</div>
-<p>Nous devons chercher premièrement les paramètres de notre arbre. Les structures de nos arbres sont contenus dans les fonctions <span class="math notranslate nohighlight">\(f_i\)</span>. Il s’avère complexe d’optimiser la structure d’un arbre, il ne s’agit pas simplement de problèmes de gradients.<br />
-Ici nous fixons ce que nous avons à apprendre puis nous ajoutons un arbre à la fois. Notre valeur de prédiction avec un pas de <span class="math notranslate nohighlight">\(t\)</span> pour la fonction <span class="math notranslate nohighlight">\(\hat{y}_i^{(t)}\)</span> s’écrit :</p>
-<p>\begin{split}
-\hat{y}_i^{(0)} &amp;= 0\
-\hat{y}_i^{(1)} &amp;= f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)\
-\hat{y}_i^{(2)} &amp;= f_1(x_i) + f_2(x_i)= \hat{y}_i^{(1)} + f_2(x_i)\
-&amp;\dots\
-\hat{y}<em>i^{(t)} &amp;= \sum</em>{k=1}^t f_k(x_i)= \hat{y}_i^{(t-1)} + f_t(x_i)</p>
-<p>\end{split}</p>
-<p>La question qui se pose alors est : quel arbre ajouté après un pas ?. La réponse est l’arbre qui optimise le mieux notre prédiction.</p>
-<p>\begin{split}
-\text{obj}^{(t)} &amp; = \sum_{i=1}^n l(y_i, \hat{y}<em>i^{(t)}) + \sum</em>{i=1}^t\Omega(f_i) \
-&amp; = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t) + \mathrm{constant}
-\end{split}</p>
-<p>Lorsque la mean squared error (MSE) est utilisée, notre fonction d’objectif devient</p>
-<p>\begin{split}
-\text{obj}^{(t)} &amp; = \sum_{i=1}^n (y_i - (\hat{y}<em>i^{(t-1)} + f_t(x_i)))^2 + \sum</em>{i=1}^t\Omega(f_i) \
-&amp; = \sum_{i=1}^n [2(\hat{y}_i^{(t-1)} - y_i)f_t(x_i) + f_t(x_i)^2] + \Omega(f_t) + \mathrm{constant}
-\end{split}</p>
-<p>L’utilisation de la MSE est assez courante avec un résidu et un terme quadratique.
-La fonction d’objectif devient alors :</p>
-<div class="math notranslate nohighlight">
-\[ \text{obj}^{(t)} = \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) + \mathrm{constant} \]</div>
-<p>où <span class="math notranslate nohighlight">\(g_i\)</span> et <span class="math notranslate nohighlight">\(h_i\)</span> sont :</p>
-<p>\begin{split}
-g_i &amp;= \partial_{\hat{y}_i^{(t-1)}} l(y_i, \hat{y}<em>i^{(t-1)})\
-h_i &amp;= \partial</em>{\hat{y}_i^{(t-1)}}^2 l(y_i, \hat{y}_i^{(t-1)})
-\end{split}</p>
-<p>Après supression de toutes les constantes, nous obtenons :</p>
-<div class="math notranslate nohighlight">
-\[\sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)\]</div>
-<p>Cette expression devient notre objectif pour les nouveaux arbres. La valeur de notre prédiction ne va alors dépendre que de <span class="math notranslate nohighlight">\(g_i\)</span> et <span class="math notranslate nohighlight">\(h_i\)</span>. Il est possible d’optimiser chaque loss function en utilisant simplement les mêmes entrées <span class="math notranslate nohighlight">\(g_i\)</span>et <span class="math notranslate nohighlight">\(h_i\)</span>.</p>
-<p>Maintenant que le terme d’entrainement est déterminé, il est nécessaire de définir le terme de régulation qui intervient dans la gestion de la complexité du modèle.<br />
-La complexité de notre arbre est représentée par <span class="math notranslate nohighlight">\(\Omega(f)\)</span> qui est defini par la fonction <span class="math notranslate nohighlight">\(f(x)\)</span> :</p>
-<div class="math notranslate nohighlight">
-\[f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} .\]</div>
-<p>où <span class="math notranslate nohighlight">\(w\)</span> est le  vecteur de score, <span class="math notranslate nohighlight">\(q\)</span> est la fonction qui alloue la bonne feuille et <span class="math notranslate nohighlight">\(T\)</span> le nombre de feuilles.
-Pour la methode XGBoost, nous pouvons définir la complexité du modèle comme étant :</p>
-<div class="math notranslate nohighlight">
-\[ \Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2 \]</div>
-<p>Il existe d’autres façons de définir la complexité du modèle; cependant celle énoncée précédemment s’avère être fonctionnelle et efficace. L’aspect de régulation est souvent sous-estimé voir même ingoré. En définissant la complexité de façon formelle, nous avons un meilleur aperçu de notre modèle et de son niveau de performance.</p>
-<p>Structure du score :</p>
-<p>Mainteant que nous avons défini notre modèle, notre valeur objectif peut s’écrire de la façon suivante :</p>
-<p>\begin{split}
-\text{obj}^{(t)} &amp;\approx \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w_{q(x_i)}^2] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\
-&amp;= \sum^T_{j=1} [(\sum_{i\in I_j} g_i) w_j + \frac{1}{2} (\sum_{i\in I_j} h_i + \lambda) w_j^2 ] + \gamma T
-\end{split}</p>
-<p>où <span class="math notranslate nohighlight">\(I_j = \{i|q(x_i)=j\}\)</span>représentent les indices des nos points dans notre arbre.<br />
-L’expression de notre valeur objectif peut être simplifiée.
-Nous définissons <span class="math notranslate nohighlight">\(G_j = \sum_{i\in I_j} g_i\)</span> et <span class="math notranslate nohighlight">\(H_j = \sum_{i\in I_j} h_i\)</span>; l’expression de notre valeur objectif devient alors :</p>
-<div class="math notranslate nohighlight">
-\[\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T\]</div>
-<p>où les <span class="math notranslate nohighlight">\(w_j\)</span> sont indépendants, <span class="math notranslate nohighlight">\(G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2\)</span> est une expression de la forme quadratique. Pour le meilleur <span class="math notranslate nohighlight">\(w_j\)</span> possible, nous pouvons ecrire :</p>
-<p>\begin{split}
-w_j^\ast &amp;= -\frac{G_j}{H_j+\lambda}\
-\text{obj}^\ast &amp;= -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T
-\end{split}</p>
-<p>C’est la dernière expression qui va déterminer la qualité de notre modèle en évaluant la qualité de la prédiction.</p>
-<p>Après avoir mesuré la qualité de notre modèle, nous allons énumerer le nombre d’arbres possibles afin de choisir le meilleur. C’est probablement impossible à réaliser avec l’infinité de combinaisons possibles. Il faut donc chercher à optimiser l’arbre niveau par niveau. Nous calculons de ce fait le gain entre un arbre et l’autre à l’aide de la formule suivante :</p>
-<div class="math notranslate nohighlight">
-\[ Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma \]</div>
-<p>Ici, nous comparons le gain entre deux nouveaux arbres et celui que nous utilisons actuellement. Si le gain est inferieur au <span class="math notranslate nohighlight">\(\gamma\)</span> il est plus préférable de ne pas ajouter le nouvel arbre.</p>
+  <div class="tex2jax_ignore mathjax_ignore section" id="gradient-boosting">
+<h1>Gradient Boosting<a class="headerlink" href="#gradient-boosting" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="telechargement-des-donnees">
+<h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/train_v1.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pre-processing">
+<h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h2>
+<p>On sépare dans un premier temps les variables explicatives et la variable à expliquer.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Variables explicative</span>
+<span class="n">exp_var</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Décomposition features / target</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">exp_var</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
+
+<span class="n">scaler</span><span class="o">=</span><span class="n">StandardScaler</span><span class="p">()</span> 
+
+<span class="n">X_scal_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_scal_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> 
+
+<span class="n">X_scal_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_scal_train</span><span class="p">,</span><span class="n">index</span><span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">exp_var</span><span class="p">)</span>
+<span class="n">X_scal_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_scal_test</span><span class="p">,</span><span class="n">index</span><span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">exp_var</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="modele">
+<h2>Modèle<a class="headerlink" href="#modele" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">()</span>
+<span class="n">xgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\xgboost\sklearn.py:1224: UserWarning: The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].
+  warnings.warn(label_encoder_deprecation_msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[21:11:38] WARNING: C:/Users/Administrator/workspace/xgboost-win64_release_1.5.1/src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;binary:logistic&#39; was changed from &#39;error&#39; to &#39;logloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;, colsample_bylevel=1,
+              colsample_bynode=1, colsample_bytree=1, enable_categorical=False,
+              gamma=0, gpu_id=-1, importance_type=None,
+              interaction_constraints=&#39;&#39;, learning_rate=0.300000012,
+              max_delta_step=0, max_depth=6, min_child_weight=1, missing=nan,
+              monotone_constraints=&#39;()&#39;, n_estimators=100, n_jobs=8,
+              num_parallel_tree=1, predictor=&#39;auto&#39;, random_state=0,
+              reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+              tree_method=&#39;exact&#39;, validate_parameters=1, verbosity=None)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f1</span> <span class="o">=</span> <span class="n">result_model</span><span class="p">(</span><span class="n">xgb</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.38136377661215676
+</pre></div>
+</div>
+<img alt="../../_images/47_xgboost_11_1.png" src="../../_images/47_xgboost_11_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="tunning">
+<h2>Tunning<a class="headerlink" href="#tunning" title="Permalink to this headline">¶</a></h2>
+<p>Pour tunner le programme, on s’inspire grandement de <a class="reference external" href="https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/#h2_9">ce site</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Import libraries:</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+<span class="kn">from</span> <span class="nn">xgboost.sklearn</span> <span class="kn">import</span> <span class="n">XGBClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>   <span class="c1">#Perforing grid search</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib.pylab</span> <span class="kn">import</span> <span class="n">rcParams</span>
+<span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">4</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;Response&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">modelfit</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="n">dtrain</span><span class="p">,</span> <span class="n">predictors</span><span class="p">,</span> <span class="n">useTrainCV</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cv_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">useTrainCV</span><span class="p">:</span>
+        <span class="n">xgb_param</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">get_xgb_params</span><span class="p">()</span>
+        <span class="n">xgtrain</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">dtrain</span><span class="p">[</span><span class="n">predictors</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">dtrain</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">cvresult</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">xgb_param</span><span class="p">,</span> <span class="n">xgtrain</span><span class="p">,</span> <span class="n">num_boost_round</span><span class="o">=</span><span class="n">alg</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">],</span> <span class="n">nfold</span><span class="o">=</span><span class="n">cv_folds</span><span class="p">,</span>
+            <span class="n">metrics</span><span class="o">=</span><span class="s1">&#39;auc&#39;</span><span class="p">,</span> <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="n">early_stopping_rounds</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">cvresult</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1">#Fit the algorithm on the data</span>
+    <span class="n">alg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dtrain</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span> <span class="n">dtrain</span><span class="p">[</span><span class="n">target</span><span class="p">],</span><span class="n">eval_metric</span><span class="o">=</span><span class="s1">&#39;auc&#39;</span><span class="p">)</span>
+        
+    <span class="c1">#Predict training set:</span>
+    <span class="n">dtrain_predictions</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dtrain</span><span class="p">[</span><span class="n">predictors</span><span class="p">])</span>
+    <span class="n">dtrain_predprob</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">dtrain</span><span class="p">[</span><span class="n">predictors</span><span class="p">])[:,</span><span class="mi">1</span><span class="p">]</span>
+        
+    <span class="c1">#Print model report:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Model Report&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy : &quot;</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">dtrain</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtrain_predictions</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f1 : &quot;</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">dtrain</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtrain_predictions</span><span class="p">))</span>
+                           
+    <span class="c1"># feat_imp = pd.Series(alg.booster().get_fscore()).sort_values(ascending=False)</span>
+    <span class="c1"># feat_imp.plot(kind=&#39;bar&#39;, title=&#39;Feature Importances&#39;)</span>
+    <span class="c1"># plt.ylabel(&#39;Feature Importance Score&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">target</span><span class="p">]]</span>
+<span class="n">xgb1</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span>
+ <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+ <span class="n">n_estimators</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+ <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+ <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+ <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+ <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+ <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span>
+ <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+ <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+ <span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<span class="n">modelfit</span><span class="p">(</span><span class="n">xgb1</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">predictors</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\xgboost\sklearn.py:1224: UserWarning: The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].
+  warnings.warn(label_encoder_deprecation_msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Report
+Accuracy :  0.8117540437166864
+f1 :  0.37099009392803983
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">xgb1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/47_xgboost_17_0.png" src="../../_images/47_xgboost_17_0.png" />
+</div>
+</div>
+<div class="section" id="etape-2">
+<h3>Etape 2<a class="headerlink" href="#etape-2" title="Permalink to this headline">¶</a></h3>
+<p>On tune max_depth et min_child_weight</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test1</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+ <span class="s1">&#39;min_child_weight&#39;</span><span class="p">:</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">gsearch1</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                            <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                            <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span>
+    <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test1</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+ 
+<span class="n">gsearch1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch1</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch1</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\xgboost\sklearn.py:1224: UserWarning: The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].
+  warnings.warn(label_encoder_deprecation_msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[21:54:02] WARNING: C:/Users/Administrator/workspace/xgboost-win64_release_1.5.1/src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;binary:logistic&#39; was changed from &#39;error&#39; to &#39;logloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;max_depth&#39;: 9, &#39;min_child_weight&#39;: 3}, 0.3899452945843579)
+</pre></div>
+</div>
+</div>
+</div>
+<p>On teste entre les deux, un peu plus haut et un peu plus bas</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test2</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;max_depth&#39;</span><span class="p">:[</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+ <span class="s1">&#39;min_child_weight&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="n">gsearch2</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                                    <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                                    <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
+            <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gsearch2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch2</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch2</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\xgboost\sklearn.py:1224: UserWarning: The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].
+  warnings.warn(label_encoder_deprecation_msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[22:14:57] WARNING: C:/Users/Administrator/workspace/xgboost-win64_release_1.5.1/src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;binary:logistic&#39; was changed from &#39;error&#39; to &#39;logloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;max_depth&#39;: 10, &#39;min_child_weight&#39;: 4}, 0.39362544382840425)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Si on est à une valeur optimale on peut tester plus haut</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test2b</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;max_depth&#39;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
+    <span class="s1">&#39;min_child_weight&#39;</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="n">gsearch2b</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                    <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                                    <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
+ <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test2b</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gsearch2b</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch2b</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch2b</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="etape-3-gamma">
+<h3>Etape 3 : Gamma<a class="headerlink" href="#etape-3-gamma" title="Permalink to this headline">¶</a></h3>
+<p>Now lets tune gamma value using the parameters already tuned above. Gamma can take various values but I’ll check for 5 values here. You can go into more precise values as.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test3</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;gamma&#39;</span><span class="p">:[</span><span class="n">i</span><span class="o">/</span><span class="mf">10.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)]</span>
+<span class="p">}</span>
+<span class="n">gsearch3</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+ <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+ <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
+ <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test3</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gsearch3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch3</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch3</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This shows that our original value of gamma, i.e. 0 is the optimum one. Before proceeding, a good idea would be to re-calibrate the number of boosting rounds for the updated parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb2</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span>
+ <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+ <span class="n">n_estimators</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+ <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+ <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+ <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+ <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+ <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span>
+ <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+ <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+ <span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<span class="n">modelfit</span><span class="p">(</span><span class="n">xgb2</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">predictors</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">xgb2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="etape-4-tune-subsample-et-colsample-bytree">
+<h3>Etape 4 : Tune subsample et colsample_bytree<a class="headerlink" href="#etape-4-tune-subsample-et-colsample-bytree" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test4</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;subsample&#39;</span><span class="p">:[</span><span class="n">i</span><span class="o">/</span><span class="mf">10.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">)],</span>
+ <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">:[</span><span class="n">i</span><span class="o">/</span><span class="mf">10.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">)]</span>
+<span class="p">}</span>
+<span class="n">gsearch4</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">177</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                    <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                                    <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
+            <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test4</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gsearch4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch4</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch4</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here, we found 0.8 as the optimum value for both subsample and colsample_bytree. Now we should try values in 0.05 interval around these.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test5</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;subsample&#39;</span><span class="p">:[</span><span class="n">i</span><span class="o">/</span><span class="mf">100.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">5</span><span class="p">)],</span>
+ <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">:[</span><span class="n">i</span><span class="o">/</span><span class="mf">100.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">5</span><span class="p">)]</span>
+<span class="p">}</span>
+<span class="n">gsearch5</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">177</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+ <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+ <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
+ <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gsearch5</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch5</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch5</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="step-5-tuning-regularization-parameters">
+<h3>Step 5: Tuning Regularization Parameters<a class="headerlink" href="#step-5-tuning-regularization-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Next step is to apply regularization to reduce overfitting. Though many people don’t use this parameters much as gamma provides a substantial way of controlling complexity. But we should always try it. I’ll tune ‘reg_alpha’ value here and leave it upto you to try different values of ‘reg_lambda’.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test6</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;reg_alpha&#39;</span><span class="p">:[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="n">gsearch6</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">177</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                 <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                                 <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
+ <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test6</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gsearch6</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">gsearch6</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch6</span><span class="o">.</span><span class="n">best_score_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># &quot;learning_rate&quot;: 0.003,</span>
+    <span class="c1"># &quot;max_depth&quot;: 5,</span>
+    <span class="c1"># &quot;eta&quot;:0.01, </span>
+    <span class="c1"># &quot;nfold&quot;:5,</span>
+    <span class="c1"># &quot;nrounds&quot;:716</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch1</span><span class="o">.</span><span class="n">grid_scores_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="o">~</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Temp</span><span class="o">/</span><span class="n">ipykernel_13192</span><span class="o">/</span><span class="mf">1720614774.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">gsearch1</span><span class="o">.</span><span class="n">grid_scores_</span>
+
+<span class="ne">AttributeError</span>: &#39;GridSearchCV&#39; object has no attribute &#39;grid_scores_&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># &quot;learning_rate&quot;: 0.003,</span>
+    <span class="c1"># &quot;max_depth&quot;: 5,</span>
+    <span class="c1"># &quot;eta&quot;:0.01, </span>
+    <span class="c1"># &quot;nfold&quot;:5,</span>
+    <span class="c1"># &quot;nrounds&quot;:716</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">xgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.38136377661215676
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgbcv</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span> <span class="n">params</span> <span class="o">=</span> <span class="n">xgb_params</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">dbTrain</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="s2">&quot;rmse&quot;</span><span class="p">,</span>
+                 <span class="n">nrounds</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">nfold</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span>
+<span class="c1"># print(xgbcv)</span>
+<span class="c1"># plot(xgbcv$evaluation_log$test_rmse_mean, type = &#39;l&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">xgb</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/47_xgboost_45_0.png" src="../../_images/47_xgboost_45_0.png" />
+</div>
+</div>
+<p>Puis, nous pouvons directement entrainer le modèle et l’afficher grâce à notre fonction <em>result_model</em>.</p>
+<p>Le F1-score n’est pas satisfaisant ce qui est évident au regard de la matrice de confusion. Tout est prédit en positif.</p>
+<p><br><br><br><br></p>
+</div>
 </div>
 </div>
 

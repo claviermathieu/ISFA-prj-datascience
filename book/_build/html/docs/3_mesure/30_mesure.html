@@ -150,7 +150,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../4_modeles/47_xgboost.html">
-     XGBoost
+     Gradient Boosting
     </a>
    </li>
   </ul>
@@ -224,6 +224,11 @@
    Comparer les modèles
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion">
+   Conclusion
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -249,8 +254,10 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 \[
 \text{précision} = \frac{VP}{(VP + FP)} \qquad et \qquad \text{rappel} = \frac{VP}{(VP + FN)}
 \]</div>
+<br>
+<p>Nous chercherons donc par la suite à optimiser le F1-Score.</p>
 <p><br><br></p>
-<p><strong>Sur Python</strong></p>
+<p><strong>Implémentation Python</strong></p>
 <p>Le package <em>sklearn</em> permet d’introduire beaucoup de mesures. La mesure f1_score est notamment disponible.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -267,16 +274,50 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 <li><p>accuracy_score</p></li>
 <li><p>r2_score</p></li>
 </ul>
-</div>
-<div class="section" id="comparer-les-modeles">
-<h2>Comparer les modèles<a class="headerlink" href="#comparer-les-modeles" title="Permalink to this headline">¶</a></h2>
+<p>Nous utiliserons simplement en plus la matrice de confusion pour avoir un élément plus visuel.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;bonjour&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
 </pre></div>
 </div>
 </div>
 </div>
+</div>
+<div class="section" id="comparer-les-modeles">
+<h2>Comparer les modèles<a class="headerlink" href="#comparer-les-modeles" title="Permalink to this headline">¶</a></h2>
+<p>Nous implémentons dans un premier temps une fonction permettant de facilement calculer le F1-Score en donnant à la fonction :</p>
+<ul class="simple">
+<li><p>Un modèle</p></li>
+<li><p>X test</p></li>
+<li><p>Y test</p></li>
+</ul>
+<p>Nous affichons par la même occation la matrice de confusion.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
+    
+   <span class="c1"># Matrice de confusion</span>
+    <span class="n">cm_model</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_model</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_model</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span><span class="p">(</span><span class="n">Y_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>On rappelle qu’une matrice de confusion donne abscisse les valeurs réelles et en ordonnées les prédites ce qui permet de connaître les faux positif, les vrais positifs etc…</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>Maintenant que nous avons les outils pour mesurer l’efficacité de nos modèles et les base de données préparées, nous pouvons passer à l’implémentation.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
 

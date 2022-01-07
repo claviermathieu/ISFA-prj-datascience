@@ -148,7 +148,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="47_xgboost.html">
-     XGBoost
+     Gradient Boosting
     </a>
    </li>
   </ul>
@@ -213,23 +213,13 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#packages">
-   Packages
+  <a class="reference internal nav-link" href="#telechargement-des-donnees">
+   Téléchargement des données
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#donnees">
-   Données
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preprocess">
-   Preprocess
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#mesures">
-   Mesures
+  <a class="reference internal nav-link" href="#pre-processing">
+   Pre-processing
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -250,180 +240,19 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="logistique">
 <h1>Logistique<a class="headerlink" href="#logistique" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="packages">
-<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="telechargement-des-donnees">
+<h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">cross_val_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span><span class="n">accuracy_score</span><span class="p">,</span><span class="n">r2_score</span><span class="p">,</span> <span class="n">matthews_corrcoef</span><span class="p">,</span> <span class="n">make_scorer</span>
-
-
-<span class="c1"># Personnal lib</span>
-<span class="kn">import</span> <span class="nn">lib.data</span> <span class="k">as</span> <span class="nn">data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/train_v2.csv&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="section" id="donnees">
-<h2>Données<a class="headerlink" href="#donnees" title="Permalink to this headline">¶</a></h2>
-<p>Pour le moment, les données sont importées directement d’un csv.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;train_log.csv&#39;</span><span class="p">)</span>
-<span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Driving_License</th>
-      <th>Region_Code</th>
-      <th>Previously_Insured</th>
-      <th>Vehicle_Damage</th>
-      <th>Annual_Premium</th>
-      <th>Vintage</th>
-      <th>VAge1</th>
-      <th>VAge2</th>
-      <th>VAge3</th>
-      <th>VPolicy0</th>
-      <th>VPolicy1</th>
-      <th>VPolicy2</th>
-      <th>VPolicy3</th>
-      <th>Response</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>30</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>1</td>
-      <td>26891</td>
-      <td>270</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>28</td>
-      <td>1</td>
-      <td>28</td>
-      <td>1</td>
-      <td>0</td>
-      <td>45434</td>
-      <td>146</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0</td>
-      <td>32</td>
-      <td>1</td>
-      <td>47</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2630</td>
-      <td>195</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0</td>
-      <td>54</td>
-      <td>1</td>
-      <td>28</td>
-      <td>0</td>
-      <td>0</td>
-      <td>41420</td>
-      <td>121</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>45</td>
-      <td>1</td>
-      <td>36</td>
-      <td>0</td>
-      <td>1</td>
-      <td>32764</td>
-      <td>185</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-</div>
-<div class="section" id="preprocess">
-<h2>Preprocess<a class="headerlink" href="#preprocess" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pre-processing">
+<h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h2>
+<p>On sépare dans un premier temps les variables explicatives et la variable à expliquer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Variables explicative</span>
@@ -432,8 +261,14 @@
 <span class="c1"># Décomposition features / target</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">exp_var</span><span class="p">]</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span>
-
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
 
 <span class="n">scaler</span><span class="o">=</span><span class="n">StandardScaler</span><span class="p">()</span> 
 
@@ -447,86 +282,28 @@
 </div>
 </div>
 </div>
-<div class="section" id="mesures">
-<h2>Mesures<a class="headerlink" href="#mesures" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f1_scorer</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_clf</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">score</span>
-
-
-<span class="k">def</span> <span class="nf">cv_f1_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">score</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
-    
-    <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;F1 cross validé :&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">score</span><span class="p">))</span>
-    
-   <span class="c1"># Matrice de confusion</span>
-    <span class="n">cm_model</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_model</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_model</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    
-    <span class="k">return</span><span class="p">(</span><span class="n">Y_model</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
 <div class="section" id="modele">
 <h2>Modèle<a class="headerlink" href="#modele" title="Permalink to this headline">¶</a></h2>
+<p>Puis, nous pouvons directement entrainer le modèle et l’afficher grâce à notre fonction <em>result_model</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-<span class="n">result_model</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scal_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+<span class="n">result_model</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_scal_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\sklearn\linear_model\_logistic.py:814: ConvergenceWarning: lbfgs failed to converge (status=1):
-STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.
-
-Increase the number of iterations (max_iter) or scale the data as shown in:
-    https://scikit-learn.org/stable/modules/preprocessing.html
-Please also refer to the documentation for alternative solver options:
-    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
-  n_iter_i = _check_optimize_result(
-C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\sklearn\linear_model\_logistic.py:814: ConvergenceWarning: lbfgs failed to converge (status=1):
-STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.
-
-Increase the number of iterations (max_iter) or scale the data as shown in:
-    https://scikit-learn.org/stable/modules/preprocessing.html
-Please also refer to the documentation for alternative solver options:
-    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
-  n_iter_i = _check_optimize_result(
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 1.0
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.3127962085308057
-F1 cross validé : 0.3150134825465126
-</pre></div>
-</div>
-<img alt="../../_images/41_logistique_13_2.png" src="../../_images/41_logistique_13_2.png" />
+<img alt="../../_images/41_logistique_11_1.png" src="../../_images/41_logistique_11_1.png" />
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0, 0, 1, ..., 0, 0, 0], dtype=int64)
 </pre></div>
 </div>
 </div>
 </div>
+<p>Le F1-score n’est pas satisfaisant ce qui est évident au regard de la matrice de confusion. Tout est prédit en positif.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
 
