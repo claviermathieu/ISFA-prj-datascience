@@ -3,11 +3,13 @@
 
 # # Description des données
 
+# Dans un premier temps, nous cherchons à comprendre le jeu de données mis à disposition.
+
 # ## Packages
 
 # Voici la liste des packages utilisés pour étudier les données.
 
-# In[13]:
+# In[2]:
 
 
 import pandas as pd
@@ -20,19 +22,18 @@ import seaborn as sns
 
 # ## Importation
 
-# Dans un premier temps, nous importons les données.
+# Importation des données brutes.
 
-# In[2]:
+# In[4]:
 
 
-test = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_test.csv")
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_train.csv")
 train.head()
 
 
 # ## Pandas profiling
 # 
-# Avant de commencer une analyse manuelle des variables, on utilise la librairie *pandas_profiling* pour avoir une première analyse rapide de notre jeu de données.
+# Avant de commencer une analyse manuelle des variables, nous utilisons la librairie *pandas_profiling* pour avoir une première analyse rapide de notre jeu de données.
 
 # In[18]:
 
@@ -42,6 +43,26 @@ profile.to_file("data_desc.html")
 
 
 # Le rapport de *pandas_profiling* est <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html">disponible ici</a>.
+
+# ## Analyse manuelle
+
+# ### Information
+
+# Voicil la liste des variables présentent dans le jeu de données
+
+# In[6]:
+
+
+train.info()
+
+
+# Nous pouvons constater qu'il y a 66 641 lignes et qu'il n'y a aucune valeur manquante.
+
+# In[8]:
+
+
+train.describe().round(2)
+
 
 # ## Types
 # 
