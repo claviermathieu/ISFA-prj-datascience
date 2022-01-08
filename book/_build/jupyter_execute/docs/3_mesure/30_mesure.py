@@ -73,18 +73,19 @@ from sklearn.metrics import confusion_matrix
 # In[7]:
 
 
-def result_model(model,X,Y) :
-    Y_model =model.predict(X)
+def result_model(model,X,Y, mat = True) :
+    Y_model = model.predict(X)
 
     f1_scor = f1_score(Y,Y_model)
     print('Le f1 score vaut',f1_scor)
     
-   # Matrice de confusion
-    cm_model = confusion_matrix(Y, Y_model)
-    plt.rcParams['figure.figsize'] = (5, 5)
-    sns.heatmap(cm_model, annot = True)
-    plt.title(str(model))
-    plt.show()
+    if mat:
+    # Matrice de confusion
+        cm_model = confusion_matrix(Y, Y_model)
+        plt.rcParams['figure.figsize'] = (5, 5)
+        sns.heatmap(cm_model, annot = True)
+        plt.title(str(model))
+        plt.show()
     
     return(Y_model)
 

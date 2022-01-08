@@ -233,6 +233,11 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-1-initialisation">
+     Étape 1 : Initialisation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#etape-2-max-depth-et-min-child-weight">
      Étape 2 : max_depth et min_child_weight
     </a>
@@ -324,34 +329,17 @@
 </div>
 <div class="section" id="implementation">
 <h2>Implémentation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb0</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="n">use_label_encoder</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">xgb0</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[11:11:19] WARNING: C:/Users/Administrator/workspace/xgboost-win64_release_1.5.1/src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;binary:logistic&#39; was changed from &#39;error&#39; to &#39;logloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;, colsample_bylevel=1,
-              colsample_bynode=1, colsample_bytree=1, enable_categorical=False,
-              gamma=0, gpu_id=-1, importance_type=None,
-              interaction_constraints=&#39;&#39;, learning_rate=0.300000012,
-              max_delta_step=0, max_depth=6, min_child_weight=1, missing=nan,
-              monotone_constraints=&#39;()&#39;, n_estimators=100, n_jobs=8,
-              num_parallel_tree=1, predictor=&#39;auto&#39;, random_state=0,
-              reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
-              tree_method=&#39;exact&#39;, use_label_encoder=False,
-              validate_parameters=1, verbosity=None)
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f1</span> <span class="o">=</span> <span class="n">result_model</span><span class="p">(</span><span class="n">xgb0</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_model</span><span class="p">(</span><span class="n">xgb0</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -374,27 +362,7 @@ Nous utilisons la fonction GridSearchCV de <em>sklearn</em>.</p>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bloc non affiché</span>
-
-<span class="c1">#Import libraries:</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
-<span class="kn">from</span> <span class="nn">xgboost.sklearn</span> <span class="kn">import</span> <span class="n">XGBClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>   <span class="c1">#Perforing grid search</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib.pylab</span> <span class="kn">import</span> <span class="n">rcParams</span>
-<span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">4</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;Response&#39;</span>
 <span class="n">predictors</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">target</span><span class="p">]]</span>
@@ -437,6 +405,8 @@ Nous utilisons la fonction GridSearchCV de <em>sklearn</em>.</p>
 </div>
 </div>
 </div>
+<div class="section" id="etape-1-initialisation">
+<h3>Étape 1 : Initialisation<a class="headerlink" href="#etape-1-initialisation" title="Permalink to this headline">¶</a></h3>
 <p>On modifie quelques paramètres de base au regard des TP réalisés.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -463,7 +433,8 @@ Accuracy :  0.809403849403235
 f1 :  0.3475654642969818
 </pre></div>
 </div>
-<img alt="../../_images/47_xgboost_22_1.png" src="../../_images/47_xgboost_22_1.png" />
+<img alt="../../_images/47_xgboost_23_1.png" src="../../_images/47_xgboost_23_1.png" />
+</div>
 </div>
 </div>
 <div class="section" id="etape-2-max-depth-et-min-child-weight">
@@ -487,7 +458,8 @@ f1 :  0.3475654642969818
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<p>Nous utilisons l’outil gsearch de <em>sklearn</em> pour tester différents paramètres en ayant comme mesure de scoring le F1-Score. Voici l’implémentation qui sera masquée par la suite.</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch1</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
     <span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">),</span>
@@ -497,33 +469,8 @@ f1 :  0.3475654642969818
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;,
-                                     colsample_bylevel=1, colsample_bynode=1,
-                                     colsample_bytree=1,
-                                     enable_categorical=False, gamma=0,
-                                     gpu_id=-1, importance_type=None,
-                                     interaction_constraints=&#39;&#39;,
-                                     learning_rate=0.300000012,
-                                     max_delta_step=0, max_depth=6,
-                                     min_child_weight=1, missing=nan,
-                                     monotone_constraints=&#39;()&#39;,
-                                     n_estimators=140, n_jobs=8, nthread=7,
-                                     num_parallel_tree=1, predictor=&#39;auto&#39;,
-                                     random_state=0, reg_alpha=0, reg_lambda=1,
-                                     scale_pos_weight=1, seed=27, subsample=1,
-                                     tree_method=&#39;exact&#39;,
-                                     use_label_encoder=False,
-                                     validate_parameters=1, ...),
-             n_jobs=4,
-             param_grid={&#39;max_depth&#39;: range(3, 10, 2),
-                         &#39;min_child_weight&#39;: range(1, 6)},
-             scoring=&#39;f1&#39;)
-</pre></div>
 </div>
-</div>
-</div>
+<p>On récupère les paramètres optimaux identifiés.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch1</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch1</span><span class="o">.</span><span class="n">best_score_</span>
@@ -546,7 +493,7 @@ f1 :  0.3475654642969818
 </div>
 </div>
 <p>Étant à la limite sur les deux paramètres, nous testons avec des paramètres plus forts.</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test2</span> <span class="o">=</span> <span class="p">{</span>
 <span class="s1">&#39;max_depth&#39;</span><span class="p">:[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">],</span>
@@ -561,39 +508,8 @@ f1 :  0.3475654642969818
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;,
-                                     colsample_bylevel=1, colsample_bynode=1,
-                                     colsample_bytree=1,
-                                     enable_categorical=False, gamma=0,
-                                     gpu_id=-1, importance_type=None,
-                                     interaction_constraints=&#39;&#39;,
-                                     learning_rate=0.300000012,
-                                     max_delta_step=0, max_depth=9,
-                                     min_child_weight=5, missing=nan,
-                                     monotone_constraints=&#39;()&#39;,
-                                     n_estimators=140, n_jobs=8, nthread=7,
-                                     num_parallel_tree=1, predictor=&#39;auto&#39;,
-                                     random_state=0, reg_alpha=0, reg_lambda=1,
-                                     scale_pos_weight=1, seed=27, subsample=1,
-                                     tree_method=&#39;exact&#39;,
-                                     use_label_encoder=False,
-                                     validate_parameters=1, ...),
-             n_jobs=4,
-             param_grid={&#39;max_depth&#39;: [9, 20, 45, 50, 75],
-                         &#39;min_child_weight&#39;: [5, 10, 20]},
-             scoring=&#39;f1&#39;)
-</pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch2</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch2</span><span class="o">.</span><span class="n">best_score_</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;max_depth&#39;: 50, &#39;min_child_weight&#39;: 5}, 0.41722053132398057)
 </pre></div>
@@ -617,46 +533,7 @@ f1 :  0.3475654642969818
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch2b</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
-                <span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">),</span> 
-                <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test2b</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="n">gsearch2b</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;,
-                                     colsample_bylevel=1, colsample_bynode=1,
-                                     colsample_bytree=1,
-                                     enable_categorical=False, gamma=0,
-                                     gpu_id=-1, importance_type=None,
-                                     interaction_constraints=&#39;&#39;,
-                                     learning_rate=0.300000012,
-                                     max_delta_step=0, max_depth=50,
-                                     min_child_weight=5, missing=nan,
-                                     monotone_constraints=&#39;()&#39;,
-                                     n_estimators=140, n_jobs=8, nthread=7,
-                                     num_parallel_tree=1, predictor=&#39;auto&#39;,
-                                     random_state=0, reg_alpha=0, reg_lambda=1,
-                                     scale_pos_weight=1, seed=27, subsample=1,
-                                     tree_method=&#39;exact&#39;,
-                                     use_label_encoder=False,
-                                     validate_parameters=1, ...),
-             n_jobs=4, param_grid={&#39;max_depth&#39;: [45, 50, 55]}, scoring=&#39;f1&#39;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch2b</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch2b</span><span class="o">.</span><span class="n">best_score_</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;max_depth&#39;: 50}, 0.41722053132398057)
 </pre></div>
@@ -682,7 +559,7 @@ f1 :  0.3475654642969818
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch3</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">),</span> 
                         <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test3</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -691,37 +568,8 @@ f1 :  0.3475654642969818
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;,
-                                     colsample_bylevel=1, colsample_bynode=1,
-                                     colsample_bytree=1,
-                                     enable_categorical=False, gamma=0,
-                                     gpu_id=-1, importance_type=None,
-                                     interaction_constraints=&#39;&#39;,
-                                     learning_rate=0.300000012,
-                                     max_delta_step=0, max_depth=50,
-                                     min_child_weight=5, missing=nan,
-                                     monotone_constraints=&#39;()&#39;,
-                                     n_estimators=140, n_jobs=8, nthread=7,
-                                     num_parallel_tree=1, predictor=&#39;auto&#39;,
-                                     random_state=0, reg_alpha=0, reg_lambda=1,
-                                     scale_pos_weight=1, seed=27, subsample=1,
-                                     tree_method=&#39;exact&#39;,
-                                     use_label_encoder=False,
-                                     validate_parameters=1, ...),
-             n_jobs=4, param_grid={&#39;gamma&#39;: [0.0, 0.1, 0.2, 0.3, 0.4]},
-             scoring=&#39;f1&#39;)
-</pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch3</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch3</span><span class="o">.</span><span class="n">best_score_</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;gamma&#39;: 0.0}, 0.41722053132398057)
 </pre></div>
@@ -745,7 +593,7 @@ Accuracy :  0.8635658438426445
 f1 :  0.6138260869565217
 </pre></div>
 </div>
-<img alt="../../_images/47_xgboost_48_1.png" src="../../_images/47_xgboost_48_1.png" />
+<img alt="../../_images/47_xgboost_51_1.png" src="../../_images/47_xgboost_51_1.png" />
 </div>
 </div>
 </div>
@@ -770,95 +618,14 @@ f1 :  0.6138260869565217
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch4</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
-    <span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">),</span> 
-    <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test4</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-    
-<span class="n">gsearch4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;,
-                                     colsample_bylevel=1, colsample_bynode=1,
-                                     colsample_bytree=1,
-                                     enable_categorical=False, gamma=0,
-                                     gpu_id=-1, importance_type=None,
-                                     interaction_constraints=&#39;&#39;,
-                                     learning_rate=0.300000012,
-                                     max_delta_step=0, max_depth=50,
-                                     min_child_weight=5, missing=nan,
-                                     monotone_constraints=&#39;()&#39;,
-                                     n_estimators=140, n_jobs=8, nthread=7,
-                                     num_parallel_tree=1, predictor=&#39;auto&#39;,
-                                     random_state=0, reg_alpha=0, reg_lambda=1,
-                                     scale_pos_weight=1, seed=27, subsample=1,
-                                     tree_method=&#39;exact&#39;,
-                                     use_label_encoder=False,
-                                     validate_parameters=1, ...),
-             n_jobs=4,
-             param_grid={&#39;colsample_bytree&#39;: [0.6, 0.7, 0.8, 0.9],
-                         &#39;subsample&#39;: [0.6, 0.7, 0.8, 0.9]},
-             scoring=&#39;f1&#39;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch4</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch4</span><span class="o">.</span><span class="n">best_score_</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;colsample_bytree&#39;: 0.9, &#39;subsample&#39;: 0.7}, 0.42095524066535334)
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;objective&#39;: &#39;binary:logistic&#39;,
- &#39;base_score&#39;: 0.5,
- &#39;booster&#39;: &#39;gbtree&#39;,
- &#39;colsample_bylevel&#39;: 1,
- &#39;colsample_bynode&#39;: 1,
- &#39;colsample_bytree&#39;: 0.9,
- &#39;gamma&#39;: 0,
- &#39;gpu_id&#39;: -1,
- &#39;interaction_constraints&#39;: &#39;&#39;,
- &#39;learning_rate&#39;: 0.300000012,
- &#39;max_delta_step&#39;: 0,
- &#39;max_depth&#39;: 50,
- &#39;min_child_weight&#39;: 5,
- &#39;monotone_constraints&#39;: &#39;()&#39;,
- &#39;n_jobs&#39;: 8,
- &#39;num_parallel_tree&#39;: 1,
- &#39;predictor&#39;: &#39;auto&#39;,
- &#39;random_state&#39;: 0,
- &#39;reg_alpha&#39;: 0,
- &#39;reg_lambda&#39;: 1,
- &#39;scale_pos_weight&#39;: 1,
- &#39;subsample&#39;: 0.7,
- &#39;tree_method&#39;: &#39;exact&#39;,
- &#39;validate_parameters&#39;: 1,
- &#39;verbosity&#39;: None,
- &#39;seed&#39;: 27,
- &#39;nthread&#39;: 7,
- &#39;use_label_encoder&#39;: False,
- &#39;n_estimators&#39;: 140}
-</pre></div>
-</div>
-</div>
-</div>
+<p>Nous modifions les paramètres identifiés</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;subsample&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.7</span>
@@ -867,7 +634,7 @@ f1 :  0.6138260869565217
 </div>
 </div>
 </div>
-<p>Here, we found 0.8 as the optimum value for both subsample and colsample_bytree. Now we should try values in 0.05 interval around these.</p>
+<p>Nous affinons les tests sur ces paramètres.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test5</span> <span class="o">=</span> <span class="p">{</span>
@@ -878,60 +645,18 @@ f1 :  0.6138260869565217
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch5</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
-                <span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">),</span> 
-                <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="n">gsearch5</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=0.5, booster=&#39;gbtree&#39;,
-                                     colsample_bylevel=1, colsample_bynode=1,
-                                     colsample_bytree=0.9,
-                                     enable_categorical=False, gamma=0,
-                                     gpu_id=-1, importance_type=None,
-                                     interaction_constraints=&#39;&#39;,
-                                     learning_rate=0.300000012,
-                                     max_delta_step=0, max_depth=50,
-                                     min_child_weight=5, missing=nan,
-                                     monotone_constraints=&#39;()&#39;,
-                                     n_estimators=140, n_jobs=8, nthread=7,
-                                     num_parallel_tree=1, predictor=&#39;auto&#39;,
-                                     random_state=0, reg_alpha=0, reg_lambda=1,
-                                     scale_pos_weight=1, seed=27, subsample=0.7,
-                                     tree_method=&#39;exact&#39;,
-                                     use_label_encoder=False,
-                                     validate_parameters=1, ...),
-             n_jobs=4,
-             param_grid={&#39;colsample_bytree&#39;: [0.85, 0.9, 0.95],
-                         &#39;subsample&#39;: [0.65, 0.7, 0.75]},
-             scoring=&#39;f1&#39;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch5</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch5</span><span class="o">.</span><span class="n">best_score_</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;colsample_bytree&#39;: 0.9, &#39;subsample&#39;: 0.7}, 0.42095524066535334)
 </pre></div>
 </div>
 </div>
 </div>
-<p>Cela confirme les vqleurs 0.9 et 0.7 trouvées précédemment.</p>
+<p>Cela confirme les valeurs 0.9 et 0.7 trouvées précédemment.</p>
 </div>
 <div class="section" id="etape-5-reg-alpha">
 <h3>Étape 5 : reg_alpha<a class="headerlink" href="#etape-5-reg-alpha" title="Permalink to this headline">¶</a></h3>
-<p>Next step is to apply regularization to reduce overfitting. Though many people don’t use this parameters much as gamma provides a substantial way of controlling complexity. But we should always try it. I’ll tune ‘reg_alpha’ value here and leave it upto you to try different values of ‘reg_lambda’.</p>
+<p>Prochaine étape : optimisation de <em>reg_alpha</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_test6</span> <span class="o">=</span> <span class="p">{</span>
@@ -941,56 +666,14 @@ f1 :  0.6138260869565217
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch6</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">learning_rate</span> <span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">177</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                                 <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-                                 <span class="n">objective</span><span class="o">=</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">27</span><span class="p">),</span> 
-                        <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_test6</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">gsearch6</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">predictors</span><span class="p">],</span><span class="n">train</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mathi\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\xgboost\sklearn.py:1224: UserWarning: The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].
-  warnings.warn(label_encoder_deprecation_msg, UserWarning)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GridSearchCV(cv=5,
-             estimator=XGBClassifier(base_score=None, booster=None,
-                                     colsample_bylevel=None,
-                                     colsample_bynode=None,
-                                     colsample_bytree=0.9,
-                                     enable_categorical=False, gamma=0.1,
-                                     gpu_id=None, importance_type=None,
-                                     interaction_constraints=None,
-                                     learning_rate=0.1, max_delta_step=None,
-                                     max_depth=50, min_child_weight=4,
-                                     missing=nan, monotone_constraints=None,
-                                     n_estimators=177, n_jobs=None, nthread=7,
-                                     num_parallel_tree=None, predictor=None,
-                                     random_state=None, reg_alpha=None,
-                                     reg_lambda=None, scale_pos_weight=1,
-                                     seed=27, subsample=0.8, tree_method=None,
-                                     validate_parameters=None, verbosity=None),
-             n_jobs=4, param_grid={&#39;reg_alpha&#39;: [1e-05, 0.01, 0.1, 1, 100]},
-             scoring=&#39;f1&#39;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsearch6</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">gsearch6</span><span class="o">.</span><span class="n">best_score_</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;reg_alpha&#39;: 1e-05}, 0.41076480565646045)
 </pre></div>
 </div>
 </div>
 </div>
+<p>On modifie le paramètre.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;reg_alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-5</span>
@@ -1014,12 +697,13 @@ Accuracy :  0.8651326400516121
 f1 :  0.6105048354183302
 </pre></div>
 </div>
-<img alt="../../_images/47_xgboost_70_1.png" src="../../_images/47_xgboost_70_1.png" />
+<img alt="../../_images/47_xgboost_74_1.png" src="../../_images/47_xgboost_74_1.png" />
 </div>
 </div>
 </div>
 <div class="section" id="etape-6-learning-rate">
 <h3>Etape 6 : Learning rate<a class="headerlink" href="#etape-6-learning-rate" title="Permalink to this headline">¶</a></h3>
+<p>Enfin, nous essayons de diminuer le <em>learning_rate</em> et d’augmenter grandement les <em>n_estimators</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_estimators&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5000</span>
@@ -1028,7 +712,6 @@ f1 :  0.6105048354183302
 </div>
 </div>
 </div>
-<p>Lastly, we should lower the learning rate and add more trees. Lets use the cv function of XGBoost to do the job again.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb4</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
@@ -1043,7 +726,7 @@ Accuracy :  0.8634275971183238
 f1 :  0.5663984394050231
 </pre></div>
 </div>
-<img alt="../../_images/47_xgboost_74_1.png" src="../../_images/47_xgboost_74_1.png" />
+<img alt="../../_images/47_xgboost_78_1.png" src="../../_images/47_xgboost_78_1.png" />
 </div>
 </div>
 <p>Le F1-Score ne s’améliore pas, nous revenons aux anciens paramètres.</p>
@@ -1060,12 +743,7 @@ f1 :  0.5663984394050231
 <div class="section" id="parametres-finaux">
 <h2>Paramètres finaux<a class="headerlink" href="#parametres-finaux" title="Permalink to this headline">¶</a></h2>
 <p>Au final, les paramètres obtenus sont :</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;objective&#39;: &#39;binary:logistic&#39;,
  &#39;base_score&#39;: 0.5,

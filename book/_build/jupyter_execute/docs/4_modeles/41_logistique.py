@@ -15,9 +15,6 @@ import seaborn as sns
 import pandas as pd
 
 
-# In[2]:
-
-
 def result_model(model,X,Y) :
     Y_model =model.predict(X)
 
@@ -96,3 +93,6 @@ print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.
 # ## Conclusion
 
 # Le résultat est, sans surprise majeure, peu satisfaisant, la régression logistique (qui, on rappelle, est l'équivalent de la régression linéaire en classification) n'est pas un modèle robuste, peu adapté à l'étude de données complexes. Si la précision naïve (% de bonnes précisions/% de mauvaises) est sauvée par l'importante proportion de Response = 0 ce n'est pas le cas du le f1_score. On constate que le modèle est très déséquilibré et tend à presque tout classer dans la catégorie 0. 
+# 
+# 
+# <br><br><br><br>

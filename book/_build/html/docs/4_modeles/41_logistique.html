@@ -243,42 +243,7 @@
         
               <div>
                 
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
-    
-   <span class="c1"># Matrice de confusion</span>
-    <span class="n">cm_model</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_model</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_model</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    
-    <span class="k">return</span><span class="p">(</span><span class="n">Y_model</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="logistique">
+  <div class="tex2jax_ignore mathjax_ignore section" id="logistique">
 <h1>Logistique<a class="headerlink" href="#logistique" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="telechargement-des-donnees">
 <h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
@@ -332,11 +297,11 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.19243156199677938
 </pre></div>
 </div>
-<img alt="../../_images/41_logistique_10_1.png" src="../../_images/41_logistique_10_1.png" />
+<img alt="../../_images/41_logistique_9_1.png" src="../../_images/41_logistique_9_1.png" />
 </div>
 </div>
 <p>En testant avec de la cross-validation les résultats ne sont améliorés.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_scal</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
@@ -356,6 +321,7 @@
 <div class="section" id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
 <p>Le résultat est, sans surprise majeure, peu satisfaisant, la régression logistique (qui, on rappelle, est l’équivalent de la régression linéaire en classification) n’est pas un modèle robuste, peu adapté à l’étude de données complexes. Si la précision naïve (% de bonnes précisions/% de mauvaises) est sauvée par l’importante proportion de Response = 0 ce n’est pas le cas du le f1_score. On constate que le modèle est très déséquilibré et tend à presque tout classer dans la catégorie 0.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
 

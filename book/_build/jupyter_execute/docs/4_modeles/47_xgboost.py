@@ -33,8 +33,6 @@ def result_model(model,X,Y) :
     f1_scor = f1_score(Y,Y_model)
     print('Le f1 score vaut',f1_scor)
     
-#     score = cross_val_score(model,X,Y,cv=5,scoring = make_scorer(f1_score))
-#     print('F1 cross validé :', np.mean(score))
     
    # Matrice de confusion
     cm_model = confusion_matrix(Y, Y_model)
@@ -96,7 +94,7 @@ xgb0.fit(X_train, Y_train)
 # In[21]:
 
 
-f1 = result_model(xgb0, X_test, Y_test)
+result_model(xgb0, X_test, Y_test)
 
 
 # ## Tuning
@@ -171,6 +169,8 @@ def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopp
 params = xgb0.get_xgb_params()
 
 
+# ### Étape 1 : Initialisation
+
 # On modifie quelques paramètres de base au regard des TP réalisés.
 
 # In[39]:
@@ -211,6 +211,8 @@ param_test1 = {
 }
 
 
+# Nous utilisons l'outil gsearch de *sklearn* pour tester différents paramètres en ayant comme mesure de scoring le F1-Score. Voici l'implémentation qui sera masquée par la suite.
+
 # In[43]:
 
 
@@ -220,6 +222,8 @@ gsearch1 = GridSearchCV(
  
 gsearch1.fit(train[predictors],train[target])
 
+
+# On récupère les paramètres optimaux identifiés.
 
 # In[44]:
 
@@ -373,11 +377,7 @@ gsearch4.fit(train[predictors],train[target])
 gsearch4.best_params_, gsearch4.best_score_
 
 
-# In[69]:
-
-
-params
-
+# Nous modifions les paramètres identifiés
 
 # In[68]:
 
@@ -386,7 +386,7 @@ params["subsample"] = 0.7
 params["colsample_bytree"] = 0.9
 
 
-# Here, we found 0.8 as the optimum value for both subsample and colsample_bytree. Now we should try values in 0.05 interval around these.
+# Nous affinons les tests sur ces paramètres.
 
 # In[70]:
 
@@ -413,11 +413,11 @@ gsearch5.fit(train[predictors],train[target])
 gsearch5.best_params_, gsearch5.best_score_
 
 
-# Cela confirme les vqleurs 0.9 et 0.7 trouvées précédemment.
+# Cela confirme les valeurs 0.9 et 0.7 trouvées précédemment.
 
 # ### Étape 5 : reg_alpha
 
-# Next step is to apply regularization to reduce overfitting. Though many people don’t use this parameters much as gamma provides a substantial way of controlling complexity. But we should always try it. I’ll tune ‘reg_alpha’ value here and leave it upto you to try different values of ‘reg_lambda’.
+# Prochaine étape : optimisation de *reg_alpha*.
 
 # In[77]:
 
@@ -443,6 +443,8 @@ gsearch6.fit(train[predictors],train[target])
 gsearch6.best_params_, gsearch6.best_score_
 
 
+# On modifie le paramètre.
+
 # In[81]:
 
 
@@ -461,14 +463,14 @@ modelfit(xgb3, train, predictors)
 
 # ### Etape 6 : Learning rate
 
+# Enfin, nous essayons de diminuer le *learning_rate* et d'augmenter grandement les *n_estimators*.
+
 # In[87]:
 
 
 params["n_estimators"] = 5000
 params["learning_rate"] = 0.01
 
-
-# Lastly, we should lower the learning rate and add more trees. Lets use the cv function of XGBoost to do the job again.
 
 # In[88]:
 

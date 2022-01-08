@@ -243,42 +243,7 @@
         
               <div>
                 
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
-    
-   <span class="c1"># Matrice de confusion</span>
-    <span class="n">cm_model</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_model</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_model</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    
-    <span class="k">return</span><span class="p">(</span><span class="n">Y_model</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="support-vector-classifier">
+  <div class="tex2jax_ignore mathjax_ignore section" id="support-vector-classifier">
 <h1>Support Vector Classifier<a class="headerlink" href="#support-vector-classifier" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="telechargement-des-donnees">
 <h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
@@ -329,17 +294,14 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.14808206958073147
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.12747252747252746
 </pre></div>
 </div>
-<img alt="../../_images/42_svc_11_1.png" src="../../_images/42_svc_11_1.png" />
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0, 0, 0, ..., 0, 0, 0], dtype=int64)
-</pre></div>
-</div>
+<img alt="../../_images/42_svc_10_1.png" src="../../_images/42_svc_10_1.png" />
 </div>
 </div>
 <p>En testant avec de la cross-validation les résultats ne sont améliorés.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_scal</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
@@ -350,7 +312,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.22 avec un écart type de 0.02
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.13 avec un écart type de 0.01
 </pre></div>
 </div>
 </div>
@@ -359,6 +321,7 @@
 <div class="section" id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
 <p>Ici encore le résultat n’est pas satisfaisant, on retrouve le même comportement que pour la régression logistique, pis encore, l’entrainement du SVC est beaucoup plus long que la détermination des coefficients de la régression, qui elle est presque instantanée. On constate encore bien que, quand bien même quelques entrées sont classées en 1, elles représentent une infime partie du jeu de données, de plus autant d’entrées classées en 1 sont correctement classées qu’incorrectement, ce qui laisse à penser que le modèle est complètement inefficace sur ce front.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
 

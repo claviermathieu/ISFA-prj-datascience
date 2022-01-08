@@ -135,7 +135,7 @@ xgb0.fit(X_train, Y_train)
 # In[15]:
 
 
-f1 = result_model(xgb0, X_test, Y_test)
+result_model(xgb0, X_test, Y_test)
 
 
 # In[16]:
@@ -148,7 +148,7 @@ xgb1.fit(X, Y)
 # In[20]:
 
 
-f1 = result_model(xgb1, X_test, Y_test, mat = False)
+result_model(xgb1, X_test, Y_test, mat = False)
 
 
 # Bien évidemment, le modèle entrainé sur X contient X_test, et donc il y a de l'overfitting si l'on teste sur Y_test.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 from sklearn.metrics import f1_score
@@ -13,10 +13,6 @@ from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-
-
-# In[2]:
-
 
 def result_model(model,X,Y) :
     Y_model =model.predict(X)
@@ -31,14 +27,13 @@ def result_model(model,X,Y) :
     plt.title(str(model))
     plt.show()
     
-    return(Y_model)
 
 
 # # Support Vector Classifier
 
 # ## Téléchargement des données
 
-# In[3]:
+# In[2]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v2.csv")
@@ -47,7 +42,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v2.csv"
 # ## Pre-processing
 # On sépare la variable à expliquer des variables explicatives.
 
-# In[4]:
+# In[3]:
 
 
 X = train.drop(columns = 'Response')
@@ -56,7 +51,7 @@ Y = train['Response']
 
 # On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
 
-# In[5]:
+# In[4]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -74,7 +69,7 @@ X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
 # On applique ensuite directement notre modèle :
 
-# In[7]:
+# In[5]:
 
 
 clf = SVC(random_state=0).fit(X_scal_train, Y_train)
@@ -83,7 +78,7 @@ result_model(clf, X_scal_test, Y_test)
 
 # En testant avec de la cross-validation les résultats ne sont améliorés.
 
-# In[ ]:
+# In[6]:
 
 
 X_scal = scaler.fit_transform(X)
@@ -96,3 +91,5 @@ print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.
 # ## Conclusion
 
 # Ici encore le résultat n'est pas satisfaisant, on retrouve le même comportement que pour la régression logistique, pis encore, l'entrainement du SVC est beaucoup plus long que la détermination des coefficients de la régression, qui elle est presque instantanée. On constate encore bien que, quand bien même quelques entrées sont classées en 1, elles représentent une infime partie du jeu de données, de plus autant d'entrées classées en 1 sont correctement classées qu'incorrectement, ce qui laisse à penser que le modèle est complètement inefficace sur ce front.
+# 
+# <br><br><br><br>

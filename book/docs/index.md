@@ -43,6 +43,10 @@ Le rapport se décompose en 5 grandes parties :
 
 <br>
 
+Vous pouvez télécharger le fichier [groupe_1_prediction.csv](https://www.data.mclavier.com/prj_datascience/groupe_1_predictions.csv) pour évaluer le modèle.
+
+<br>
+
 À la fin de chaque page, un bouton **Next page** permet de changer de notebook et de lire le rapport comme un livre. Il est possible aussi de naviguer à l'aide du sommaire rétractable sur le côté gauche du site.
 
 
