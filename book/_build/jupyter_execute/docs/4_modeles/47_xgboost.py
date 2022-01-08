@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Gradient Boosting
+# # XGBoost
 
 # In[3]:
 
@@ -203,6 +203,11 @@ gsearch1 = GridSearchCV(
     param_grid = param_test1, scoring='f1', n_jobs=4, cv=5)
  
 gsearch1.fit(train[predictors],train[target])
+
+
+# In[ ]:
+
+
 gsearch1.best_params_, gsearch1.best_score_
 
 
@@ -265,21 +270,26 @@ gsearch2c.fit(train[predictors],train[target])
 gsearch2c.best_params_, gsearch2c.best_score_
 
 
-# In[67]:
+# In[43]:
 
 
 param_test2d = {
-    'max_depth':[45, 50, 55]
+    'max_depth':[9, 30, 40, 45, 50]
 }
 
 gsearch2d = GridSearchCV(
                 estimator = XGBClassifier(use_label_encoder=False,
                                 learning_rate=0.1, n_estimators=140, max_depth=50,
-                                min_child_weight=4, gamma=0, subsample=0.8, colsample_bytree=0.8,
+                                min_child_weight=3, gamma=0, subsample=0.8, colsample_bytree=0.8,
                                 objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
                 param_grid = param_test2d, scoring='f1',n_jobs=4, cv=5)
                 
 gsearch2d.fit(train[predictors],train[target])
+
+
+# In[ ]:
+
+
 gsearch2d.best_params_, gsearch2d.best_score_
 
 
