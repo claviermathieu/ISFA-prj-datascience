@@ -3,7 +3,7 @@
 
 # # XGBoost
 
-# In[1]:
+# In[11]:
 
 
 # Bloc non affiché
@@ -41,12 +41,11 @@ def result_model(model,X,Y) :
     plt.title(str(model))
     plt.show()
     
-    return(f1_scor)
 
 
 # ## Téléchargement des données
 
-# In[2]:
+# In[3]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -56,7 +55,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[3]:
+# In[4]:
 
 
 # Décomposition features / target
@@ -66,32 +65,24 @@ Y = train['Response']
 
 # Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
 
-# In[11]:
+# In[7]:
 
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.9)
-
-scaler=StandardScaler() 
-
-X_scal_train = scaler.fit_transform(X_train)
-X_scal_test = scaler.transform(X_test) 
-
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=X.columns)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=X.columns)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 
 # Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
 # ## Implémentation
 
-# In[20]:
+# In[9]:
 
 
 xgb0 = XGBClassifier(use_label_encoder=False)
 xgb0.fit(X_train, Y_train)
 
 
-# In[21]:
+# In[12]:
 
 
 result_model(xgb0, X_test, Y_test)
@@ -102,13 +93,13 @@ result_model(xgb0, X_test, Y_test)
 # Pour tuner le programme, on s'inspire grandement de [ce site](https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/#h2_9).
 # Nous utilisons la fonction GridSearchCV de *sklearn*.
 
-# In[ ]:
+# In[13]:
 
 
 from sklearn.model_selection import GridSearchCV  
 
 
-# In[53]:
+# In[44]:
 
 
 # Bloc non affiché
@@ -127,7 +118,7 @@ from matplotlib.pylab import rcParams
 rcParams['figure.figsize'] = 12, 4
 
 
-# In[37]:
+# In[45]:
 
 
 target = 'Response'
@@ -157,13 +148,13 @@ def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopp
     print("f1 : ", f1_score(dtrain[target].values, dtrain_predictions))
 
 
-    plot_importance(xgb1)
+    plot_importance(alg)
     plt.show()
 
 
 # Dans un premier temps, on récupère les paramètres de bases que l'on va tuner par la suite.
 
-# In[38]:
+# In[46]:
 
 
 params = xgb0.get_xgb_params()
@@ -173,7 +164,7 @@ params = xgb0.get_xgb_params()
 
 # On modifie quelques paramètres de base au regard des TP réalisés.
 
-# In[39]:
+# In[47]:
 
 
 params['seed'] = 27
@@ -182,7 +173,7 @@ params["use_label_encoder"] = False
 params["n_estimators"] = 1000
 
 
-# In[40]:
+# In[48]:
 
 
 xgb1 = XGBClassifier(**params)
@@ -194,7 +185,7 @@ modelfit(xgb1, train, predictors)
 
 # Lors du tuning, nous diminuons le nombre d'estimators pour réduire le temps de calcul
 
-# In[41]:
+# In[49]:
 
 
 params["n_estimators"] = 140
@@ -233,7 +224,7 @@ gsearch1.best_params_, gsearch1.best_score_
 
 # Nous pouvons modifier *min_child_weight* dans les paramètres.
 
-# In[46]:
+# In[50]:
 
 
 params["max_depth"] = 9
@@ -265,7 +256,7 @@ gsearch2.best_params_, gsearch2.best_score_
 
 # Si on est à une valeur optimale on peut tester plus haut
 
-# In[50]:
+# In[51]:
 
 
 params["max_depth"] = 50
@@ -332,7 +323,7 @@ gsearch3.best_params_, gsearch3.best_score_
 
 # Avant de continuer, nous ré-augmentons n_estimators pour voir où est le modèle si nous augmentons le nombre de boosting rounds.
 
-# In[61]:
+# In[52]:
 
 
 params["n_estimators"] = 1000
@@ -344,7 +335,7 @@ modelfit(xgb2, train, predictors)
 
 # Nous rétablissons *n_estimators* pour la puissance de calcul.
 
-# In[62]:
+# In[53]:
 
 
 params["n_estimators"] = 140
@@ -379,7 +370,7 @@ gsearch4.best_params_, gsearch4.best_score_
 
 # Nous modifions les paramètres identifiés
 
-# In[68]:
+# In[54]:
 
 
 params["subsample"] = 0.7
@@ -430,10 +421,9 @@ param_test6 = {
 # In[78]:
 
 
-gsearch6 = GridSearchCV(estimator = XGBClassifier( learning_rate =0.1, n_estimators=177, max_depth=50,
-                                 min_child_weight=4, gamma=0.1, subsample=0.8, colsample_bytree=0.9,
-                                 objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
+gsearch6 = GridSearchCV(estimator = XGBClassifier(**params), 
                         param_grid = param_test6, scoring='f1',n_jobs=4, cv=5)
+                        
 gsearch6.fit(train[predictors],train[target])
 
 
@@ -445,7 +435,7 @@ gsearch6.best_params_, gsearch6.best_score_
 
 # On modifie le paramètre.
 
-# In[81]:
+# In[55]:
 
 
 params["reg_alpha"] = 1e-5
@@ -453,7 +443,7 @@ params["reg_alpha"] = 1e-5
 
 # Avant de continuer, nous ré-augmentons n_estimators pour voir où est le modèle si nous augmentons le nombre de boosting rounds.
 
-# In[82]:
+# In[56]:
 
 
 params["n_estimators"] = 1000
@@ -465,7 +455,31 @@ modelfit(xgb3, train, predictors)
 
 # Enfin, nous essayons de diminuer le *learning_rate* et d'augmenter grandement les *n_estimators*.
 
-# In[87]:
+# In[38]:
+
+
+param_test7 = {
+ 'n_estimators':np.arange(0.01, 0.32, 0.03),
+ 'learning_rate':np.arange(250, 5051, 400)
+}
+
+
+# In[ ]:
+
+
+gsearch7 = GridSearchCV(estimator = XGBClassifier(**params), 
+                        param_grid = param_test7, scoring='f1',n_jobs=4, cv=5)
+                        
+gsearch7.fit(train[predictors],train[target])
+
+
+# In[ ]:
+
+
+gsearch7.best_params_, gsearch7.best_score_
+
+
+# In[40]:
 
 
 params["n_estimators"] = 5000
@@ -492,7 +506,7 @@ params["learning_rate"] = 0.1
 
 # Au final, les paramètres obtenus sont :
 
-# In[91]:
+# In[43]:
 
 
 params
@@ -505,3 +519,172 @@ params
 # Tuner un modèle XGBoost nécessite énormement de temps de calcul. Dans ce projet, nous avons restreint le nombre de paramètres. Bien sûr, avec davantage de puissance, nous aurions pu calibrer plus précisement les paramètres étudiés et tuner d'autres paramètres non traités dans ce notebook.
 # 
 # <br><br><br><br><br>
+
+# ## Rappels théoriques
+
+# Le Boosting de Gradient est un algorithme d’apprentissage supervisé dont le principe est de combiner les résultats d’un ensemble de modèles moins performants afin de fournir la meilleure prédiction possible.
+# 
+# Un exemple classique est le modèle linéaire défini comme ci-suit  $\hat{y}_i = \sum_j \theta_j x_{ij}$ qui représente une combinaison de plusieurs variables plus ou moins significatives.
+# 
+# En choisissant judicieusement notre $y_i$, nous pouvons à partir de notre jeu de données faire des régressions et de la classification.
+# 
+# Lorque nous entrainons notre modèle, nous cherchons à définir le meilleur paramètre $ \theta  $ qui ajustera nos données $x_i$ et nous permettra d'obtenir les meilleurs prédictions de $y_i$. Pour entrainer notre modèle, nous avons besoin d'une fonction dite d'objectif afin d'estimer si notre modèle est performant ou non. \
+# Notre fonction dite d'objectif est définie de la manière suivante :
+# $$\text{obj}(\theta) = L(\theta) + \Omega(\theta)$$
+# 
+# Dans cette expression nous retrouvons deux composants :\
+# Le premier $L$, la fonction d'entrainement, le second $\Omega$ qui est le terme de régulation.\
+# $L$ va donc estimer la performance prédicitive de notre modèle.\
+# Un choix classique pour $L$ est la mesure la mean squared error (MSE) donnée par : $$ L(\theta) = \sum_i (y_i-\hat{y}_i)^2  $$
+# 
+# Il existe également la fonction de logistic loss qui peut également être utilisée comme fonction d'entrainement: 
+# 
+# $$ L(\theta) = \sum_i[ y_i\ln (1+e^{-\hat{y}_i}) + (1-y_i)\ln (1+e^{\hat{y}_i})]  $$
+# 
+# Le terme de régulation est assez souvent oublié; c'est pourtant lui qui contrôle la compléxité du modèle et nous empêche d'entrainer notre modèle en overfittant.
+# 
+# ![Texte alternatif](https://drive.google.com/uc?id=1ks-oizjnu3-rThY-gecix6BpKFWy__FM)
+# 
+# La présentation de la méthode XGBoost ne peut se faire sans introduire la notion d'arbre de décision.
+# 
+# ![Texte alternatif](https://drive.google.com/uc?id=1R7HcQg2z2cJ14GSCOL45VsWfHGT0-f37)
+# 
+# Dans notre exemple, il s'agit d'un modèle qui doit classifier suivant deux variables l'âge ainsi que l'utilisation quotidienne d'un ordinateur. Le modèle alloue a chaque échantillon un score de prédiction.
+# 
+# Mathématiquement, le score peut s'écrire sous la forme :
+# 
+# $$\hat{y}_i = \sum_{k=1}^K f_k(x_i), f_k \in \mathcal{F}$$
+# 
+# où $K$ est le nombre d'arbres, $f$ une fonction dans $\mathcal{F}$ et $\mathcal{F}$ est l'ensemble des arbres de classification et de regression.\
+# L'objectif est d'optimiser la fonction suivante : 
+# 
+# $$ \text{obj}(\theta) = \sum_i^n l(y_i, \hat{y}_i) + \sum_{k=1}^K \Omega(f_k)$$
+# 
+# Mainteant que nous avons introduit le modèle, nous pouvons passer à l'entrainement de ce dernier. Nous allons définir une fonction d'objectif que nous optimiserons.\
+# Notre fonction d'objectif est défini comme étant :
+# 
+# $$ \text{obj} = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\Omega(f_i) $$
+# 
+# Nous devons chercher premièrement les paramètres de notre arbre. Les structures de nos arbres sont contenus dans les fonctions $f_i$. Il s'avère complexe d'optimiser la structure d'un arbre, il ne s'agit pas simplement de problèmes de gradients.\
+# Ici nous fixons ce que nous avons à apprendre puis nous ajoutons un arbre à la fois. Notre valeur de prédiction avec un pas de $t$ pour la fonction $\hat{y}_i^{(t)}$ s'écrit : 
+# 
+
+# $$
+# 
+# \begin{split}
+# 
+# \hat{y}_i^{(0)} &= 0\\
+# \hat{y}_i^{(1)} &= f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)\\
+# \hat{y}_i^{(2)} &= f_1(x_i) + f_2(x_i)= \hat{y}_i^{(1)} + f_2(x_i)\\
+# &\dots\\
+# \hat{y}_i^{(t)} &= \sum_{k=1}^t f_k(x_i)= \hat{y}_i^{(t-1)} + f_t(x_i)
+# 
+# \end{split}
+# 
+# $$
+
+# La question qui se pose alors est : quel arbre ajouté après un pas ?. La réponse est l'arbre qui optimise le mieux notre prédiction.
+# 
+
+# $$
+# 
+# \begin{split}
+# 
+# \text{obj}^{(t)} & = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\Omega(f_i) \\
+#           & = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t) + \mathrm{constant}
+# 
+# \end{split}
+# 
+# $$
+
+# Lorsque la mean squared error (MSE) est utilisée, notre fonction d'objectif devient 
+# 
+# $$
+# 
+# \begin{split}
+# 
+# \text{obj}^{(t)} & = \sum_{i=1}^n (y_i - (\hat{y}_i^{(t-1)} + f_t(x_i)))^2 + \sum_{i=1}^t\Omega(f_i) \\
+#           & = \sum_{i=1}^n [2(\hat{y}_i^{(t-1)} - y_i)f_t(x_i) + f_t(x_i)^2] + \Omega(f_t) + \mathrm{constant}
+# 
+# \end{split}
+# 
+# $$
+# 
+# L'utilisation de la MSE est assez courante avec un résidu et un terme quadratique.
+# La fonction d'objectif devient alors : 
+# 
+# $$ \text{obj}^{(t)} = \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) + \mathrm{constant} $$
+#  
+#  où $g_i$ et $h_i$ sont :
+# 
+# $$
+# 
+#  \begin{split}
+# 
+#  g_i &= \partial_{\hat{y}_i^{(t-1)}} l(y_i, \hat{y}_i^{(t-1)})\\
+# h_i &= \partial_{\hat{y}_i^{(t-1)}}^2 l(y_i, \hat{y}_i^{(t-1)})
+# 
+# \end{split}
+# 
+# $$
+# Après supression de toutes les constantes, nous obtenons : 
+# 
+# $$\sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)$$
+# 
+# Cette expression devient notre objectif pour les nouveaux arbres. La valeur de notre prédiction ne va alors dépendre que de $g_i$ et $h_i$. Il est possible d'optimiser chaque loss function en utilisant simplement les mêmes entrées $g_i$et $h_i$.
+# 
+# Maintenant que le terme d'entrainement est déterminé, il est nécessaire de définir le terme de régulation qui intervient dans la gestion de la complexité du modèle.\
+# La complexité de notre arbre est représentée par $\Omega(f)$ qui est defini par la fonction $f(x)$ :
+# 
+# $$f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} .$$
+# 
+# où $w$ est le  vecteur de score, $q$ est la fonction qui alloue la bonne feuille et $T$ le nombre de feuilles.
+# Pour la methode XGBoost, nous pouvons définir la complexité du modèle comme étant :
+# 
+# $$ \Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2 $$
+# 
+# Il existe d'autres façons de définir la complexité du modèle; cependant celle énoncée précédemment s'avère être fonctionnelle et efficace. L'aspect de régulation est souvent sous-estimé voir même ingoré. En définissant la complexité de façon formelle, nous avons un meilleur aperçu de notre modèle et de son niveau de performance.
+# 
+# Structure du score :
+# 
+# Mainteant que nous avons défini notre modèle, notre valeur objectif peut s'écrire de la façon suivante :
+# 
+# $$
+# 
+# \begin{split}
+# 
+# \text{obj}^{(t)} &\approx \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w_{q(x_i)}^2] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\\
+# &= \sum^T_{j=1} [(\sum_{i\in I_j} g_i) w_j + \frac{1}{2} (\sum_{i\in I_j} h_i + \lambda) w_j^2 ] + \gamma T
+# 
+# \end{split}
+# 
+# $$
+# 
+# où $I_j = \{i|q(x_i)=j\}$représentent les indices des nos points dans notre arbre.\
+# L'expression de notre valeur objectif peut être simplifiée.
+# Nous définissons $G_j = \sum_{i\in I_j} g_i$ et $H_j = \sum_{i\in I_j} h_i$; l'expression de notre valeur objectif devient alors :
+# 
+# $$\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T$$
+# 
+# où les $w_j$ sont indépendants, $G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2$ est une expression de la forme quadratique. Pour le meilleur $w_j$ possible, nous pouvons ecrire : 
+# 
+# $$
+# 
+# \begin{split}
+# 
+# w_j^\ast &= -\frac{G_j}{H_j+\lambda}\\
+# \text{obj}^\ast &= -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T
+# 
+# \end{split}
+# 
+# $$
+# 
+# C'est la dernière expression qui va déterminer la qualité de notre modèle en évaluant la qualité de la prédiction.
+# 
+# Après avoir mesuré la qualité de notre modèle, nous allons énumerer le nombre d'arbres possibles afin de choisir le meilleur. C'est probablement impossible à réaliser avec l'infinité de combinaisons possibles. Il faut donc chercher à optimiser l'arbre niveau par niveau. Nous calculons de ce fait le gain entre un arbre et l'autre à l'aide de la formule suivante : 
+# 
+# $$ Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma $$
+# 
+# Ici, nous comparons le gain entre deux nouveaux arbres et celui que nous utilisons actuellement. Si le gain est inferieur au $\gamma$ il est plus préférable de ne pas ajouter le nouvel arbre.  
+
+# <br><br><br><br>
