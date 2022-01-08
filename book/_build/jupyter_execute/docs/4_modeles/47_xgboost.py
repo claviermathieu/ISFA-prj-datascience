@@ -3,7 +3,7 @@
 
 # # XGBoost
 
-# In[3]:
+# In[1]:
 
 
 # Bloc non affiché
@@ -16,27 +16,15 @@ import seaborn as sns
 
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix,accuracy_score,r2_score, matthews_corrcoef, make_scorer
+from sklearn.metrics import f1_score, confusion_matrix,accuracy_score, matthews_corrcoef, make_scorer
 
-
-from sklearn.svm import NuSVC
-from sklearn.svm import LinearSVC
-from sklearn.svm import SVC
 
 from xgboost import XGBClassifier
-from xgboost import XGBRFClassifier
 from xgboost import plot_importance
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegressionCV
+
 from sklearn.model_selection import GridSearchCV
 
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.over_sampling import RandomOverSampler
-from imblearn.over_sampling import SMOTE
-from sklearn import datasets, ensemble
-
-import imblearn
 
 
 def result_model(model,X,Y) :
@@ -60,7 +48,7 @@ def result_model(model,X,Y) :
 
 # ## Téléchargement des données
 
-# In[4]:
+# In[2]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -70,58 +58,58 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[6]:
+# In[3]:
 
-
-# Variables explicative
-exp_var = train.columns[:-1]
 
 # Décomposition features / target
-X = train[exp_var]
+X = train.drop(columns='Response')
 Y = train['Response']
 
 
 # Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
 
-# In[14]:
+# In[11]:
 
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.95)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.9)
 
 scaler=StandardScaler() 
 
 X_scal_train = scaler.fit_transform(X_train)
 X_scal_test = scaler.transform(X_test) 
 
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=exp_var)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=exp_var)
+X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=X.columns)
+X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=X.columns)
 
+
+# Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
 # ## Modèle
 
-# In[33]:
+# In[20]:
 
 
-xgb = XGBClassifier(use_label_encoder=False, objective = 'reg:squarederror')
-xgb.fit(X, Y)
+xgb0 = XGBClassifier(use_label_encoder=False)
+xgb0.fit(X_train, Y_train)
 
 
-# In[34]:
+# In[21]:
 
 
-f1 = result_model(xgb, X_test, Y_test)
+f1 = result_model(xgb0, X_test, Y_test)
 
 
-# ## Tunning
+# ## Tuning
 
-# Pour tunner le programme, on s'inspire grandement de [ce site](https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/#h2_9).
+# Pour tuner le programme, on s'inspire grandement de [ce site](https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/#h2_9).
 
-# In[35]:
+# In[36]:
 
 
 #Import libraries:
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 import xgboost as xgb
 from xgboost.sklearn import XGBClassifier
 from sklearn.model_selection import GridSearchCV   #Perforing grid search
@@ -131,10 +119,13 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 from matplotlib.pylab import rcParams
 rcParams['figure.figsize'] = 12, 4
 
+
+# In[37]:
+
+
 target = 'Response'
+predictors = [x for x in train.columns if x not in [target]]
 
-
-# In[36]:
 
 
 def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopping_rounds=50):
@@ -151,9 +142,8 @@ def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopp
         
     #Predict training set:
     dtrain_predictions = alg.predict(dtrain[predictors])
-    dtrain_predprob = alg.predict_proba(dtrain[predictors])[:,1]
+    # dtrain_predprob = alg.predict_proba(dtrain[predictors])[:,1]
         
-    #Print model report:
     print("\nMesures :")
     print("---------")
     print("Accuracy : ", accuracy_score(dtrain[target].values, dtrain_predictions))
@@ -164,70 +154,99 @@ def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopp
     plt.show()
 
 
+# Dans un premier temps, on récupère les paramètres de bases que l'on va tuner par la suite.
+
+# In[38]:
+
+
+params = xgb0.get_xgb_params()
+
+
+# On modifie quelques paramètres de base au regard des TP réalisés.
+
 # In[39]:
 
 
-predictors = [x for x in train.columns if x not in [target]]
-xgb1 = XGBClassifier(
-    use_label_encoder=False,
-    learning_rate =0.1,
-    n_estimators=1000,
-    max_depth=5,
-    min_child_weight=1,
-    gamma=0,
-    subsample=0.8,
-    colsample_bytree=0.8,
-    objective= 'binary:logistic',
-    nthread=4,
-    scale_pos_weight=1,
-    seed=27)
+params['seed'] = 27
+params['nthread'] = 7
+params["use_label_encoder"] = False
+params["n_estimators"] = 1000
+
+
+# In[40]:
+
+
+xgb1 = XGBClassifier(**params)
+
 modelfit(xgb1, train, predictors)
 
 
 # ### Etape 2
 
+# Lors du tuning, nous diminuons le nombre d'estimators pour réduire le temps de calcul
+
+# In[41]:
+
+
+params["n_estimators"] = 140
+
+
 # On tune max_depth et min_child_weight
 
-# In[40]:
+# In[42]:
 
 
 param_test1 = {
  'max_depth':range(3,10,2),
  'min_child_weight':range(1,6)
 }
+
+
+# In[43]:
+
+
 gsearch1 = GridSearchCV(
-    estimator = XGBClassifier(use_label_encoder=False,
-                            learning_rate =0.1, n_estimators=140, max_depth=5,
-                            min_child_weight=1, gamma=0, subsample=0.8, colsample_bytree=0.8,
-                            objective= 'binary:logistic', nthread=7, scale_pos_weight=1, seed=27),
+    estimator = XGBClassifier(**params),
     param_grid = param_test1, scoring='f1', n_jobs=4, cv=5)
  
 gsearch1.fit(train[predictors],train[target])
 
 
-# In[ ]:
+# In[44]:
 
 
 gsearch1.best_params_, gsearch1.best_score_
 
 
-# On teste entre les deux, un peu plus haut et un peu plus bas
+# Nous pouvons modifier *min_child_weight* dans les paramètres.
 
-# In[41]:
+# In[46]:
+
+
+params["max_depth"] = 9
+params["min_child_weight"] = 5
+
+
+# Étant à la limite sur les deux paramètres, nous testons avec des paramètres plus forts.
+
+# In[48]:
 
 
 param_test2 = {
- 'max_depth':[9, 20, 50, 75],
+'max_depth':[9, 20,45, 50, 75],
+'min_child_weight':[5, 10, 20]
 }
 
 gsearch2 = GridSearchCV(
-                estimator = XGBClassifier(use_label_encoder=False,
-                            learning_rate=0.1, n_estimators=140, max_depth=9,
-                            min_child_weight=3, gamma=0, subsample=0.8, colsample_bytree=0.8,
-                            objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
+                estimator = XGBClassifier(**params),
                 param_grid = param_test2, scoring='f1',n_jobs=4,cv=5)
 
 gsearch2.fit(train[predictors],train[target])
+
+
+# In[ ]:
+
+
 gsearch2.best_params_, gsearch2.best_score_
 
 
@@ -287,7 +306,7 @@ gsearch2d = GridSearchCV(
 gsearch2d.fit(train[predictors],train[target])
 
 
-# In[ ]:
+# In[45]:
 
 
 gsearch2d.best_params_, gsearch2d.best_score_
@@ -297,61 +316,85 @@ gsearch2d.best_params_, gsearch2d.best_score_
 
 # Now lets tune gamma value using the parameters already tuned above. Gamma can take various values but I’ll check for 5 values here. You can go into more precise values as.
 
-# In[68]:
+# In[46]:
 
 
 param_test3 = {
  'gamma':[i/10.0 for i in range(0,5)]
 }
-gsearch3 = GridSearchCV(estimator = XGBClassifier( learning_rate =0.1, n_estimators=140, max_depth=50,
-                                    min_child_weight=4, gamma=0, subsample=0.8, colsample_bytree=0.8,
+
+
+# In[47]:
+
+
+gsearch3 = GridSearchCV(estimator = XGBClassifier(use_label_encoder=False,
+                                    learning_rate =0.1, n_estimators=140, max_depth=45,
+                                    min_child_weight=3, gamma=0, subsample=0.8, colsample_bytree=0.8,
                                     objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
- param_grid = param_test3, scoring='f1',n_jobs=4, cv=5)
+                        param_grid = param_test3, scoring='f1',n_jobs=4, cv=5)
+
 gsearch3.fit(train[predictors],train[target])
+
+
+# In[49]:
+
+
 gsearch3.best_params_, gsearch3.best_score_
 
 
 # This shows that our original value of gamma, i.e. 0 is the optimum one. Before proceeding, a good idea would be to re-calibrate the number of boosting rounds for the updated parameters.
 
-# In[70]:
+# In[53]:
 
 
 xgb2 = XGBClassifier(
- learning_rate =0.1,
- n_estimators=1000,
- max_depth=50,
- min_child_weight=4,
- gamma=0,
- subsample=0.8,
- colsample_bytree=0.8,
- objective= 'binary:logistic',
- nthread=7,
- scale_pos_weight=1,
- seed=27)
+        use_label_encoder=False,
+        learning_rate =0.1,
+        n_estimators=1000,
+        max_depth=45,
+        min_child_weight=3,
+        gamma=0.3,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        objective= 'binary:logistic',
+        nthread=7,
+        scale_pos_weight=1,
+        seed=27
+        )
+
+
+# In[54]:
+
+
 modelfit(xgb2, train, predictors)
-
-
-# In[71]:
-
-
-plot_importance(xgb2)
-plt.show()
 
 
 # ### Etape 4 : Tune subsample et colsample_bytree
 
-# In[72]:
+# In[55]:
 
 
 param_test4 = {
  'subsample':[i/10.0 for i in range(6,10)],
  'colsample_bytree':[i/10.0 for i in range(6,10)]
 }
-gsearch4 = GridSearchCV(estimator = XGBClassifier( learning_rate =0.1, n_estimators=177, max_depth=50,
-                                    min_child_weight=4, gamma=0, subsample=0.8, colsample_bytree=0.8,
-                                    objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
-            param_grid = param_test4, scoring='f1',n_jobs=4, cv=5)
+
+
+# In[56]:
+
+
+gsearch4 = GridSearchCV(
+    estimator = XGBClassifier(use_label_encoder=False,
+                learning_rate =0.1, n_estimators=177, max_depth=45,
+                min_child_weight=4, gamma=0.3, subsample=0.8, colsample_bytree=0.8,
+                objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
+    param_grid = param_test4, scoring='f1',n_jobs=4, cv=5)
 gsearch4.fit(train[predictors],train[target])
+
+
+# In[ ]:
+
+
 gsearch4.best_params_, gsearch4.best_score_
 
 
@@ -385,7 +428,7 @@ param_test6 = {
 gsearch6 = GridSearchCV(estimator = XGBClassifier( learning_rate =0.1, n_estimators=177, max_depth=50,
                                  min_child_weight=4, gamma=0.1, subsample=0.8, colsample_bytree=0.9,
                                  objective= 'binary:logistic', nthread=7, scale_pos_weight=1,seed=27), 
- param_grid = param_test6, scoring='f1',n_jobs=4, cv=5)
+                        param_grid = param_test6, scoring='f1',n_jobs=4, cv=5)
 gsearch6.fit(train[predictors],train[target])
 gsearch6.best_params_, gsearch6.best_score_
 

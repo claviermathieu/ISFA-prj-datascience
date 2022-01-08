@@ -1,24 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Logistique
-
-# In[17]:
+# In[7]:
 
 
-# Bloc non affiché
-
-import numpy as np
-import pandas as pd
-
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
-from sklearn.linear_model import LogisticRegression
 
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix,accuracy_score,r2_score, matthews_corrcoef, make_scorer
+# In[2]:
 
 
 def result_model(model,X,Y) :
@@ -27,9 +24,6 @@ def result_model(model,X,Y) :
     f1_scor = f1_score(Y,Y_model)
     print('Le f1 score vaut',f1_scor)
     
-#     score = cross_val_score(model,X,Y,cv=5,scoring = make_scorer(f1_score))
-#     print('F1 cross validé :', np.mean(score))
-    
    # Matrice de confusion
     cm_model = confusion_matrix(Y, Y_model)
     plt.rcParams['figure.figsize'] = (5, 5)
@@ -37,35 +31,32 @@ def result_model(model,X,Y) :
     plt.title(str(model))
     plt.show()
     
-    # return(Y_model)
+    return(Y_model)
 
+
+# # Logistique
 
 # ## Téléchargement des données
 
-# In[2]:
+# In[15]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v2.csv")
 
 
 # ## Pre-processing
+# On sépare la variable à expliquer des variables explicatives.
 
-# On sépare dans un premier temps les variables explicatives et la variable à expliquer.
-
-# In[3]:
+# In[16]:
 
 
-# Variables explicative
-exp_var = train.columns[:-1]
-
-# Décomposition features / target
-X = train[exp_var]
+X = train.drop(columns = 'Response')
 Y = train['Response']
 
 
-# Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
+# On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
 
-# In[4]:
+# In[17]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -75,21 +66,33 @@ scaler=StandardScaler()
 X_scal_train = scaler.fit_transform(X_train)
 X_scal_test = scaler.transform(X_test) 
 
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=exp_var)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=exp_var)
+X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index)
+X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
 
-# ## Modèle
+# ## Implémentation
+# 
+# On applique ensuite directement notre modèle :
 
-# Puis, nous pouvons directement entrainer le modèle et l'afficher grâce à notre fonction *result_model*.
-
-# In[16]:
+# In[18]:
 
 
 clf = LogisticRegression(random_state=0).fit(X_scal_train, Y_train)
-result_model(clf, X_scal_test, Y_test)
+f1 = result_model(clf, X_scal_test, Y_test)
 
 
-# Le F1-score n'est pas satisfaisant ce qui est évident au regard de la matrice de confusion. Tout est prédit en positif.
-# 
-# <br><br><br><br>
+# En testant avec de la cross-validation les résultats ne sont améliorés.
+
+# In[38]:
+
+
+X_scal = scaler.fit_transform(X)
+
+clf = LogisticRegression(random_state=0)
+scores = cross_val_score(clf, X_scal, Y, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
+
+
+# ## Conclusion
+
+# Le résultat est, sans surprise majeure, peu satisfaisant, la régression logistique (qui, on rappelle, est l'équivalent de la régression linéaire en classification) n'est pas un modèle robuste, peu adapté à l'étude de données complexes. Si la précision naïve (% de bonnes précisions/% de mauvaises) est sauvée par l'importante proportion de Response = 0 ce n'est pas le cas du le f1_score. On constate que le modèle est très déséquilibré et tend à presque tout classer dans la catégorie 0. 

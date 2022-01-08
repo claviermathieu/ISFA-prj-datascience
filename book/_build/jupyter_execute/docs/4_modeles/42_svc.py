@@ -1,37 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # SVC
-
-# In[1]:
+# In[ ]:
 
 
-# Bloc non affiché
-
-import pandas as pd
-import pandas as pd
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix,accuracy_score,r2_score, matthews_corrcoef, make_scorer
+import pandas as pd
 
 
-from sklearn.svm import NuSVC
-from sklearn.svm import LinearSVC
-from sklearn.svm import SVC
-from xgboost import XGBClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegressionCV
-from sklearn.model_selection import GridSearchCV
-
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.over_sampling import RandomOverSampler
-from imblearn.over_sampling import SMOTE
-
-
-import imblearn
+# In[2]:
 
 
 def result_model(model,X,Y) :
@@ -40,9 +24,6 @@ def result_model(model,X,Y) :
     f1_scor = f1_score(Y,Y_model)
     print('Le f1 score vaut',f1_scor)
     
-#     score = cross_val_score(model,X,Y,cv=5,scoring = make_scorer(f1_score))
-#     print('F1 cross validé :', np.mean(score))
-    
    # Matrice de confusion
     cm_model = confusion_matrix(Y, Y_model)
     plt.rcParams['figure.figsize'] = (5, 5)
@@ -50,35 +31,32 @@ def result_model(model,X,Y) :
     plt.title(str(model))
     plt.show()
     
-    # return()
+    return(Y_model)
 
+
+# # Support Vector Classifier
 
 # ## Téléchargement des données
-
-# In[2]:
-
-
-train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
-
-
-# ## Pre-processing
-
-# On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
 # In[3]:
 
 
-# Variables explicative
-exp_var = train.columns[:-1]
+train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v2.csv")
 
-# Décomposition features / target
-X = train[exp_var]
+
+# ## Pre-processing
+# On sépare la variable à expliquer des variables explicatives.
+
+# In[4]:
+
+
+X = train.drop(columns = 'Response')
 Y = train['Response']
 
 
-# Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
+# On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
 
-# In[4]:
+# In[5]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -88,34 +66,33 @@ scaler=StandardScaler()
 X_scal_train = scaler.fit_transform(X_train)
 X_scal_test = scaler.transform(X_test) 
 
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=exp_var)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=exp_var)
+X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index)
+X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
 
-# ## Modèle
+# ## Implémentation
 
-# Puis, nous pouvons directement entrainer le modèle et l'afficher grâce à notre fonction *result_model*.
+# On applique ensuite directement notre modèle :
 
 # In[7]:
 
 
-svc = SVC()
-svc.fit(X_train, Y_train)
-Y_svc = result_model(svc, X_test, Y_test)
+clf = SVC(random_state=0).fit(X_scal_train, Y_train)
+result_model(clf, X_scal_test, Y_test)
 
 
-# <br><br>
-# 
-# En normalisant les données le résultat n'est pas beaucoup amélioré.
+# En testant avec de la cross-validation les résultats ne sont améliorés.
 
-# In[8]:
+# In[ ]:
 
 
-svc = SVC()
-svc.fit(X_scal_train, Y_train)
-Y_svc = result_model(svc, X_scal_test, Y_test)
+X_scal = scaler.fit_transform(X)
+
+clf = SVC(random_state=0)
+scores = cross_val_score(clf, X_scal, Y, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
-# Le F1-score n'est pas satisfaisant ce qui est évident au regard de la matrice de confusion. Tout est prédit en positif.
-# 
-# <br><br><br><br>
+# ## Conclusion
+
+# Ici encore le résultat n'est pas satisfaisant, on retrouve le même comportement que pour la régression logistique, pis encore, l'entrainement du SVC est beaucoup plus long que la détermination des coefficients de la régression, qui elle est presque instantanée. On constate encore bien que, quand bien même quelques entrées sont classées en 1, elles représentent une infime partie du jeu de données, de plus autant d'entrées classées en 1 sont correctement classées qu'incorrectement, ce qui laisse à penser que le modèle est complètement inefficace sur ce front.

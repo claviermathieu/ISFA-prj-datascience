@@ -3,7 +3,7 @@
 
 # # Gradient Boosting
 
-# In[11]:
+# In[3]:
 
 
 # Bloc non affiché
@@ -55,7 +55,7 @@ def result_model(model,X,Y) :
 
 # ## Téléchargement des données
 
-# In[13]:
+# In[4]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -65,20 +65,17 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[14]:
+# In[5]:
 
-
-# Variables explicative
-exp_var = train.columns[:-1]
 
 # Décomposition features / target
-X = train[exp_var]
+X = train.drop(columns='Response')
 Y = train['Response']
 
 
 # Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
 
-# In[15]:
+# In[6]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -88,13 +85,30 @@ scaler=StandardScaler()
 X_scal_train = scaler.fit_transform(X_train)
 X_scal_test = scaler.transform(X_test) 
 
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=exp_var)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=exp_var)
+X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=X.columns)
+X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=X.columns)
 
 
 # ## Modèle
 
-# In[37]:
+# In[7]:
+
+
+gbr = ensemble.GradientBoostingClassifier()
+
+
+# On visualise les paramètres
+
+# In[8]:
+
+
+gbr.get_params()
+
+
+# Nous modifions quelques paramètres pour expliquer montrer l'implémentation mais le véritable tuning est réalisé dans la partie suivante : XGBoost.
+# Ici nous reprenons les paramètres trouvés pour l'XGBoost.
+
+# In[9]:
 
 
 params = {
@@ -106,19 +120,25 @@ params = {
 }
 
 
-# In[38]:
+# Nous entrainons le modèle.
+
+# In[10]:
 
 
 gbr = ensemble.GradientBoostingClassifier(**params)
 gbr.fit(X_train, Y_train)
 
 
-# In[39]:
+# Nous visualisons les résultats.
+
+# In[11]:
 
 
 result_model(gbr, X_test, Y_test)
 
 
-# Puis, nous pouvons directement entrainer le modèle et l'afficher grâce à notre fonction *result_model*.
+# ## Conclusion
+
+# Le modèle **Gradient boosting** améliore nos précédents résultats. XGBoost possède de nombreux points communs et à pour réputation d'être souvent plus performant. Ainsi, nous ne poussons pas plus ce modèle et testons directement le modèle **XGBoost**.
 
 # <br><br><br><br>
