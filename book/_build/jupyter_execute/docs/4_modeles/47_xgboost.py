@@ -55,10 +55,9 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[4]:
+# In[57]:
 
 
-# Décomposition features / target
 X = train.drop(columns='Response')
 Y = train['Response']
 
