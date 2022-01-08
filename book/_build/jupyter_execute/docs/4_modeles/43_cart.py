@@ -43,6 +43,14 @@ def result_model(model,X,Y, mat = True):
 
 # # CART
 
+# ## Téléchargement des données
+
+# In[ ]:
+
+
+train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
+
+
 # In[3]:
 
 

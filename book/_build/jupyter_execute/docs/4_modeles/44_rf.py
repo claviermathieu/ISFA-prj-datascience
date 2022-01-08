@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Random Forest
-
-# D'abord nous importons toutes les librairies nécessaire à l'implémentation de la méthode sous python.
-
-# In[1]:
+# In[35]:
 
 
 from sklearn.metrics import f1_score
@@ -22,76 +18,56 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-
-# Nous créons aussi deux fonctions utile pour l'évaluation de nos modèles et nous téléchargeons les données sur lesquels nous devons travailler.
-
-# In[2]:
-
-
 def F1(model,X,Y) :
     Y_model =model.predict(X)
     f1_scor = f1_score(Y,Y_model)
     return(f1_scor)
 
-
-# In[3]:
-
-
-def result_model(model,X,Y) :
+def result_model(model,X,Y, mat = True):
     Y_model =model.predict(X)
 
     f1_scor = f1_score(Y,Y_model)
     print('Le f1 score vaut',f1_scor)
-    
-#     score = cross_val_score(model,X,Y,cv=5,scoring = make_scorer(f1_score))
-#     print('F1 cross validé :', np.mean(score))
-    
-   # Matrice de confusion
-    cm_model = confusion_matrix(Y, Y_model)
-    plt.rcParams['figure.figsize'] = (5, 5)
-    sns.heatmap(cm_model, annot = True)
-    plt.title(str(model))
-    plt.show()
-    
-    # return()
+
+    if mat:
+        # Matrice de confusion
+        cm_model = confusion_matrix(Y, Y_model)
+        plt.rcParams['figure.figsize'] = (5, 5)
+        sns.heatmap(cm_model, annot = True)
+        plt.title(str(model))
+        plt.show()
 
 
-# In[4]:
+# # Random Forest
+
+# ## Téléchargement des données
+
+# In[36]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
 
 
-# In[5]:
+# In[37]:
 
 
-train.head()
+train.head(3)
 
 
-# # Pre-processing
+# ## Pre-processing
 
 # On sépare la variable à expliquer des variables explicatives.
 
-# In[6]:
+# In[38]:
 
 
-# Variables explicative
-exp_var = train.columns[:-1]
-
-# Décomposition features / target
-X = train[exp_var]
+X = train.drop(columns='Response')
 Y = train['Response']
 
 
-# In[7]:
+# On sépare les données en train et test.
 
-
-X.head()
-
-
-# On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
-
-# In[8]:
+# In[39]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -101,29 +77,32 @@ scaler=StandardScaler()
 X_scal_train = scaler.fit_transform(X_train)
 X_scal_test = scaler.transform(X_test) 
 
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=exp_var)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=exp_var)
+X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index)
+X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
+
+# ## Implémentation
 
 # On fait un premier test avec les hyper-paramêtres par défaut 
 
-# In[9]:
+# In[40]:
 
 
 rfc = RandomForestClassifier()
 rfc.fit(X_train, Y_train)
-Y_rfc = result_model(rfc, X_test, Y_test)
+result_model(rfc, X_test, Y_test)
 
 
-# In[10]:
+# In[41]:
 
 
-cross_val_score(rfc, X_train, Y_train, cv=5, scoring='f1')
+scores = cross_val_score(rfc, X_train, Y_train, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
 # On fait aussi l'entrainement avec les variables normalisées pour voir si les résultats différents, mais ça ne semble pas être le cas.
 
-# In[11]:
+# In[42]:
 
 
 rfc = RandomForestClassifier()
@@ -131,15 +110,16 @@ rfc.fit(X_scal_train, Y_train)
 Y_rfc = result_model(rfc, X_scal_test, Y_test)
 
 
-# In[12]:
+# In[43]:
 
 
-cross_val_score(rfc, X_scal_train, Y_train, cv=5, scoring='f1')
+scores = cross_val_score(rfc, X_scal_train, Y_train, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
 # Afin d'avoir une meilleur compréhension de nos modèle on peut aussi observer quels sont les variables qui leurs apportent le plus d'informations et sont les plus importantes.
 
-# In[13]:
+# In[44]:
 
 
 importances = rfc.feature_importances_
@@ -157,51 +137,42 @@ fig.tight_layout()
 
 # ## Tuning
 
-# ## Il y'a de nombreux paramêtres à tuner :
-# ### Nous allons intervenir sur les paramêtres suivant et procéder dans l'ordre dans lesquels les paramêtres sont présentés
+# Il y'a de nombreux paramêtres à tuner :
 # 
-# n_estimatorsint, default=100, ce paramêtre correspond au nombre d'arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus
+# Nous allons intervenir sur les paramêtres suivant et procéder dans l'ordre dans lesquels les paramêtres sont présentés :
 # 
-# max_depthint, correspond à la profondeur maximal des arbres default=None
-# 
-# min_samples_splitint, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2
-# 
-# min_samples_leafint, correspond au nombre minimum d'observations dans une feuille simple default=1
-# 
-# min_impurity_decreasefloat, correspond à l'apport minimum d'une fuille pour qu'elle soit conservé default=0.0
-# 
-# n_estimatorsint, le nombre d'arbre à nouveau, au cas où les paramêtres modifiés modifié à leur tour le nombre d'arbre optimal, default=100
-# 
-# max_features{“auto”, “sqrt”, “log2”}, default= "auto", les 3 modes de calculs de features max qu'il faut tester
-# 
-# class_weight{“balanced”, “balanced_subsample”}, default=None, les 2 options pour mettre des poids sur les observations
+# - **n_estimatorsint**, default=100, ce paramêtre correspond au nombre d'arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus
+# - **max_depthint**, correspond à la profondeur maximal des arbres default=None
+# - **min_samples_splitint**, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2
+# - **min_samples_leafint**, correspond au nombre minimum d'observations dans une feuille simple default=1
+# - **min_impurity_decreasefloat**, correspond à l'apport minimum d'une fuille pour qu'elle soit conservé default=0.0
+# - **n_estimatorsint**, le nombre d'arbre à nouveau, au cas où les paramêtres modifiés modifié à leur tour le nombre d'arbre optimal, default=100
+# - **max_features**{“auto”, “sqrt”, “log2”}, default= "auto", les 3 modes de calculs de features max qu'il faut tester
+# - **class_weight**{“balanced”, “balanced_subsample”}, default=None, les 2 options pour mettre des poids sur les observations
 
-# #### On reprend tout d'abord le résultat de base avant de commencer notre tuning
+# ### Étape 1 : Initialisation
 
-# In[14]:
+# Rappelons, le F1 de base avant le tunning. 
+
+# In[45]:
 
 
 rfc = RandomForestClassifier()
 rfc.fit(X_train, Y_train)
-Y_rfc = result_model(rfc, X_test, Y_test)
+Y_rfc = result_model(rfc, X_test, Y_test, mat = False)
 
 
-# # n_estimators
+# ### Étape 2 : n_estimators
 # 
-# La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardans la meilleur valeur avant de répéter le processus à avec les valeurs proches de l'optimum et en s'aidant de l'allure du graphe de nos F1 scores en fonction de nos paramêtre pour savoir dans quelle directions s'orienter.
+# La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus à avec les valeurs proches de l'optimum et en s'aidant de l'allure du graphe de nos F1 scores en fonction de nos paramêtre pour savoir dans quelle directions s'orienter.
 
-# In[15]:
+# In[46]:
 
 
-maxi=F1(rfc, X_scal_test, Y_test)
+maxi=F1(rfc, X_test, Y_test)
 kmaxi=100
 
-
-# In[38]:
-
-
 T=[]
-#test=[50,75,100,115,120,130,200]
 test=[50,60,70,75,80,90,95,100,105,110,120]
 for k in test:
     rfc = RandomForestClassifier(max_depth=k)
@@ -216,32 +187,30 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[40]:
+# In[47]:
 
 
-n_estimators_int=kmaxi
-print("on choissit donc",kmaxi,"comme la valeur pour","n_estimators_int")
+n_estimators_int = kmaxi
+print("Nous choisissons donc",kmaxi,"comme la valeur pour le paramètre n_estimators.")
 
 
 # Nous n'observons pas de tendances sur le graphe donc nous pouvons nous arréter là, mais nous aurions aussi pû essayer de regarder aux alentours de 100 s'il y'avait de meilleurs prétendants.
 
-# # Max depth
-# Nous répétons le processus pour ce paramêtre, le bridant simplement à 100 maximum
+# ### Étape 3 : max_depth
+# Nous répétons le processus pour ce paramètre, le bridant simplement à 100 maximum.
 
-# In[41]:
+# In[48]:
 
 
 maxi=F1(rfc, X_test, Y_test)
 kmaxi=100
 
 
-# In[42]:
+# In[49]:
 
 
 T=[]
-#test=[1,5,10,20,100]
-#test=[20,100,200]
-#test=[70,90,95,100,105,110]
+
 test=[115,120,123,125,130]
 for k in test:
     rfc = RandomForestClassifier(n_estimators=n_estimators_int,max_depth=k)
@@ -256,22 +225,25 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[43]:
+# Nous évaluons le f1-score actuellement.
+
+# In[50]:
 
 
 max_depth_int=kmaxi
-rfc = RandomForestClassifier(max_depth=max_depth_int)
+rfc = RandomForestClassifier(n_estimators=n_estimators_int, max_depth=max_depth_int)
 rfc.fit(X_train, Y_train)
 Y_rfc = result_model(rfc, X_test, Y_test)
-rfc.fit(X_train, Y_train)
-maxi= F1(rfc, X_test, Y_test)
-kmaxi=2
+
+maxi=F1(rfc, X_test, Y_test)
+kmaxi = 2
 
 
-# # min_samples_split
-# Nous répétons le processus pour ce paramêtre.
+# ### Étape 4 :min_samples_split
 
-# In[44]:
+# Nous répétons le processus pour le paramètre min_samples_split.
+
+# In[51]:
 
 
 T=[]
@@ -289,27 +261,29 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[45]:
+# In[52]:
 
 
 min_samples_split_int=kmaxi
-print("on choissit donc",kmaxi,"comme la valeur pour","min_samples_split_int")
+print("Nous choisissons donc",kmaxi,"comme la valeur du paramètre min_samples_split.")
 
 
-# In[46]:
+# In[53]:
 
 
 rfc = RandomForestClassifier(n_estimators=n_estimators_int,max_depth=max_depth_int,min_samples_split=min_samples_split_int)
 rfc.fit(X_train, Y_train)
 Y_rfc = result_model(rfc, X_test, Y_test)
+
 maxi=F1(rfc, X_test, Y_test)
-kmaxi=1
+kmaxi = 1
 
 
-# # min_samples_leaf
-# Nous répétons le processus pour ce paramêtre.
+# ### Étape 5 : min_samples_leaf
 
-# In[47]:
+# Nous répétons le processus pour le paramètre *min_samples_leaf*.
+
+# In[54]:
 
 
 T=[]
@@ -327,27 +301,29 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[48]:
+# In[55]:
 
 
 min_samples_leaf_int=kmaxi
-print("on choissit donc",kmaxi,"comme la valeur pour","min_samples_leaf_int")
+print("Nous choisissons donc",kmaxi,"comme valeur du paramètre min_samples_leaf.")
 
 
-# # min_impurity_decrease
-# Nous répétons le processus pour ce paramêtre
+# ### Étape 6 : min_impurity_decrease
 
-# In[49]:
+# Nous répétons le processus pour le paramètre *min_samples_leaf*.
+
+# In[56]:
 
 
 rfc = RandomForestClassifier(n_estimators=n_estimators_int,max_depth=max_depth_int,min_samples_split=min_samples_split_int,min_samples_leaf=min_samples_leaf_int)
 rfc.fit(X_train, Y_train)
 Y_rfc = result_model(rfc, X_test, Y_test)
+
 maxi=F1(rfc, X_test, Y_test)
 kmaxi=0
 
 
-# In[50]:
+# In[57]:
 
 
 T=[]
@@ -365,26 +341,26 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[51]:
+# In[58]:
 
 
 min_impurity_decrease_int=kmaxi
-print("on choissit donc",kmaxi,"comme la valeur pour","min_impurity_decrease_int")
+print("Nous choisissons donc",kmaxi,"comme valeur du paramètre min_impurity_decrease.")
 
 
-# In[52]:
+# In[59]:
 
 
 rfc = RandomForestClassifier(n_estimators=n_estimators_int,max_depth=max_depth_int,min_samples_split=min_samples_split_int,min_samples_leaf=min_samples_leaf_int,min_impurity_decrease=0)
 rfc.fit(X_train, Y_train)
 Y_rfc = result_model(rfc, X_test, Y_test)
 maxi=F1(rfc, X_test, Y_test)
-kmaxi=0
+kmaxi=50
 
 
-# # n_estimators
+# ### Étape 7 : n_estimators
 
-# In[53]:
+# In[65]:
 
 
 T=[]
@@ -402,37 +378,39 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[54]:
+# In[67]:
 
 
 n_estimators_int=kmaxi
-print("on choissit donc",kmaxi,"comme la valeur pour","n_estimators_int")
+print("Nous choisissons donc",kmaxi,"comme valeur du paramètre n_estimators.")
 
 
-# # max_features{“auto”, “sqrt”, “log2”}, default= "auto"
+# ### Étape 8 : max_features
 
-# In[55]:
+# In[68]:
 
 
 rfc = RandomForestClassifier(max_depth=max_depth_int,min_samples_split=min_samples_split_int, min_samples_leaf=min_samples_leaf_int,min_impurity_decrease=0,n_estimators=n_estimators_int)
 rfc.fit(X_train, Y_train)
 newF= F1(rfc, X_test, Y_test)
 print("avec auto F1=",newF)
+
 rfc = RandomForestClassifier(max_depth=max_depth_int,min_samples_split=min_samples_split_int, min_samples_leaf=min_samples_leaf_int,min_impurity_decrease=0,n_estimators=n_estimators_int,max_features="sqrt")
 rfc.fit(X_train, Y_train)
 newF= F1(rfc, X_test, Y_test)
 print("avec sqrt F1=",newF)
+
 rfc = RandomForestClassifier(max_depth=max_depth_int,min_samples_split=min_samples_split_int, min_samples_leaf=min_samples_leaf_int,min_impurity_decrease=0,n_estimators=n_estimators_int,max_features="log2")
 rfc.fit(X_train, Y_train)
-newF= F1(rfc, Xl_test, Y_test)
+newF= F1(rfc, X_test, Y_test)
 print("avec log2 F1=",newF)
 
 
 # On observe de meilleur résultat avec la valeur par défaut qui correspond au mode automatique donc nous le conservons dans notre tuning.
 
-# #### log2 semble meilleur 
+# **log2** semble meilleur :
 
-# In[56]:
+# In[69]:
 
 
 rfc = RandomForestClassifier(max_depth=max_depth_int,min_samples_split=min_samples_split_int,min_samples_leaf=min_samples_leaf_int,min_impurity_decrease=0,n_estimators=n_estimators_int,max_features="log2")
@@ -441,9 +419,9 @@ Y_rfc = result_model(rfc, X_test, Y_test)
 maxi=F1(rfc, X_test, Y_test)
 
 
-# # class_weight{“balanced”, “balanced_subsample”}, default=None
+# ### Étape 9 : class_weight
 
-# In[57]:
+# In[70]:
 
 
 rfc = RandomForestClassifier(max_depth=max_depth_int,min_samples_split=min_samples_split_int,min_samples_leaf=min_samples_leaf_int,min_impurity_decrease=0,n_estimators=n_estimators_int,max_features="log2")
@@ -462,13 +440,13 @@ newF= F1(rfc, X_test, Y_test)
 print("avec balanced_subsample F1=",newF)
 
 
-# nos résultats sont meilleurs avec l'option de balanced weight donc nous la conservons pour notre modèle.
+# Nos résultats sont meilleurs avec l'option de balanced weight donc nous la conservons pour notre modèle.
 
 # # Méthode tatonement aléatoire
 # Afin d'améliorer notre tuning nous pouvons aussi utilisés des méthodes aléatoires, leurs intérêts résside dans le fait qu'elle permettents des modifications plus subtil ou au contraire plus imprévisible et désorganisé que celle pensé par un humain, et donc inexploré.
 # Cette version est relativement naive et ne  possède que peu d'itération mais il est possible d'en faire une méthode beaucoup plus poussé, ce code est présent uniquement à titre d'exemple.
 
-# In[58]:
+# In[71]:
 
 
 def variation(param):
@@ -482,12 +460,12 @@ def variation(param):
     rfc = RandomForestClassifier(max_depth=param[0],min_samples_split=param[1],
                              min_samples_leaf=param[2],min_impurity_decrease=param[3],
                              n_estimators=param[4],max_features="log2", class_weight="balanced")
-    rfc.fit(X_scal_train, Y_train)
-    newF= F1(rfc, X_scal_test, Y_test)
+    rfc.fit(X_train, Y_train)
+    newF= F1(rfc, X_test, Y_test)
     return(param,newF)
 
 
-# In[59]:
+# In[72]:
 
 
 def variation2(param):
@@ -501,19 +479,18 @@ def variation2(param):
     rfc = RandomForestClassifier(max_depth=param[0],min_samples_split=param[1],
                              min_samples_leaf=param[2],min_impurity_decrease=param[3],
                              n_estimators=param[4],max_features="log2", class_weight="balanced")
-    rfc.fit(X_scal_train, Y_train)
-    newF= F1(rfc, X_scal_test, Y_test)
+    rfc.fit(X_train, Y_train)
+    newF= F1(rfc, X_test, Y_test)
     return(param,newF)
 
 
-# In[60]:
+# In[73]:
 
 
-param=[max_depth_int,0.5,0.25,min_impurity_decrease_int,n_estimators_int]
-print(param)
+param=[max_depth_int,0.5,0.25,min_impurity_decrease_int,n_estimators_int]; param
 
 
-# In[61]:
+# In[75]:
 
 
 T=[]
@@ -532,83 +509,72 @@ for k in range(10): #ou 100 voir 2000 pendant la nuit
     if nF>newF:
         newF=nF
         param=nparam
-        print("evolution !!!!!")
+        print("+ Improvement")
         rip=0
     nparam,nF=variation2(param)
     T.append(nF)
     if nF>newF:
         newF=nF
         param=nparam
-        print("evolution !!!!!")
+        print("+ Improvement")
         rip=0
     if rip==100:
         break
-print(param)
+
+
+# In[76]:
+
+
+param
+
+
+# In[77]:
+
+
 plt.plot(T)
 plt.show()
-plt.show()
 
 
-# In[62]:
-
-
-print(param)
-plt.plot(T)
-plt.show()
-
-
-# In[63]:
+# In[78]:
 
 
 rfc = RandomForestClassifier(max_depth=param[0],min_samples_split=param[1],
                              min_samples_leaf=param[2],min_impurity_decrease=param[3],
                              n_estimators=param[4],max_features="log2", class_weight="balanced")
 rfc.fit(X_train, Y_train)
-newF= F1(rfc, X_test, Y_test)
+F1(rfc, X_test, Y_test)
 
 
 # Au final le F1 score que nous obtenons est relativement correct sur cette base de test avec un résultat de 0.35 environ
 
-# In[64]:
-
-
-newF
-
-
 # Afin d'avoir une meilleur vision sur notre modèle dans un cas plus généralnous pouvons effectuer une cross validation qui prends plus de variété dans ses tests et évalutation.
 
-# In[65]:
+# In[79]:
 
 
 scores = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
-# In[ ]:
+# In[82]:
 
 
+param
 
 
-
-# In[66]:
+# In[80]:
 
 
 rfc = RandomForestClassifier(min_samples_split=param[1],
                              min_samples_leaf=param[2],min_impurity_decrease=param[3],
                              n_estimators=param[4], class_weight="balanced")
-rfc.fit(X_scal_train, Y_train)
-newF= F1(rfc, X_scal_test, Y_test)
+rfc.fit(X_train, Y_train)
+F1(rfc, X_test, Y_test)
 
 
-# In[67]:
+# In[81]:
 
 
 scores = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
-
-
-# In[ ]:
-
-
-
 

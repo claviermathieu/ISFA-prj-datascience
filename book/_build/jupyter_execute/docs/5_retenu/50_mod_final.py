@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[19]:
+# In[1]:
 
 
 # Bloc non affiché
@@ -49,7 +49,7 @@ def result_model(model,X,Y, mat = True) :
 
 # ## Téléchargement des données
 
-# In[8]:
+# In[2]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -59,7 +59,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[9]:
+# In[3]:
 
 
 # Décomposition features / target
@@ -67,29 +67,19 @@ X = train.drop(columns='Response')
 Y = train['Response']
 
 
-# Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
-
-# In[10]:
-
-
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.9)
-
-scaler=StandardScaler() 
-
-X_scal_train = scaler.fit_transform(X_train)
-X_scal_test = scaler.transform(X_test) 
-
-X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index, columns=X.columns)
-X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index, columns=X.columns)
-
-
 # Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
+
+# In[5]:
+
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
+
 
 # ## Modèle
 
 # On utilise les paramètres déterminé dans le précédent notebook
 
-# In[11]:
+# In[6]:
 
 
 params = {
@@ -125,14 +115,14 @@ params = {
 }
 
 
-# In[14]:
+# In[7]:
 
 
 xgb0 = XGBClassifier(**params)
 xgb0.fit(X_train, Y_train)
 
 
-# In[15]:
+# In[8]:
 
 
 result_model(xgb0, X_test, Y_test)
@@ -152,6 +142,37 @@ result_model(xgb1, X_test, Y_test, mat = False)
 
 
 # Bien évidemment, le modèle entrainé sur X contient X_test, et donc il y a de l'overfitting si l'on teste sur Y_test.
+
+# ```{warning}
+# C'est peut-être finalement le random forest le meilleur.
+# ```
+
+# In[9]:
+
+
+param = [947, 0.11959494750571721, 0.08048576405844253, 0.030792701550521537, 88]
+
+
+# In[10]:
+
+
+from sklearn.ensemble import RandomForestClassifier
+
+
+# In[11]:
+
+
+rfc = RandomForestClassifier(min_samples_split=param[1],
+                             min_samples_leaf=param[2],min_impurity_decrease=param[3],
+                             n_estimators=param[4], class_weight="balanced")
+rfc.fit(X_train, Y_train)
+
+
+# In[12]:
+
+
+result_model(rfc, X_test, Y_test, mat = False)
+
 
 # ## Export des prédictions
 
