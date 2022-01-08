@@ -21,7 +21,7 @@ Lien pour
 
 # Rappels du sujet
 
-**Sujet :** Prédiction de cross-selling en assurance
+**Sujet :** <a href = "https://www.datascience.mclavier.com/content//consignes.pdf">Prédiction de cross-selling en assurance</a>
 
 
 Une compagnie d'assurances santé souhaite mettre à profit sa base de données clients afin de diversifier ses activités. Pour ce faire, elle contacte ses nouveaux assurés pour leur proposer de souscrire à une assurance auto. Un premier test a déjà été mis en place sur quelques dizaines de milliers d’assurés. Durant cette campagne marketing, des données ont été récupérées et structurées pour savoir si la 
