@@ -25,6 +25,8 @@ htmlmin==0.1.12
 idna==3.3
 ImageHash==4.2.1
 imagesize==1.3.0
+imbalanced-learn==0.8.1
+imblearn==0.0
 importlib-metadata==4.8.2
 importlib-resources==5.4.0
 ipykernel==6.5.1
@@ -97,10 +99,12 @@ pywinpty==1.1.6
 PyYAML==6.0
 pyzmq==22.3.0
 requests==2.26.0
+scikit-learn==1.0.1
 scipy==1.7.3
 seaborn==0.11.2
 Send2Trash==1.8.0
 six==1.16.0
+sklearn==0.0
 smmap==5.0.0
 sniffio==1.2.0
 snowballstemmer==2.2.0
@@ -127,6 +131,7 @@ tangled-up-in-unicode==0.1.0
 tenacity==8.0.1
 terminado==0.12.1
 testpath==0.5.0
+threadpoolctl==3.0.0
 toml==0.10.2
 tornado==6.1
 tqdm==4.62.3
@@ -139,4 +144,5 @@ wcwidth==0.2.5
 webencodings==0.5.1
 websocket-client==1.2.1
 widgetsnbextension==3.5.2
+xgboost==1.5.1
 zipp==3.6.0
