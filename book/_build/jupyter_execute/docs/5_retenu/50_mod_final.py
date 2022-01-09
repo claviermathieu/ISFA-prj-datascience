@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[49]:
+# In[90]:
 
 
 # Bloc non affiché
@@ -18,6 +18,12 @@ from sklearn.metrics import f1_score, confusion_matrix,accuracy_score, matthews_
 
 from imblearn.under_sampling import RandomUnderSampler
 from xgboost import XGBClassifier
+import xgboost as xgb
+
+import matplotlib.pylab as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] = 14, 6
 
 
 from sklearn.ensemble import RandomForestClassifier
@@ -48,7 +54,7 @@ def result_model(model,X,Y, mat = True) :
 
 # ## Téléchargement des données
 
-# In[22]:
+# In[79]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -58,7 +64,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[23]:
+# In[80]:
 
 
 X = train.drop(columns='Response')
@@ -67,7 +73,7 @@ Y = train['Response']
 
 # Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
-# In[24]:
+# In[81]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -145,11 +151,18 @@ print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scor
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
 
 
+# In[91]:
+
+
+xgb.plot_importance(xgb0)
+plt.show()
+
+
 # ### Random Forest
 
 # Finalement, nous avons peut-être été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d'entrainement bien moindres.
 
-# In[55]:
+# In[82]:
 
 
 params_rf = {
@@ -163,7 +176,7 @@ params_rf = {
 
 # Entrainement.
 
-# In[56]:
+# In[83]:
 
 
 rfc = RandomForestClassifier(**params_rf)
@@ -172,20 +185,20 @@ rfc.fit(X_train, Y_train)
 
 # Résultat simple puis cross-validé.
 
-# In[57]:
+# In[84]:
 
 
 result_model(rfc, X_test, Y_test)
 
 
-# In[54]:
+# In[85]:
 
 
 scores_rf = cross_val_score(rfc, X_test, Y_test, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_rf.mean(), scores_rf.std()))
 
 
-# In[ ]:
+# In[86]:
 
 
 importances = rfc.feature_importances_
