@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[90]:
+# In[107]:
 
 
 # Bloc non affiché
@@ -31,11 +31,11 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 
-def result_model(model,X,Y, mat = True) :
+def result_model(model,X,Y, mat = True, f1=True) :
     Y_model =model.predict(X)
-
-    f1_scor = f1_score(Y,Y_model)
-    print('Le f1 score vaut',f1_scor)
+    if f1:
+        f1_scor = f1_score(Y,Y_model)
+        print('Le f1 score vaut',f1_scor)
     
 #     score = cross_val_score(model,X,Y,cv=5,scoring = make_scorer(f1_score))
 #     print('F1 cross validé :', np.mean(score))
@@ -87,7 +87,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 # On utilise les paramètres déterminé dans le précédent notebook
 
-# In[68]:
+# In[96]:
 
 
 params_xg = {
@@ -123,35 +123,43 @@ params_xg = {
 }
 
 
-# In[51]:
+# In[97]:
 
 
 xgb0 = XGBClassifier(**params_xg)
-rus = RandomUnderSampler(sampling_strategy = 0.85)
+rus = RandomUnderSampler(sampling_strategy = 0.833)
 X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
 xgb0 = xgb0.fit(X_rus, Y_rus)
 
 
-# In[47]:
+# In[99]:
 
 
-result_model(xgb0, X_test, Y_test, mat = True)
+result_model(xgb0, X_test, Y_test, mat = False)
 
 
-# In[59]:
+# In[100]:
 
 
-scores_xg = cross_val_score(xgb0, X_test, Y_test, cv=5, scoring='f1')
+result_model(xgb0, X_test, Y_test, mat = True, f1 = False)
+
+
+# In[103]:
+
+
+scores_xg = cross_val_score(xgb0, X, Y, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
 
 
-# In[60]:
+# In[104]:
 
 
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
 
 
-# In[91]:
+# La fonction cross_val_score ne fonctionne pas avec XGBoost car une grande partie du tuning se fait par le random under sample.
+
+# In[108]:
 
 
 xgb.plot_importance(xgb0)
@@ -191,10 +199,10 @@ rfc.fit(X_train, Y_train)
 result_model(rfc, X_test, Y_test)
 
 
-# In[85]:
+# In[105]:
 
 
-scores_rf = cross_val_score(rfc, X_test, Y_test, cv=5, scoring='f1')
+scores_rf = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_rf.mean(), scores_rf.std()))
 
 

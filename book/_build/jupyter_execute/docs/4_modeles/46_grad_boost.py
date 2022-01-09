@@ -3,7 +3,7 @@
 
 # # Gradient Boosting
 
-# In[3]:
+# In[1]:
 
 
 # Bloc non affiché
@@ -53,9 +53,15 @@ def result_model(model,X,Y) :
     # return()
 
 
+# In[ ]:
+
+
+
+
+
 # ## Téléchargement des données
 
-# In[4]:
+# In[2]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -65,10 +71,9 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[5]:
+# In[3]:
 
 
-# Décomposition features / target
 X = train.drop(columns='Response')
 Y = train['Response']
 

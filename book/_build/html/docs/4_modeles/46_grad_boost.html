@@ -260,15 +260,14 @@
 <p>On sépare dans un premier temps les variables explicatives et la variable à expliquer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Décomposition features / target</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Response&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Response&#39;</span><span class="p">)</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
 
@@ -294,7 +293,7 @@
 </div>
 </div>
 <p>On visualise les paramètres</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gbr</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
 </pre></div>
@@ -355,7 +354,7 @@ Ici nous reprenons les paramètres trouvés pour l’XGBoost.</p>
 </div>
 </div>
 <p>Nous visualisons les résultats.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_model</span><span class="p">(</span><span class="n">gbr</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
 </pre></div>
@@ -365,7 +364,7 @@ Ici nous reprenons les paramètres trouvés pour l’XGBoost.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.3896830329397141
 </pre></div>
 </div>
-<img alt="../../_images/46_grad_boost_18_1.png" src="../../_images/46_grad_boost_18_1.png" />
+<img alt="../../_images/46_grad_boost_19_1.png" src="../../_images/46_grad_boost_19_1.png" />
 </div>
 </div>
 </div>
