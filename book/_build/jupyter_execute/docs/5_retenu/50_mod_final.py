@@ -266,35 +266,37 @@ X_to_predict = test
 X_to_predict.head(3)
 
 
-# In[69]:
+# In[111]:
 
 
 xgb_final = XGBClassifier(**params_xg)
-xgb_final.fit(X, Y)
+rus = RandomUnderSampler(sampling_strategy = 0.833)
+X_r , Y_r = rus.fit_resample(X ,Y)
+xgb_final.fit(X_r, Y_r)
 
 rfc_final = RandomForestClassifier(**params_rf)
 rfc_final.fit(X, Y)
 
 
-# In[70]:
+# In[112]:
 
 
 Y_predict = rfc_final.predict(X_to_predict)
 
 
-# In[77]:
+# In[113]:
 
 
 np.mean(Y_predict)
 
 
-# In[71]:
+# In[114]:
 
 
 Y_predict_xg = xgb_final.predict(X_to_predict)
 
 
-# In[76]:
+# In[115]:
 
 
 np.mean(Y_predict_xg)

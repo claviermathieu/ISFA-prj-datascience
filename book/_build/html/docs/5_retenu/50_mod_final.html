@@ -553,7 +553,9 @@
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb_final</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_xg</span><span class="p">)</span>
-<span class="n">xgb_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">rus</span> <span class="o">=</span> <span class="n">RandomUnderSampler</span><span class="p">(</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="mf">0.833</span><span class="p">)</span>
+<span class="n">X_r</span> <span class="p">,</span> <span class="n">Y_r</span> <span class="o">=</span> <span class="n">rus</span><span class="o">.</span><span class="n">fit_resample</span><span class="p">(</span><span class="n">X</span> <span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">xgb_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_r</span><span class="p">,</span> <span class="n">Y_r</span><span class="p">)</span>
 
 <span class="n">rfc_final</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
 <span class="n">rfc_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
@@ -575,7 +577,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5267132867132868
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4613986013986014
 </pre></div>
 </div>
 </div>
@@ -594,7 +596,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.17034965034965036
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3732867132867133
 </pre></div>
 </div>
 </div>
