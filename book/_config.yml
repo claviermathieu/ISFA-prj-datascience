@@ -18,7 +18,7 @@ html:
   favicon              : "logo.png"
   home_page_in_navbar  : false
   use_edit_page_button : false
-  use_repository_button: false
+  use_repository_button: truej 
   use_issues_button    : false
 
 # Interact link settings
