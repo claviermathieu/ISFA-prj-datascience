@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[49]:
 
 
 # Bloc non affiché
@@ -16,12 +16,12 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import f1_score, confusion_matrix,accuracy_score, matthews_corrcoef, make_scorer
 
-
+from imblearn.under_sampling import RandomUnderSampler
 from xgboost import XGBClassifier
-from xgboost import plot_importance
 
 
-from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+
 
 
 
@@ -42,14 +42,13 @@ def result_model(model,X,Y, mat = True) :
         plt.title(str(model))
         plt.show()
     
-    return(f1_scor)
 
 
 # # Modèle finale
 
 # ## Téléchargement des données
 
-# In[2]:
+# In[22]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -59,7 +58,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[3]:
+# In[23]:
 
 
 X = train.drop(columns='Response')
@@ -68,7 +67,7 @@ Y = train['Response']
 
 # Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
-# In[4]:
+# In[24]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -76,12 +75,16 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 # ## Modèle
 
+# Au final, deux modèles sont proches. Le Random Forest et le XGBoost.
+
+# ### XGBoost
+
 # On utilise les paramètres déterminé dans le précédent notebook
 
-# In[5]:
+# In[68]:
 
 
-params = {
+params_xg = {
    'objective': 'binary:logistic',
    'base_score': 0.5,
    'booster': 'gbtree',
@@ -114,77 +117,88 @@ params = {
 }
 
 
-# In[6]:
+# In[51]:
 
 
-xgb0 = XGBClassifier(**params)
-xgb0.fit(X_train, Y_train)
+xgb0 = XGBClassifier(**params_xg)
+rus = RandomUnderSampler(sampling_strategy = 0.85)
+X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
+xgb0 = xgb0.fit(X_rus, Y_rus)
 
 
-# In[7]:
+# In[47]:
 
 
-scores = cross_val_score(xgb0, X, Y, cv=5, scoring='f1')
-print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
+result_model(xgb0, X_test, Y_test, mat = True)
 
 
-# In[8]:
+# In[59]:
 
 
-result_model(xgb0, X_test, Y_test)
+scores_xg = cross_val_score(xgb0, X_test, Y_test, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
 
 
-# In[16]:
+# In[60]:
 
 
-xgb1 = XGBClassifier(**params)
-xgb1.fit(X, Y)
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
 
 
-# In[20]:
+# ### Random Forest
+
+# Finalement, nous avons peut-être été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d'entrainement bien moindres.
+
+# In[55]:
 
 
-result_model(xgb1, X_test, Y_test, mat = False)
+params_rf = {
+    'min_samples_split': 0.11959494750571721, 
+    'min_samples_leaf' : 0.08048576405844253,
+    'min_impurity_decrease' : 0.030792701550521537, 
+    'n_estimators' : 88, 
+    'class_weight' : 'balanced'
+}
 
 
-# Bien évidemment, le modèle entrainé sur X contient X_test, et donc il y a de l'overfitting si l'on teste sur Y_test.
+# Entrainement.
 
-# ```{warning}
-# C'est peut-être finalement le random forest le meilleur.
-# ```
-
-# In[10]:
+# In[56]:
 
 
-param = [947, 0.11959494750571721, 0.08048576405844253, 0.030792701550521537, 88]
-
-
-# In[11]:
-
-
-from sklearn.ensemble import RandomForestClassifier
-
-
-# In[12]:
-
-
-rfc = RandomForestClassifier(min_samples_split=param[1],
-                             min_samples_leaf=param[2],min_impurity_decrease=param[3],
-                             n_estimators=param[4], class_weight="balanced")
+rfc = RandomForestClassifier(**params_rf)
 rfc.fit(X_train, Y_train)
 
 
-# In[14]:
+# Résultat simple puis cross-validé.
+
+# In[57]:
 
 
-result_model(rfc, X_test, Y_test, mat = False)
+result_model(rfc, X_test, Y_test)
 
 
-# In[13]:
+# In[54]:
 
 
-scores = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
-print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
+scores_rf = cross_val_score(rfc, X_test, Y_test, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_rf.mean(), scores_rf.std()))
+
+
+# In[ ]:
+
+
+importances = rfc.feature_importances_
+std = np.std([tree.feature_importances_ for tree in rfc.estimators_], axis=0)
+
+feature_names = [i for i in X.columns]
+forest_importances = pd.Series(importances, index=feature_names)
+
+fig, ax = plt.subplots(figsize = (10, 5))
+forest_importances.plot.bar(yerr=std, ax=ax)
+ax.set_title("Feature importances")
+ax.set_ylabel("Mean decrease in impurity")
+fig.tight_layout()
 
 
 # ## Export des prédictions
@@ -195,7 +209,7 @@ print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.
 
 # Nous appliquons le même traitement à la bdd test qu'à la bdd train.
 
-# In[31]:
+# In[62]:
 
 
 test = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_test.csv")
@@ -225,28 +239,49 @@ test.replace(dict_age, inplace = True)
 X_to_predict = test
 
 
-# In[32]:
+# In[63]:
 
 
 X_to_predict.head(3)
 
 
-# In[26]:
+# In[69]:
 
 
-xgb_final = XGBClassifier(**params)
+xgb_final = XGBClassifier(**params_xg)
 xgb_final.fit(X, Y)
 
+rfc_final = RandomForestClassifier(**params_rf)
+rfc_final.fit(X, Y)
 
-# In[79]:
+
+# In[70]:
 
 
-Y_predict = xgb_final.predict(X_to_predict)
+Y_predict = rfc_final.predict(X_to_predict)
+
+
+# In[77]:
+
+
+np.mean(Y_predict)
+
+
+# In[71]:
+
+
+Y_predict_xg = xgb_final.predict(X_to_predict)
+
+
+# In[76]:
+
+
+np.mean(Y_predict_xg)
 
 
 # On l'exporte sous le même format que la base de donnée X.
 
-# In[80]:
+# In[66]:
 
 
 Y_predict = pd.DataFrame(Y_predict)

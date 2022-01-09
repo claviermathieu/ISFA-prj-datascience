@@ -295,45 +295,7 @@
         
               <div>
                 
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">cross_val_score</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="k">def</span> <span class="nf">F1</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">f1_scor</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">mat</span><span class="p">:</span>
-        <span class="c1"># Matrice de confusion</span>
-        <span class="n">cm_model</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_model</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_model</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="random-forest">
+  <div class="tex2jax_ignore mathjax_ignore section" id="random-forest">
 <h1>Random Forest<a class="headerlink" href="#random-forest" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="telechargement-des-donnees">
 <h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
@@ -442,7 +404,7 @@
 </div>
 </div>
 <p>On sépare les données en train et test.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
 
@@ -476,7 +438,7 @@
 <img alt="../../_images/44_rf_12_1.png" src="../../_images/44_rf_12_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 moyen de </span><span class="si">%0.2f</span><span class="s2"> avec un écart type de </span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
@@ -505,13 +467,7 @@
 <img alt="../../_images/44_rf_15_1.png" src="../../_images/44_rf_15_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_scal_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 moyen de </span><span class="si">%0.2f</span><span class="s2"> avec un écart type de </span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.39 avec un écart type de 0.01
 </pre></div>
@@ -519,7 +475,7 @@
 </div>
 </div>
 <p>Afin d’avoir une meilleur compréhension de nos modèle on peut aussi observer quels sont les variables qui leurs apportent le plus d’informations et sont les plus importantes.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">importances</span> <span class="o">=</span> <span class="n">rfc</span><span class="o">.</span><span class="n">feature_importances_</span>
 <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">([</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">rfc</span><span class="o">.</span><span class="n">estimators_</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -575,7 +531,7 @@
 <div class="section" id="etape-2-n-estimators">
 <h3>Étape 2 : n_estimators<a class="headerlink" href="#etape-2-n-estimators" title="Permalink to this headline">¶</a></h3>
 <p>La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus à avec les valeurs proches de l’optimum et en s’aidant de l’allure du graphe de nos F1 scores en fonction de nos paramêtre pour savoir dans quelle directions s’orienter.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">maxi</span><span class="o">=</span><span class="n">F1</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
 <span class="n">kmaxi</span><span class="o">=</span><span class="mi">100</span>
@@ -629,7 +585,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 
@@ -656,7 +612,7 @@
 </div>
 </div>
 <p>Nous évaluons le f1-score actuellement.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_depth_int</span><span class="o">=</span><span class="n">kmaxi</span>
 <span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">)</span>
@@ -679,7 +635,7 @@
 <div class="section" id="etape-4-min-samples-split">
 <h3>Étape 4 :min_samples_split<a class="headerlink" href="#etape-4-min-samples-split" title="Permalink to this headline">¶</a></h3>
 <p>Nous répétons le processus pour le paramètre min_samples_split.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">test</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span>
@@ -704,20 +660,14 @@
 <img alt="../../_images/44_rf_35_1.png" src="../../_images/44_rf_35_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_samples_split_int</span><span class="o">=</span><span class="n">kmaxi</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nous choisissons donc&quot;</span><span class="p">,</span><span class="n">kmaxi</span><span class="p">,</span><span class="s2">&quot;comme la valeur du paramètre min_samples_split.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nous choisissons donc 3 comme la valeur du paramètre min_samples_split.
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">,</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">,</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split_int</span><span class="p">)</span>
 <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
@@ -739,7 +689,7 @@
 <div class="section" id="etape-5-min-samples-leaf">
 <h3>Étape 5 : min_samples_leaf<a class="headerlink" href="#etape-5-min-samples-leaf" title="Permalink to this headline">¶</a></h3>
 <p>Nous répétons le processus pour le paramètre <em>min_samples_leaf</em>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">test</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span>
@@ -764,13 +714,7 @@
 <img alt="../../_images/44_rf_40_1.png" src="../../_images/44_rf_40_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_samples_leaf_int</span><span class="o">=</span><span class="n">kmaxi</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nous choisissons donc&quot;</span><span class="p">,</span><span class="n">kmaxi</span><span class="p">,</span><span class="s2">&quot;comme valeur du paramètre min_samples_leaf.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nous choisissons donc 1 comme valeur du paramètre min_samples_leaf.
 </pre></div>
@@ -781,7 +725,7 @@
 <div class="section" id="etape-6-min-impurity-decrease">
 <h3>Étape 6 : min_impurity_decrease<a class="headerlink" href="#etape-6-min-impurity-decrease" title="Permalink to this headline">¶</a></h3>
 <p>Nous répétons le processus pour le paramètre <em>min_samples_leaf</em>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">,</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">,</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split_int</span><span class="p">,</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf_int</span><span class="p">)</span>
 <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
@@ -799,7 +743,7 @@
 <img alt="../../_images/44_rf_44_1.png" src="../../_images/44_rf_44_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">test</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]</span>
@@ -824,20 +768,14 @@
 <img alt="../../_images/44_rf_45_1.png" src="../../_images/44_rf_45_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_impurity_decrease_int</span><span class="o">=</span><span class="n">kmaxi</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nous choisissons donc&quot;</span><span class="p">,</span><span class="n">kmaxi</span><span class="p">,</span><span class="s2">&quot;comme valeur du paramètre min_impurity_decrease.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nous choisissons donc 0 comme valeur du paramètre min_impurity_decrease.
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">,</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">,</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split_int</span><span class="p">,</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf_int</span><span class="p">,</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
@@ -857,7 +795,7 @@
 </div>
 <div class="section" id="etape-7-n-estimators">
 <h3>Étape 7 : n_estimators<a class="headerlink" href="#etape-7-n-estimators" title="Permalink to this headline">¶</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">test</span><span class="o">=</span><span class="p">[</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">500</span><span class="p">]</span>
@@ -882,13 +820,7 @@
 <img alt="../../_images/44_rf_49_1.png" src="../../_images/44_rf_49_1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_estimators_int</span><span class="o">=</span><span class="n">kmaxi</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nous choisissons donc&quot;</span><span class="p">,</span><span class="n">kmaxi</span><span class="p">,</span><span class="s2">&quot;comme valeur du paramètre n_estimators.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nous choisissons donc 50 comme valeur du paramètre n_estimators.
 </pre></div>
@@ -898,7 +830,7 @@
 </div>
 <div class="section" id="etape-8-max-features">
 <h3>Étape 8 : max_features<a class="headerlink" href="#etape-8-max-features" title="Permalink to this headline">¶</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">,</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split_int</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf_int</span><span class="p">,</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">)</span>
 <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
@@ -927,7 +859,7 @@ avec log2 F1= 0.41231822070145424
 </div>
 <p>On observe de meilleur résultat avec la valeur par défaut qui correspond au mode automatique donc nous le conservons dans notre tuning.</p>
 <p><strong>log2</strong> semble meilleur :</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">,</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split_int</span><span class="p">,</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf_int</span><span class="p">,</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">,</span><span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;log2&quot;</span><span class="p">)</span>
 <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
@@ -946,7 +878,7 @@ avec log2 F1= 0.41231822070145424
 </div>
 <div class="section" id="etape-9-class-weight">
 <h3>Étape 9 : class_weight<a class="headerlink" href="#etape-9-class-weight" title="Permalink to this headline">¶</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth_int</span><span class="p">,</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split_int</span><span class="p">,</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf_int</span><span class="p">,</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators_int</span><span class="p">,</span><span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;log2&quot;</span><span class="p">)</span>
 <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
@@ -1032,7 +964,7 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">rip</span><span class="o">=</span><span class="mi">0</span>
@@ -1061,23 +993,6 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
         <span class="n">rip</span><span class="o">=</span><span class="mi">0</span>
     <span class="k">if</span> <span class="n">rip</span><span class="o">==</span><span class="mi">100</span><span class="p">:</span>
         <span class="k">break</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
-1
-+ Improvement
-2
-+ Improvement
-3
-4
-+ Improvement
-5
-6
-7
-8
-9
 </pre></div>
 </div>
 </div>

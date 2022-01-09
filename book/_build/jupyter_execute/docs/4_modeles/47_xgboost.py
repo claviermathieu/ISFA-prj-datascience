@@ -3,7 +3,7 @@
 
 # # XGBoost
 
-# In[1]:
+# In[113]:
 
 
 # Bloc non affiché
@@ -20,10 +20,14 @@ from sklearn.metrics import f1_score, confusion_matrix,accuracy_score, matthews_
 
 import xgboost as xgb
 from xgboost.sklearn import XGBClassifier
-from xgboost import plot_importance
 
 from sklearn.model_selection import GridSearchCV
 
+
+import matplotlib.pylab as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+from matplotlib.pylab import rcParams
+rcParams['figure.figsize'] = 14, 6
 
 
 def result_model(model,X,Y, f1 = True, mat = True) :
@@ -94,6 +98,19 @@ result_model(xgb0, X_test, Y_test, mat = False)
 result_model(xgb0, X_test, Y_test, mat = True, f1 = False)
 
 
+# Visualisation du graphique **Features importance**.
+
+# In[114]:
+
+
+xgb.plot_importance(xgb0)
+plt.show()
+
+
+# ```{note}
+# Le graphe des features importance du modèle tuné se trouve à la fin de ce notebook.
+# ```
+
 # ## Tuning
 
 # Pour tuner le programme, on s'inspire grandement de [ce site](https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/#h2_9).
@@ -103,20 +120,6 @@ result_model(xgb0, X_test, Y_test, mat = True, f1 = False)
 
 
 from sklearn.model_selection import GridSearchCV  
-
-
-# In[9]:
-
-
-# Bloc non affiché
-
-#Import libraries:
-
-
-# import matplotlib.pylab as plt
-# %matplotlib inline
-# from matplotlib.pylab import rcParams
-# rcParams['figure.figsize'] = 12, 4
 
 
 # Si la metrics f1 existait dans la fonction cv d'XGBoost, nous aurions pu l'utiliser de la cross validation pour adapter *n_estimators* au fur et à mesure du tuning. Actuellement, ce n'est pas le cas, nous nous contenterons d'utiliser la même méthode d'entrainement et de test que précédemment. Ceci a pour intérêt de permettre facilement de comparer les résultats.
@@ -170,14 +173,9 @@ params['nthread'] = 7 # Utilisation maximale des capacités de la machine utilis
 params["use_label_encoder"] = False # Masquer les warning.
 
 
-# In[62]:
-
-
-train_train = pd.concat([X_train, Y_train], axis = 1)
-
-target = 'Response'
-predictors = [x for x in train.columns if x not in [target]]
-
+# Le paramètre *n_estimators* est particulier, nous l'estimerons plusieurs fois à différentes étapes du tuning.
+# 
+# Nous définissons dans un premier temps les valeurs que l'on souhaite tester.
 
 # In[66]:
 
@@ -185,6 +183,15 @@ predictors = [x for x in train.columns if x not in [target]]
 param_estimator1 = {
  'n_estimators':[900, 1000, 1100, 1200]
 }
+
+
+# Nous utilisons l'outil gsearch de *sklearn* pour tester différents paramètres en ayant comme mesure de scoring le F1-Score. Voici l'implémentation qui sera masquée par la suite.
+
+# In[62]:
+
+
+target = 'Response'
+predictors = [x for x in train.columns if x not in [target]]
 
 
 # In[67]:
@@ -197,49 +204,56 @@ gsearch_est1 = GridSearchCV(
 gsearch_est1.fit(train[predictors],train[target])
 
 
-# In[65]:
+# On récupère les paramètres optimaux identifiés.
+
+# In[68]:
 
 
 gsearch_est1.best_params_, gsearch_est1.best_score_
 
 
-# In[ ]:
+# Nous modifions le paramètres *n_estimators* suite au résultat ci-dessus.
+
+# In[115]:
 
 
 params["n_estimators"] = 1000
 
 
-# In[54]:
+# ```{note}
+# Le F1-Score en sorti du grid_search ne peut pas être comparé complètement au f1 initiale car le grid_search utilise de la cross validation et donc pas le même jeu de données test.
+# ```
+
+# Nous entrainons le modèle avec les nouveaux paramètres pour pouvoir comparer. Par la suite, cette étape ne sera pas tout le temps réalisée.
+
+# In[116]:
 
 
 xgb1 = XGBClassifier(**params)
-
-
-# In[55]:
-
-
 xgb1.fit(X_train, Y_train)
 
 
-# In[56]:
+# In[72]:
 
 
 result_model(xgb1, X_test, Y_test, mat = False)
 
 
+# Le f1-score s'est amélioré de 0.02 point. Nous continuons le tuning.
+
 # ### Étape 2 : max_depth et min_child_weight
 
-# Lors du tuning, nous diminuons le nombre d'estimators pour réduire le temps de calcul
+# Lors du tuning, nous diminuons le nombre d’estimators pour réduire le temps de calcul
 
-# In[160]:
+# In[117]:
 
 
-params["n_estimators"] = 19
+params["n_estimators"] = 140
 
 
 # On tune max_depth et min_child_weight
 
-# In[161]:
+# In[74]:
 
 
 param_test1 = {
@@ -250,7 +264,7 @@ param_test1 = {
 
 # Nous utilisons l'outil gsearch de *sklearn* pour tester différents paramètres en ayant comme mesure de scoring le F1-Score. Voici l'implémentation qui sera masquée par la suite.
 
-# In[162]:
+# In[75]:
 
 
 gsearch1 = GridSearchCV(
@@ -262,7 +276,7 @@ gsearch1.fit(train[predictors],train[target])
 
 # On récupère les paramètres optimaux identifiés.
 
-# In[73]:
+# In[76]:
 
 
 gsearch1.best_params_, gsearch1.best_score_
@@ -270,7 +284,7 @@ gsearch1.best_params_, gsearch1.best_score_
 
 # Nous pouvons modifier *min_child_weight* dans les paramètres.
 
-# In[74]:
+# In[118]:
 
 
 params["max_depth"] = 9
@@ -279,7 +293,7 @@ params["min_child_weight"] = 5
 
 # Étant à la limite sur les deux paramètres, nous testons avec des paramètres plus forts.
 
-# In[75]:
+# In[78]:
 
 
 param_test2 = {
@@ -294,13 +308,13 @@ gsearch2 = GridSearchCV(
 gsearch2.fit(train[predictors],train[target])
 
 
-# In[76]:
+# In[88]:
 
 
 gsearch2.best_params_, gsearch2.best_score_
 
 
-# In[77]:
+# In[119]:
 
 
 params["max_depth"] = 50
@@ -308,7 +322,7 @@ params["max_depth"] = 50
 
 # Nous pouvons essayer d'affiner l'ajustement.
 
-# In[51]:
+# In[90]:
 
 
 param_test2b = {
@@ -316,7 +330,7 @@ param_test2b = {
 }
 
 
-# In[52]:
+# In[82]:
 
 
 gsearch2b = GridSearchCV(
@@ -326,7 +340,7 @@ gsearch2b = GridSearchCV(
 gsearch2b.fit(train[predictors],train[target])
 
 
-# In[55]:
+# In[83]:
 
 
 gsearch2b.best_params_, gsearch2b.best_score_
@@ -365,7 +379,7 @@ gsearch3.fit(train[predictors],train[target])
 gsearch3.best_params_, gsearch3.best_score_
 
 
-# In[78]:
+# In[120]:
 
 
 params["gamma"] = 0
@@ -375,19 +389,25 @@ params["gamma"] = 0
 
 # Avant de continuer, nous ré-augmentons n_estimators pour voir où est le modèle si nous augmentons le nombre de boosting rounds.
 
-# In[52]:
+# In[121]:
 
 
 params["n_estimators"] = 1000
 xgb2 = XGBClassifier(**params)
-modelfit(xgb2, train, predictors)
+xgb2 = xgb2.fit(X_train, Y_train)
+
+
+# In[104]:
+
+
+result_model(xgb2, X_test, Y_test, mat = False)
 
 
 # ### Etape 4 : subsample et colsample_bytree
 
 # Nous rétablissons *n_estimators* pour la puissance de calcul.
 
-# In[53]:
+# In[122]:
 
 
 params["n_estimators"] = 140
@@ -422,7 +442,7 @@ gsearch4.best_params_, gsearch4.best_score_
 
 # Nous modifions les paramètres identifiés
 
-# In[79]:
+# In[123]:
 
 
 params["subsample"] = 0.7
@@ -462,7 +482,7 @@ gsearch5.best_params_, gsearch5.best_score_
 
 # Prochaine étape : optimisation de *reg_alpha*.
 
-# In[77]:
+# In[124]:
 
 
 param_test6 = {
@@ -487,7 +507,7 @@ gsearch6.best_params_, gsearch6.best_score_
 
 # On modifie le paramètre.
 
-# In[80]:
+# In[125]:
 
 
 params["reg_alpha"] = 1e-5
@@ -495,106 +515,155 @@ params["reg_alpha"] = 1e-5
 
 # Avant de continuer, nous ré-augmentons n_estimators pour voir où est le modèle si nous augmentons le nombre de boosting rounds.
 
-# In[56]:
+# In[126]:
 
 
 params["n_estimators"] = 1000
 xgb3 = XGBClassifier(**params)
-modelfit(xgb3, train, predictors)
+xgb3 = xgb3.fit(X_train, Y_train)
+
+
+# In[127]:
+
+
+result_model(xgb3, X_test, Y_test, mat = False)
 
 
 # ### Etape 6 : Learning rate
 
 # Enfin, nous essayons de diminuer le *learning_rate* et d'augmenter grandement les *n_estimators*.
 
-# In[105]:
+# In[128]:
 
 
 params["n_estimators"] = 5000
 params["learning_rate"] = 0.01
 
 
-# In[106]:
+# In[129]:
 
 
 xgb4 = XGBClassifier(**params)
-modelfit(xgb4, train, predictors)
+xgb4 = xgb4.fit(X_train, Y_train)
 
 
-# In[133]:
+# In[130]:
 
 
-xgb4
+result_model(xgb4, X_test, Y_test, mat = False)
 
 
 # Le F1-Score ne s'améliore pas, nous revenons aux anciens paramètres.
 
-# In[90]:
+# In[135]:
 
 
 params["n_estimators"] = 1000
 params["learning_rate"] = 0.1
 
 
-# ### Imbalanced
+# ## Random Under Sampler
 # 
 
-# In[124]:
+# Une autre idée pour améliorer notre XGBoost est de travailler sur la forme des données d'entrainement. Actuellement le jeux de données est non balancé, c'est-à-dire que nous avons plus de Y ayant une valeur de 0 que de 1.
+# 
+# Pour résoudre ce problème nous utilisons un librairie permettan de réaliser du **random under sampler** et réajustant à souhait la répartition des 1 et des 0 dans notre base de données d'entrainement.
+
+# In[136]:
 
 
 from imblearn.under_sampling import RandomUnderSampler
 
-alpha = 1
-rus = RandomUnderSampler(sampling_strategy = alpha)
-X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
+
+# Dans un premier temps nous définissons la fonction *model_rus(alpha, model, X_train, Y_train)* et *f1_scorer(model, X, Y)*.
+
+# In[137]:
 
 
-# In[129]:
-
-
-
-import xgboost as xgb
-from xgboost import XGBClassifier
-
-xgb = XGBClassifier(**params)
-
-def model_imb2(alpha,model) :
+def model_rus(alpha,model, X_train, Y_train) :
     rus = RandomUnderSampler(sampling_strategy = alpha)
     X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
     model.fit(X_rus,Y_rus)
     return model
 
-def f1_scorer(clf,X,Y) :
-    Y_clf = clf.predict(X)
-    score = f1_score(Y,Y_clf)
+def f1_scorer(model,X,Y) :
+    Y_model = model.predict(X)
+    score = f1_score(Y,Y_model)
     return score
 
 
-# In[130]:
+# Grâce à ses fonctions, nous évaluons notre modèle XGBoost avec des jeux de données plus ou moins équilibrés. 
+# 
+# $$
+# \alpha = \frac{\text{Nombre de 1}}{\text{Nombre de 0}}
+# $$
+# 
+# Lorsque $\alpha = 1$ les données sont parfaitement balancées (50% /50%).
+
+# In[144]:
 
 
 list_model = []
 list_alpha =  np.linspace(0.5,1,10)
 score_alpha = []
 
-for i in list_alpha :
-    a = model_imb2(i,xgb)
-    list_model.append(a)
-    f1 = f1_scorer(a,X_test , Y_test)
+xgb_rus = XGBClassifier(**params)
+
+for alpha in list_alpha :
+    temp_m = model_rus(alpha,xgb_rus, X_train, Y_train)
+    list_model.append(temp_m)
+    f1 = f1_scorer(temp_m,X_test , Y_test)
     score_alpha.append(f1)
 
 
-# In[132]:
+# In[149]:
 
 
 plt.plot(list_alpha, score_alpha)
+plt.title("Évolution du F1-Score en fonction de alpha (jeu de données plus ou moins balancé)")
+
+plt.show()
+
+
+# In[182]:
+
+
+# Index qui optimise le f1 score
+max_value = max(score_alpha)
+max_index = score_alpha.index(max_value)
+print("On choisit donc alpha = ", np.round(list_alpha[max_index], 3))
+
+
+# Le F1-Score s'améliore grandement lorsque l'entrainement se fait sur des données balancées. Nous nous rappronchons des valeurs du random forest.
+
+# In[175]:
+
+
+# Modèle final
+xgb5 = XGBClassifier(**params)
+rus = RandomUnderSampler(sampling_strategy = list_alpha[max_index])
+X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
+xgb5 = xgb5.fit(X_rus, Y_rus)
+
+
+# In[176]:
+
+
+result_model(xgb5, X_test, Y_test, mat = False)
+
+
+# In[185]:
+
+
+xgb.plot_importance(xgb5)
+plt.show()
 
 
 # ## Paramètres finaux
 
-# Au final, les paramètres obtenus sont :
+# Au final, l'optimisation se fait à travers les paramètres et la base de données d'entrainement. La base de données d'entrainement doit être équilibrée avec un coefficient $\alpha = 0.833$ et les paramètres sont :
 
-# In[43]:
+# In[177]:
 
 
 params
