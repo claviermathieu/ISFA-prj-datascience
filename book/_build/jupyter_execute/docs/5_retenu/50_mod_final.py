@@ -62,14 +62,13 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 # In[3]:
 
 
-# Décomposition features / target
 X = train.drop(columns='Response')
 Y = train['Response']
 
 
 # Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
-# In[5]:
+# In[4]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -79,7 +78,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 # On utilise les paramètres déterminé dans le précédent notebook
 
-# In[6]:
+# In[5]:
 
 
 params = {
@@ -115,11 +114,18 @@ params = {
 }
 
 
-# In[7]:
+# In[6]:
 
 
 xgb0 = XGBClassifier(**params)
 xgb0.fit(X_train, Y_train)
+
+
+# In[7]:
+
+
+scores = cross_val_score(xgb0, X, Y, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
 # In[8]:
@@ -147,19 +153,19 @@ result_model(xgb1, X_test, Y_test, mat = False)
 # C'est peut-être finalement le random forest le meilleur.
 # ```
 
-# In[9]:
+# In[10]:
 
 
 param = [947, 0.11959494750571721, 0.08048576405844253, 0.030792701550521537, 88]
 
 
-# In[10]:
+# In[11]:
 
 
 from sklearn.ensemble import RandomForestClassifier
 
 
-# In[11]:
+# In[12]:
 
 
 rfc = RandomForestClassifier(min_samples_split=param[1],
@@ -168,10 +174,17 @@ rfc = RandomForestClassifier(min_samples_split=param[1],
 rfc.fit(X_train, Y_train)
 
 
-# In[12]:
+# In[14]:
 
 
 result_model(rfc, X_test, Y_test, mat = False)
+
+
+# In[13]:
+
+
+scores = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
+print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
 # ## Export des prédictions

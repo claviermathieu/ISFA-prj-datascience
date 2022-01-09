@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[35]:
+# In[83]:
 
 
 from sklearn.metrics import f1_score
@@ -42,13 +42,13 @@ def result_model(model,X,Y, mat = True):
 
 # ## Téléchargement des données
 
-# In[36]:
+# In[84]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
 
 
-# In[37]:
+# In[85]:
 
 
 train.head(3)
@@ -58,7 +58,7 @@ train.head(3)
 
 # On sépare la variable à expliquer des variables explicatives.
 
-# In[38]:
+# In[86]:
 
 
 X = train.drop(columns='Response')
@@ -67,7 +67,7 @@ Y = train['Response']
 
 # On sépare les données en train et test.
 
-# In[39]:
+# In[87]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -85,7 +85,7 @@ X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
 # On fait un premier test avec les hyper-paramêtres par défaut 
 
-# In[40]:
+# In[88]:
 
 
 rfc = RandomForestClassifier()
@@ -93,7 +93,7 @@ rfc.fit(X_train, Y_train)
 result_model(rfc, X_test, Y_test)
 
 
-# In[41]:
+# In[89]:
 
 
 scores = cross_val_score(rfc, X_train, Y_train, cv=5, scoring='f1')
@@ -119,7 +119,7 @@ print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.
 
 # Afin d'avoir une meilleur compréhension de nos modèle on peut aussi observer quels sont les variables qui leurs apportent le plus d'informations et sont les plus importantes.
 
-# In[44]:
+# In[93]:
 
 
 importances = rfc.feature_importances_
@@ -141,11 +141,11 @@ fig.tight_layout()
 # 
 # Nous allons intervenir sur les paramêtres suivant et procéder dans l'ordre dans lesquels les paramêtres sont présentés :
 # 
-# - **n_estimatorsint**, default=100, ce paramêtre correspond au nombre d'arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus
+# - **n_estimatorsint**, default=100, ce paramètre correspond au nombre d'arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus
 # - **max_depthint**, correspond à la profondeur maximal des arbres default=None
 # - **min_samples_splitint**, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2
 # - **min_samples_leafint**, correspond au nombre minimum d'observations dans une feuille simple default=1
-# - **min_impurity_decreasefloat**, correspond à l'apport minimum d'une fuille pour qu'elle soit conservé default=0.0
+# - **min_impurity_decreasefloat**, correspond à l'apport minimum d'une feuille pour qu'elle soit conservée default=0.0
 # - **n_estimatorsint**, le nombre d'arbre à nouveau, au cas où les paramêtres modifiés modifié à leur tour le nombre d'arbre optimal, default=100
 # - **max_features**{“auto”, “sqrt”, “log2”}, default= "auto", les 3 modes de calculs de features max qu'il faut tester
 # - **class_weight**{“balanced”, “balanced_subsample”}, default=None, les 2 options pour mettre des poids sur les observations
@@ -154,7 +154,7 @@ fig.tight_layout()
 
 # Rappelons, le F1 de base avant le tunning. 
 
-# In[45]:
+# In[94]:
 
 
 rfc = RandomForestClassifier()
@@ -166,7 +166,7 @@ Y_rfc = result_model(rfc, X_test, Y_test, mat = False)
 # 
 # La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus à avec les valeurs proches de l'optimum et en s'aidant de l'allure du graphe de nos F1 scores en fonction de nos paramêtre pour savoir dans quelle directions s'orienter.
 
-# In[46]:
+# In[95]:
 
 
 maxi=F1(rfc, X_test, Y_test)
@@ -187,7 +187,7 @@ plt.plot(test,T)
 plt.show()
 
 
-# In[47]:
+# In[96]:
 
 
 n_estimators_int = kmaxi
@@ -199,14 +199,14 @@ print("Nous choisissons donc",kmaxi,"comme la valeur pour le paramètre n_estima
 # ### Étape 3 : max_depth
 # Nous répétons le processus pour ce paramètre, le bridant simplement à 100 maximum.
 
-# In[48]:
+# In[97]:
 
 
 maxi=F1(rfc, X_test, Y_test)
 kmaxi=100
 
 
-# In[49]:
+# In[98]:
 
 
 T=[]
@@ -227,7 +227,7 @@ plt.show()
 
 # Nous évaluons le f1-score actuellement.
 
-# In[50]:
+# In[99]:
 
 
 max_depth_int=kmaxi
@@ -442,7 +442,7 @@ print("avec balanced_subsample F1=",newF)
 
 # Nos résultats sont meilleurs avec l'option de balanced weight donc nous la conservons pour notre modèle.
 
-# # Méthode tatonement aléatoire
+# ## Méthode tatonement aléatoire
 # Afin d'améliorer notre tuning nous pouvons aussi utilisés des méthodes aléatoires, leurs intérêts résside dans le fait qu'elle permettents des modifications plus subtil ou au contraire plus imprévisible et désorganisé que celle pensé par un humain, et donc inexploré.
 # Cette version est relativement naive et ne  possède que peu d'itération mais il est possible d'en faire une méthode beaucoup plus poussé, ce code est présent uniquement à titre d'exemple.
 
@@ -495,7 +495,7 @@ param=[max_depth_int,0.5,0.25,min_impurity_decrease_int,n_estimators_int]; param
 
 T=[]
 rip=0
-param=[max_depth_int,0.5,0.25,min_impurity_decrease_int,n_estimators_int]
+
 rfc = RandomForestClassifier(max_depth=param[0],min_samples_split=param[1],
                              min_samples_leaf=param[2],min_impurity_decrease=param[3],
                              n_estimators=param[4],max_features="log2", class_weight="balanced")

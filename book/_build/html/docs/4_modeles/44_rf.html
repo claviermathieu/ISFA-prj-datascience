@@ -212,81 +212,74 @@
             </div>
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Random Forest
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#telechargement-des-donnees">
+   Téléchargement des données
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#telechargement-des-donnees">
-     Téléchargement des données
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-processing">
+   Pre-processing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implementation">
+   Implémentation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tuning">
+   Tuning
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-1-initialisation">
+     Étape 1 : Initialisation
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#pre-processing">
-     Pre-processing
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-2-n-estimators">
+     Étape 2 : n_estimators
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#implementation">
-     Implémentation
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-3-max-depth">
+     Étape 3 : max_depth
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#tuning">
-     Tuning
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-4-min-samples-split">
+     Étape 4 :min_samples_split
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-1-initialisation">
-       Étape 1 : Initialisation
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-2-n-estimators">
-       Étape 2 : n_estimators
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-3-max-depth">
-       Étape 3 : max_depth
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-4-min-samples-split">
-       Étape 4 :min_samples_split
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-5-min-samples-leaf">
-       Étape 5 : min_samples_leaf
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-6-min-impurity-decrease">
-       Étape 6 : min_impurity_decrease
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-7-n-estimators">
-       Étape 7 : n_estimators
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-8-max-features">
-       Étape 8 : max_features
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#etape-9-class-weight">
-       Étape 9 : class_weight
-      </a>
-     </li>
-    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-5-min-samples-leaf">
+     Étape 5 : min_samples_leaf
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-6-min-impurity-decrease">
+     Étape 6 : min_impurity_decrease
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-7-n-estimators">
+     Étape 7 : n_estimators
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-8-max-features">
+     Étape 8 : max_features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#etape-9-class-weight">
+     Étape 9 : class_weight
+    </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#methode-tatonement-aleatoire">
    Méthode tatonement aléatoire
   </a>
@@ -477,7 +470,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.408491107286288
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.38379160636758325
 </pre></div>
 </div>
 <img alt="../../_images/44_rf_12_1.png" src="../../_images/44_rf_12_1.png" />
@@ -491,7 +484,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.39 avec un écart type de 0.01
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.40 avec un écart type de 0.01
 </pre></div>
 </div>
 </div>
@@ -552,11 +545,11 @@
 <p>Il y’a de nombreux paramêtres à tuner :</p>
 <p>Nous allons intervenir sur les paramêtres suivant et procéder dans l’ordre dans lesquels les paramêtres sont présentés :</p>
 <ul class="simple">
-<li><p><strong>n_estimatorsint</strong>, default=100, ce paramêtre correspond au nombre d’arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus</p></li>
+<li><p><strong>n_estimatorsint</strong>, default=100, ce paramètre correspond au nombre d’arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus</p></li>
 <li><p><strong>max_depthint</strong>, correspond à la profondeur maximal des arbres default=None</p></li>
 <li><p><strong>min_samples_splitint</strong>, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2</p></li>
 <li><p><strong>min_samples_leafint</strong>, correspond au nombre minimum d’observations dans une feuille simple default=1</p></li>
-<li><p><strong>min_impurity_decreasefloat</strong>, correspond à l’apport minimum d’une fuille pour qu’elle soit conservé default=0.0</p></li>
+<li><p><strong>min_impurity_decreasefloat</strong>, correspond à l’apport minimum d’une feuille pour qu’elle soit conservée default=0.0</p></li>
 <li><p><strong>n_estimatorsint</strong>, le nombre d’arbre à nouveau, au cas où les paramêtres modifiés modifié à leur tour le nombre d’arbre optimal, default=100</p></li>
 <li><p><strong>max_features</strong>{“auto”, “sqrt”, “log2”}, default= “auto”, les 3 modes de calculs de features max qu’il faut tester</p></li>
 <li><p><strong>class_weight</strong>{“balanced”, “balanced_subsample”}, default=None, les 2 options pour mettre des poids sur les observations</p></li>
@@ -573,7 +566,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.40389573188198225
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.390286717378584
 </pre></div>
 </div>
 </div>
@@ -604,7 +597,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>90 0.42036775106082036
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>90 0.3939482106488216
 </pre></div>
 </div>
 <img alt="../../_images/44_rf_25_1.png" src="../../_images/44_rf_25_1.png" />
@@ -656,7 +649,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 0.408466819221968
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 0.38874383521903105
 </pre></div>
 </div>
 <img alt="../../_images/44_rf_30_1.png" src="../../_images/44_rf_30_1.png" />
@@ -676,7 +669,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4044431785816007
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.3807580174927114
 </pre></div>
 </div>
 <img alt="../../_images/44_rf_32_1.png" src="../../_images/44_rf_32_1.png" />
@@ -983,9 +976,8 @@ avec balanced_subsample F1= 0.43081081081081085
 <p>Nos résultats sont meilleurs avec l’option de balanced weight donc nous la conservons pour notre modèle.</p>
 </div>
 </div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="methode-tatonement-aleatoire">
-<h1>Méthode tatonement aléatoire<a class="headerlink" href="#methode-tatonement-aleatoire" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="methode-tatonement-aleatoire">
+<h2>Méthode tatonement aléatoire<a class="headerlink" href="#methode-tatonement-aleatoire" title="Permalink to this headline">¶</a></h2>
 <p>Afin d’améliorer notre tuning nous pouvons aussi utilisés des méthodes aléatoires, leurs intérêts résside dans le fait qu’elle permettents des modifications plus subtil ou au contraire plus imprévisible et désorganisé que celle pensé par un humain, et donc inexploré.
 Cette version est relativement naive et ne  possède que peu d’itération mais il est possible d’en faire une méthode beaucoup plus poussé, ce code est présent uniquement à titre d’exemple.</p>
 <div class="cell docutils container">
@@ -1044,7 +1036,7 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">=</span><span class="p">[]</span>
 <span class="n">rip</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">param</span><span class="o">=</span><span class="p">[</span><span class="n">max_depth_int</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="n">min_impurity_decrease_int</span><span class="p">,</span><span class="n">n_estimators_int</span><span class="p">]</span>
+
 <span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                              <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
                              <span class="n">n_estimators</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">)</span>
@@ -1182,6 +1174,7 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.56 avec un écart type de 0.01
 </pre></div>
+</div>
 </div>
 </div>
 </div>

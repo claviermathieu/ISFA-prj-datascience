@@ -3,7 +3,7 @@
 
 # # XGBoost
 
-# In[11]:
+# In[1]:
 
 
 # Bloc non affiché
@@ -18,34 +18,35 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import f1_score, confusion_matrix,accuracy_score, matthews_corrcoef, make_scorer
 
-
-from xgboost import XGBClassifier
+import xgboost as xgb
+from xgboost.sklearn import XGBClassifier
 from xgboost import plot_importance
-
 
 from sklearn.model_selection import GridSearchCV
 
 
 
-def result_model(model,X,Y) :
+def result_model(model,X,Y, f1 = True, mat = True) :
     Y_model =model.predict(X)
 
-    f1_scor = f1_score(Y,Y_model)
-    print('Le f1 score vaut',f1_scor)
-    
-    
-   # Matrice de confusion
-    cm_model = confusion_matrix(Y, Y_model)
-    plt.rcParams['figure.figsize'] = (5, 5)
-    sns.heatmap(cm_model, annot = True)
-    plt.title(str(model))
-    plt.show()
+    if f1:
+        f1_scor = f1_score(Y,Y_model)
+        print('Le f1 score vaut',f1_scor)
+        
+        
+    # Matrice de confusion
+    if mat:
+        cm_model = confusion_matrix(Y, Y_model)
+        plt.rcParams['figure.figsize'] = (5, 5)
+        sns.heatmap(cm_model, annot = True)
+        plt.title(str(model))
+        plt.show()
     
 
 
 # ## Téléchargement des données
 
-# In[3]:
+# In[2]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -55,7 +56,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[57]:
+# In[3]:
 
 
 X = train.drop(columns='Response')
@@ -64,7 +65,7 @@ Y = train['Response']
 
 # Ensuite, on décompose en bdd train et test puis on scale les données grâce à sklearn.
 
-# In[7]:
+# In[4]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -74,17 +75,23 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 # ## Implémentation
 
-# In[9]:
+# In[5]:
 
 
-xgb0 = XGBClassifier(use_label_encoder=False)
+xgb0 = xgb.XGBClassifier(use_label_encoder=False)
 xgb0.fit(X_train, Y_train)
 
 
-# In[12]:
+# In[6]:
 
 
-result_model(xgb0, X_test, Y_test)
+result_model(xgb0, X_test, Y_test, mat = False)
+
+
+# In[7]:
+
+
+result_model(xgb0, X_test, Y_test, mat = True, f1 = False)
 
 
 # ## Tuning
@@ -92,37 +99,31 @@ result_model(xgb0, X_test, Y_test)
 # Pour tuner le programme, on s'inspire grandement de [ce site](https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/#h2_9).
 # Nous utilisons la fonction GridSearchCV de *sklearn*.
 
-# In[13]:
+# In[8]:
 
 
 from sklearn.model_selection import GridSearchCV  
 
 
-# In[44]:
+# In[9]:
 
 
 # Bloc non affiché
 
 #Import libraries:
-import numpy as np
-import pandas as pd
-
-import xgboost as xgb
-from xgboost.sklearn import XGBClassifier
-from sklearn.model_selection import GridSearchCV   #Perforing grid search
-
-import matplotlib.pylab as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
-from matplotlib.pylab import rcParams
-rcParams['figure.figsize'] = 12, 4
 
 
-# In[45]:
+# import matplotlib.pylab as plt
+# %matplotlib inline
+# from matplotlib.pylab import rcParams
+# rcParams['figure.figsize'] = 12, 4
 
 
-target = 'Response'
-predictors = [x for x in train.columns if x not in [target]]
+# Si la metrics f1 existait dans la fonction cv d'XGBoost, nous aurions pu l'utiliser de la cross validation pour adapter *n_estimators* au fur et à mesure du tuning. Actuellement, ce n'est pas le cas, nous nous contenterons d'utiliser la même méthode d'entrainement et de test que précédemment. Ceci a pour intérêt de permettre facilement de comparer les résultats.
 
+# Voici l'algorithme pour l'exemple : 
+
+# In[47]:
 
 
 def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopping_rounds=50):
@@ -131,68 +132,114 @@ def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopp
         xgb_param = alg.get_xgb_params()
         xgtrain = xgb.DMatrix(dtrain[predictors].values, label=dtrain[target].values)
         cvresult = xgb.cv(xgb_param, xgtrain, num_boost_round=alg.get_params()['n_estimators'], nfold=cv_folds,
-            metrics='auc', early_stopping_rounds=early_stopping_rounds)
+            metrics='error', early_stopping_rounds=early_stopping_rounds)
         alg.set_params(n_estimators=cvresult.shape[0])
 
     #Fit the algorithm on the data
-    alg.fit(dtrain[predictors], dtrain[target],eval_metric='auc')
+    alg.fit(dtrain[predictors], dtrain[target])
         
     #Predict training set:
     dtrain_predictions = alg.predict(dtrain[predictors])
     # dtrain_predprob = alg.predict_proba(dtrain[predictors])[:,1]
         
+    print("\nEstimateur efficient :", cvresult.shape[0])
     print("\nMesures :")
     print("---------")
-    print("Accuracy : ", accuracy_score(dtrain[target].values, dtrain_predictions))
     print("f1 : ", f1_score(dtrain[target].values, dtrain_predictions))
 
+    return(alg)
 
-    plot_importance(alg)
-    plt.show()
 
+# ### Étape 1 : Initialisation
 
 # Dans un premier temps, on récupère les paramètres de bases que l'on va tuner par la suite.
 
-# In[46]:
+# In[58]:
 
 
 params = xgb0.get_xgb_params()
 
 
-# ### Étape 1 : Initialisation
-
 # On modifie quelques paramètres de base au regard des TP réalisés.
 
-# In[47]:
+# In[59]:
 
 
-params['seed'] = 27
-params['nthread'] = 7
-params["use_label_encoder"] = False
+params['seed'] = 27 # Pour retrouver les résultats
+params['nthread'] = 7 # Utilisation maximale des capacités de la machine utilisée
+params["use_label_encoder"] = False # Masquer les warning.
+
+
+# In[62]:
+
+
+train_train = pd.concat([X_train, Y_train], axis = 1)
+
+target = 'Response'
+predictors = [x for x in train.columns if x not in [target]]
+
+
+# In[66]:
+
+
+param_estimator1 = {
+ 'n_estimators':[900, 1000, 1100, 1200]
+}
+
+
+# In[67]:
+
+
+gsearch_est1 = GridSearchCV(
+    estimator = XGBClassifier(**params),
+    param_grid = param_estimator1, scoring='f1', n_jobs=4, cv=5)
+ 
+gsearch_est1.fit(train[predictors],train[target])
+
+
+# In[65]:
+
+
+gsearch_est1.best_params_, gsearch_est1.best_score_
+
+
+# In[ ]:
+
+
 params["n_estimators"] = 1000
 
 
-# In[48]:
+# In[54]:
 
 
 xgb1 = XGBClassifier(**params)
 
-modelfit(xgb1, train, predictors)
+
+# In[55]:
+
+
+xgb1.fit(X_train, Y_train)
+
+
+# In[56]:
+
+
+result_model(xgb1, X_test, Y_test, mat = False)
 
 
 # ### Étape 2 : max_depth et min_child_weight
 
 # Lors du tuning, nous diminuons le nombre d'estimators pour réduire le temps de calcul
 
-# In[49]:
+# In[160]:
 
 
-params["n_estimators"] = 140
+params["n_estimators"] = 19
 
 
 # On tune max_depth et min_child_weight
 
-# In[42]:
+# In[161]:
 
 
 param_test1 = {
@@ -203,7 +250,7 @@ param_test1 = {
 
 # Nous utilisons l'outil gsearch de *sklearn* pour tester différents paramètres en ayant comme mesure de scoring le F1-Score. Voici l'implémentation qui sera masquée par la suite.
 
-# In[43]:
+# In[162]:
 
 
 gsearch1 = GridSearchCV(
@@ -215,7 +262,7 @@ gsearch1.fit(train[predictors],train[target])
 
 # On récupère les paramètres optimaux identifiés.
 
-# In[44]:
+# In[73]:
 
 
 gsearch1.best_params_, gsearch1.best_score_
@@ -223,7 +270,7 @@ gsearch1.best_params_, gsearch1.best_score_
 
 # Nous pouvons modifier *min_child_weight* dans les paramètres.
 
-# In[50]:
+# In[74]:
 
 
 params["max_depth"] = 9
@@ -232,7 +279,7 @@ params["min_child_weight"] = 5
 
 # Étant à la limite sur les deux paramètres, nous testons avec des paramètres plus forts.
 
-# In[48]:
+# In[75]:
 
 
 param_test2 = {
@@ -247,19 +294,19 @@ gsearch2 = GridSearchCV(
 gsearch2.fit(train[predictors],train[target])
 
 
-# In[49]:
+# In[76]:
 
 
 gsearch2.best_params_, gsearch2.best_score_
 
 
-# Si on est à une valeur optimale on peut tester plus haut
-
-# In[51]:
+# In[77]:
 
 
 params["max_depth"] = 50
 
+
+# Nous pouvons essayer d'affiner l'ajustement.
 
 # In[51]:
 
@@ -318,6 +365,12 @@ gsearch3.fit(train[predictors],train[target])
 gsearch3.best_params_, gsearch3.best_score_
 
 
+# In[78]:
+
+
+params["gamma"] = 0
+
+
 # Nous ne modifions pas *Gamma* et laissons le paramètre à 0.
 
 # Avant de continuer, nous ré-augmentons n_estimators pour voir où est le modèle si nous augmentons le nombre de boosting rounds.
@@ -369,7 +422,7 @@ gsearch4.best_params_, gsearch4.best_score_
 
 # Nous modifions les paramètres identifiés
 
-# In[54]:
+# In[79]:
 
 
 params["subsample"] = 0.7
@@ -434,7 +487,7 @@ gsearch6.best_params_, gsearch6.best_score_
 
 # On modifie le paramètre.
 
-# In[55]:
+# In[80]:
 
 
 params["reg_alpha"] = 1e-5
@@ -454,42 +507,24 @@ modelfit(xgb3, train, predictors)
 
 # Enfin, nous essayons de diminuer le *learning_rate* et d'augmenter grandement les *n_estimators*.
 
-# In[38]:
-
-
-param_test7 = {
- 'n_estimators':np.arange(0.01, 0.32, 0.03),
- 'learning_rate':np.arange(250, 5051, 400)
-}
-
-
-# In[ ]:
-
-
-gsearch7 = GridSearchCV(estimator = XGBClassifier(**params), 
-                        param_grid = param_test7, scoring='f1',n_jobs=4, cv=5)
-                        
-gsearch7.fit(train[predictors],train[target])
-
-
-# In[ ]:
-
-
-gsearch7.best_params_, gsearch7.best_score_
-
-
-# In[40]:
+# In[105]:
 
 
 params["n_estimators"] = 5000
 params["learning_rate"] = 0.01
 
 
-# In[88]:
+# In[106]:
 
 
 xgb4 = XGBClassifier(**params)
 modelfit(xgb4, train, predictors)
+
+
+# In[133]:
+
+
+xgb4
 
 
 # Le F1-Score ne s'améliore pas, nous revenons aux anciens paramètres.
@@ -499,6 +534,60 @@ modelfit(xgb4, train, predictors)
 
 params["n_estimators"] = 1000
 params["learning_rate"] = 0.1
+
+
+# ### Imbalanced
+# 
+
+# In[124]:
+
+
+from imblearn.under_sampling import RandomUnderSampler
+
+alpha = 1
+rus = RandomUnderSampler(sampling_strategy = alpha)
+X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
+
+
+# In[129]:
+
+
+
+import xgboost as xgb
+from xgboost import XGBClassifier
+
+xgb = XGBClassifier(**params)
+
+def model_imb2(alpha,model) :
+    rus = RandomUnderSampler(sampling_strategy = alpha)
+    X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
+    model.fit(X_rus,Y_rus)
+    return model
+
+def f1_scorer(clf,X,Y) :
+    Y_clf = clf.predict(X)
+    score = f1_score(Y,Y_clf)
+    return score
+
+
+# In[130]:
+
+
+list_model = []
+list_alpha =  np.linspace(0.5,1,10)
+score_alpha = []
+
+for i in list_alpha :
+    a = model_imb2(i,xgb)
+    list_model.append(a)
+    f1 = f1_scorer(a,X_test , Y_test)
+    score_alpha.append(f1)
+
+
+# In[132]:
+
+
+plt.plot(list_alpha, score_alpha)
 
 
 # ## Paramètres finaux
