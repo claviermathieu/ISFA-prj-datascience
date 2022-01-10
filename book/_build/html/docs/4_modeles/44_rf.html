@@ -280,8 +280,8 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#methode-tatonement-aleatoire">
-   Méthode tatonement aléatoire
+  <a class="reference internal nav-link" href="#methode-par-tatonnement-aleatoire">
+   Méthode par tâtonnement aléatoire
   </a>
  </li>
 </ul>
@@ -903,11 +903,21 @@ avec balanced_subsample F1= 0.43081081081081085
 <p>Nos résultats sont meilleurs avec l’option de balanced weight donc nous la conservons pour notre modèle.</p>
 </div>
 </div>
-<div class="section" id="methode-tatonement-aleatoire">
-<h2>Méthode tatonement aléatoire<a class="headerlink" href="#methode-tatonement-aleatoire" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="methode-par-tatonnement-aleatoire">
+<h2>Méthode par tâtonnement aléatoire<a class="headerlink" href="#methode-par-tatonnement-aleatoire" title="Permalink to this headline">¶</a></h2>
 <p>Afin d’améliorer notre tuning nous pouvons aussi utilisés des méthodes aléatoires, leurs intérêts résside dans le fait qu’elle permettents des modifications plus subtil ou au contraire plus imprévisible et désorganisé que celle pensé par un humain, et donc inexploré.
 Cette version est relativement naive et ne  possède que peu d’itération mais il est possible d’en faire une méthode beaucoup plus poussé, ce code est présent uniquement à titre d’exemple.</p>
-<div class="cell docutils container">
+<p>Le principe de base de la méthode aléatoire programmé est de partir de paramètres choisit à l’avance (ici ceux du tuning déterministe), paramètres “parents”, et de les modifier de manière aléatoire pour créer plusieurs enfants.
+Une fois les enfants créer on evalut les enfants et les parents (via le F1 score ici) et on garde le meilleur, qui devient à son tour le parents de plusieurs enfant, permettant de réitérer le processus jusqu’à avoir un F1 score cible ou pendant une période temps donné.</p>
+<p>Par soucis de complexité temporelle nous avons fait que 2 enfants par génération et nous n’avons fait tourner l’algorithme que quelques secondes mais il est recommandé de faire tourner l’algorithme plus longtemps avec plus d’enfant pour avoir de meilleurs résultats, même si cela peut durer plusieurs minutes/heure.</p>
+<br>
+<p>Nous avons aussi testé deux types de variations ne sachant laquelle choisir et n’ayant pas le temps de faire tourner les deux suffisamment longtemps :
+La première effectue de “relativement petit chocs” et entraine des variations qui vont de -50% à +50% sur un des paramètres
+La deuxième entraîne des changements plus conséquent, un paramètre peut ainsi varier du simple au triple.
+Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants et le parent avant de recommencer.</p>
+<br>
+<p>Cliquer sur le + pour afficher les fonctions variations.</p>
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">variation</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
     <span class="n">modif</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
@@ -923,13 +933,9 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
     <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
     <span class="n">newF</span><span class="o">=</span> <span class="n">F1</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">param</span><span class="p">,</span><span class="n">newF</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">variation2</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+
+
+<span class="k">def</span> <span class="nf">variation2</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
     <span class="n">modif</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">modif</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
         <span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span><span class="o">/</span><span class="mi">100</span>
@@ -938,8 +944,8 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
     <span class="k">else</span><span class="p">:</span>
         <span class="n">param</span><span class="p">[</span><span class="n">modif</span><span class="p">]</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="n">modif</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
     <span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                             <span class="n">n_estimators</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">)</span>
+                            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                            <span class="n">n_estimators</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;log2&quot;</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">)</span>
     <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
     <span class="n">newF</span><span class="o">=</span> <span class="n">F1</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">param</span><span class="p">,</span><span class="n">newF</span><span class="p">)</span>
@@ -949,7 +955,7 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">=</span><span class="p">[</span><span class="n">max_depth_int</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="n">min_impurity_decrease_int</span><span class="p">,</span><span class="n">n_estimators_int</span><span class="p">];</span> <span class="n">param</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param</span> <span class="o">=</span> <span class="p">[</span><span class="n">max_depth_int</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="n">min_impurity_decrease_int</span><span class="p">,</span><span class="n">n_estimators_int</span><span class="p">];</span> <span class="n">param</span>
 </pre></div>
 </div>
 </div>
@@ -992,30 +998,21 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<img alt="../../_images/44_rf_65_0.png" src="../../_images/44_rf_65_0.png" />
 </div>
 </div>
+<p>Paramètres obtenus :</p>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[947, 0.11959494750571721, 0.08048576405844253, 0.030792701550521537, 88]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/44_rf_65_0.png" src="../../_images/44_rf_65_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
+<p>Au final après avoir fait tourner l’algorithme on obtient :</p>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                              <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
@@ -1025,68 +1022,16 @@ Cette version est relativement naive et ne  possède que peu d’itération mais
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5579280892684942
-</pre></div>
 </div>
-</div>
-</div>
-<p>Au final le F1 score que nous obtenons est relativement correct sur cette base de test avec un résultat de 0.35 environ</p>
-<p>Afin d’avoir une meilleur vision sur notre modèle dans un cas plus généralnous pouvons effectuer une cross validation qui prends plus de variété dans ses tests et évalutation.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 moyen de </span><span class="si">%0.2f</span><span class="s2"> avec un écart type de </span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.55 avec un écart type de 0.01
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[947, 0.11959494750571721, 0.08048576405844253, 0.030792701550521537, 88]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                             <span class="n">n_estimators</span><span class="o">=</span><span class="n">param</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">)</span>
-<span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-<span class="n">F1</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5579280892684942
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 moyen de </span><span class="si">%0.2f</span><span class="s2"> avec un écart type de </span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.56 avec un écart type de 0.01
-</pre></div>
-</div>
-</div>
-</div>
+<p>Il est important de noter que si vous faites tourner cette algorithme de votre côté vous n’obtiendrez pas forcément les mêmes résultats, il peuvent être meilleur ou moins bon…</p>
+<p><br><br><br><br><br></p>
 </div>
 </div>
 

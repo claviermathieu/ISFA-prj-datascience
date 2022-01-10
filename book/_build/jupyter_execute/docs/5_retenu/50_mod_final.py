@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[107]:
+# In[2]:
 
 
 # Bloc non affiché
@@ -54,7 +54,7 @@ def result_model(model,X,Y, mat = True, f1=True) :
 
 # ## Téléchargement des données
 
-# In[79]:
+# In[3]:
 
 
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
@@ -64,7 +64,7 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 # On sépare dans un premier temps les variables explicatives et la variable à expliquer.
 
-# In[80]:
+# In[4]:
 
 
 X = train.drop(columns='Response')
@@ -73,7 +73,7 @@ Y = train['Response']
 
 # Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
-# In[81]:
+# In[5]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
@@ -81,96 +81,18 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 # ## Modèle
 
-# Au final, deux modèles sont proches. Le Random Forest et le XGBoost.
+# Au final, nous avons tester 7 modèles. Voici leur F1-Score respectif :
+# - **Logistique** (sans tuning) : 0.22
+# - **SCV** (sans tuning) : 0.13
+# - **CART** (sans tuning) : 0.43
+# - **Random Forest** (avec tuning) : 0.55
+# - **Réseau de neuronnes** (sans tuning) : 
+# - **Gradient Boost** (sans tuning): 0.39
+# - **XGBoost** (avec tuning) : 0.54
 
-# ### XGBoost
+# Nous utilisons donc le **Random Forest** pour nos prévisions finales. Nous avons sans doute été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d'entrainement bien moindres.
 
-# On utilise les paramètres déterminé dans le précédent notebook
-
-# In[96]:
-
-
-params_xg = {
-   'objective': 'binary:logistic',
-   'base_score': 0.5,
-   'booster': 'gbtree',
-   'colsample_bylevel': 1,
-   'colsample_bynode': 1,
-   'colsample_bytree': 0.9,
-   'gamma': 0,
-   'gpu_id': -1,
-   'interaction_constraints': '',
-   'learning_rate': 0.1,
-   'max_delta_step': 0,
-   'max_depth': 50,
-   'min_child_weight': 5,
-   'monotone_constraints': '()',
-   'n_jobs': 8,
-   'num_parallel_tree': 1,
-   'predictor': 'auto',
-   'random_state': 0,
-   'reg_alpha': 1e-05,
-   'reg_lambda': 1,
-   'scale_pos_weight': 1,
-   'subsample': 0.7,
-   'tree_method': 'exact',
-   'validate_parameters': 1,
-   'verbosity': None,
-   'seed': 27,
-   'nthread': 7,
-   'use_label_encoder': False,
-   'n_estimators': 1000
-}
-
-
-# In[97]:
-
-
-xgb0 = XGBClassifier(**params_xg)
-rus = RandomUnderSampler(sampling_strategy = 0.833)
-X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
-xgb0 = xgb0.fit(X_rus, Y_rus)
-
-
-# In[99]:
-
-
-result_model(xgb0, X_test, Y_test, mat = False)
-
-
-# In[100]:
-
-
-result_model(xgb0, X_test, Y_test, mat = True, f1 = False)
-
-
-# In[103]:
-
-
-scores_xg = cross_val_score(xgb0, X, Y, cv=5, scoring='f1')
-print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
-
-
-# In[104]:
-
-
-print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_xg.mean(), scores_xg.std()))
-
-
-# La fonction cross_val_score ne fonctionne pas avec XGBoost car une grande partie du tuning se fait par le random under sample.
-
-# In[108]:
-
-
-xgb.plot_importance(xgb0)
-plt.show()
-
-
-# ### Random Forest
-
-# Finalement, nous avons peut-être été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d'entrainement bien moindres.
-
-# In[82]:
+# In[6]:
 
 
 params_rf = {
@@ -184,7 +106,7 @@ params_rf = {
 
 # Entrainement.
 
-# In[83]:
+# In[7]:
 
 
 rfc = RandomForestClassifier(**params_rf)
@@ -193,20 +115,20 @@ rfc.fit(X_train, Y_train)
 
 # Résultat simple puis cross-validé.
 
-# In[84]:
+# In[8]:
 
 
 result_model(rfc, X_test, Y_test)
 
 
-# In[105]:
+# In[9]:
 
 
 scores_rf = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_rf.mean(), scores_rf.std()))
 
 
-# In[86]:
+# In[10]:
 
 
 importances = rfc.feature_importances_
@@ -230,7 +152,7 @@ fig.tight_layout()
 
 # Nous appliquons le même traitement à la bdd test qu'à la bdd train.
 
-# In[62]:
+# In[11]:
 
 
 test = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_test.csv")
@@ -260,51 +182,30 @@ test.replace(dict_age, inplace = True)
 X_to_predict = test
 
 
-# In[63]:
+# In[12]:
 
 
 X_to_predict.head(3)
 
 
-# In[111]:
+# In[13]:
 
-
-xgb_final = XGBClassifier(**params_xg)
-rus = RandomUnderSampler(sampling_strategy = 0.833)
-X_r , Y_r = rus.fit_resample(X ,Y)
-xgb_final.fit(X_r, Y_r)
 
 rfc_final = RandomForestClassifier(**params_rf)
 rfc_final.fit(X, Y)
 
 
-# In[112]:
+# Nous évaluons les prévisions finale :
+
+# In[15]:
 
 
 Y_predict = rfc_final.predict(X_to_predict)
 
 
-# In[113]:
+# Puis, nous l'exportons sous le même format que la base de donnée X.
 
-
-np.mean(Y_predict)
-
-
-# In[114]:
-
-
-Y_predict_xg = xgb_final.predict(X_to_predict)
-
-
-# In[115]:
-
-
-np.mean(Y_predict_xg)
-
-
-# On l'exporte sous le même format que la base de donnée X.
-
-# In[66]:
+# In[16]:
 
 
 Y_predict = pd.DataFrame(Y_predict)
@@ -324,10 +225,10 @@ Y_predict.to_csv("groupe_1_predictions.csv", index = False)
 
 # Vérification du fichier :
 
-# In[84]:
+# In[19]:
 
 
-pd.read_csv('groupe_1_predictions.csv')
+pd.read_csv('https://www.data.mclavier.com/prj_datascience/groupe_1_predictions.csv')
 
 
 # ## Conclusion

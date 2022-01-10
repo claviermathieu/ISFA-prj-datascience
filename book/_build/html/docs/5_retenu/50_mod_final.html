@@ -225,18 +225,6 @@
   <a class="reference internal nav-link" href="#modele">
    Modèle
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#xgboost">
-     XGBoost
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#random-forest">
-     Random Forest
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#export-des-predictions">
@@ -293,86 +281,17 @@
 </div>
 <div class="section" id="modele">
 <h2>Modèle<a class="headerlink" href="#modele" title="Permalink to this headline">¶</a></h2>
-<p>Au final, deux modèles sont proches. Le Random Forest et le XGBoost.</p>
-<div class="section" id="xgboost">
-<h3>XGBoost<a class="headerlink" href="#xgboost" title="Permalink to this headline">¶</a></h3>
-<p>On utilise les paramètres déterminé dans le précédent notebook</p>
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="n">params_xg</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;objective&#39;</span><span class="p">:</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;base_score&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-    <span class="s1">&#39;booster&#39;</span><span class="p">:</span> <span class="s1">&#39;gbtree&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;colsample_bylevel&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;colsample_bynode&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
-    <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s1">&#39;gpu_id&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;interaction_constraints&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="s1">&#39;max_delta_step&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-    <span class="s1">&#39;min_child_weight&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="s1">&#39;monotone_constraints&#39;</span><span class="p">:</span> <span class="s1">&#39;()&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="s1">&#39;num_parallel_tree&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;predictor&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s1">&#39;reg_alpha&#39;</span><span class="p">:</span> <span class="mf">1e-05</span><span class="p">,</span>
-    <span class="s1">&#39;reg_lambda&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;scale_pos_weight&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
-    <span class="s1">&#39;tree_method&#39;</span><span class="p">:</span> <span class="s1">&#39;exact&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;validate_parameters&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;seed&#39;</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
-    <span class="s1">&#39;nthread&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-    <span class="s1">&#39;use_label_encoder&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">1000</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb0</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_xg</span><span class="p">)</span>
-<span class="n">rus</span> <span class="o">=</span> <span class="n">RandomUnderSampler</span><span class="p">(</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="mf">0.833</span><span class="p">)</span>
-<span class="n">X_rus</span> <span class="p">,</span> <span class="n">Y_rus</span> <span class="o">=</span> <span class="n">rus</span><span class="o">.</span><span class="n">fit_resample</span><span class="p">(</span><span class="n">X_train</span> <span class="p">,</span><span class="n">Y_train</span><span class="p">)</span>
-<span class="n">xgb0</span> <span class="o">=</span> <span class="n">xgb0</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_rus</span><span class="p">,</span> <span class="n">Y_rus</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.5426301853486319
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_remove-input tag_hide-output docutils container">
-<div class="cell_output docutils container">
-<img alt="../../_images/50_mod_final_16_0.png" src="../../_images/50_mod_final_16_0.png" />
-</div>
-</div>
-<div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.41 avec un écart type de 0.01
-</pre></div>
-</div>
-</div>
-</div>
-<p>La fonction cross_val_score ne fonctionne pas avec XGBoost car une grande partie du tuning se fait par le random under sample.</p>
-<div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<img alt="../../_images/50_mod_final_20_0.png" src="../../_images/50_mod_final_20_0.png" />
-</div>
-</div>
-</div>
-<div class="section" id="random-forest">
-<h3>Random Forest<a class="headerlink" href="#random-forest" title="Permalink to this headline">¶</a></h3>
-<p>Finalement, nous avons peut-être été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d’entrainement bien moindres.</p>
+<p>Au final, nous avons tester 7 modèles. Voici leur F1-Score respectif :</p>
+<ul class="simple">
+<li><p><strong>Logistique</strong> (sans tuning) : 0.22</p></li>
+<li><p><strong>SCV</strong> (sans tuning) : 0.13</p></li>
+<li><p><strong>CART</strong> (sans tuning) : 0.43</p></li>
+<li><p><strong>Random Forest</strong> (avec tuning) : 0.55</p></li>
+<li><p><strong>Réseau de neuronnes</strong> (sans tuning) :</p></li>
+<li><p><strong>Gradient Boost</strong> (sans tuning): 0.39</p></li>
+<li><p><strong>XGBoost</strong> (avec tuning) : 0.54</p></li>
+</ul>
+<p>Nous utilisons donc le <strong>Random Forest</strong> pour nos prévisions finales. Nous avons sans doute été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d’entrainement bien moindres.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_rf</span> <span class="o">=</span> <span class="p">{</span>
@@ -398,15 +317,15 @@
 <p>Résultat simple puis cross-validé.</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.5522009029345373
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.5596444938203027
 </pre></div>
 </div>
-<img alt="../../_images/50_mod_final_27_1.png" src="../../_images/50_mod_final_27_1.png" />
+<img alt="../../_images/50_mod_final_16_1.png" src="../../_images/50_mod_final_16_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.55 avec un écart type de 0.01
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.56 avec un écart type de 0.00
 </pre></div>
 </div>
 </div>
@@ -428,8 +347,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/50_mod_final_29_0.png" src="../../_images/50_mod_final_29_0.png" />
-</div>
+<img alt="../../_images/50_mod_final_18_0.png" src="../../_images/50_mod_final_18_0.png" />
 </div>
 </div>
 </div>
@@ -552,17 +470,13 @@
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb_final</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_xg</span><span class="p">)</span>
-<span class="n">rus</span> <span class="o">=</span> <span class="n">RandomUnderSampler</span><span class="p">(</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="mf">0.833</span><span class="p">)</span>
-<span class="n">X_r</span> <span class="p">,</span> <span class="n">Y_r</span> <span class="o">=</span> <span class="n">rus</span><span class="o">.</span><span class="n">fit_resample</span><span class="p">(</span><span class="n">X</span> <span class="p">,</span><span class="n">Y</span><span class="p">)</span>
-<span class="n">xgb_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_r</span><span class="p">,</span> <span class="n">Y_r</span><span class="p">)</span>
-
-<span class="n">rfc_final</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc_final</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
 <span class="n">rfc_final</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Nous évaluons les prévisions finale :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y_predict</span> <span class="o">=</span> <span class="n">rfc_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_to_predict</span><span class="p">)</span>
@@ -570,38 +484,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y_predict</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4613986013986014
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y_predict_xg</span> <span class="o">=</span> <span class="n">xgb_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_to_predict</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y_predict_xg</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3732867132867133
-</pre></div>
-</div>
-</div>
-</div>
-<p>On l’exporte sous le même format que la base de donnée X.</p>
+<p>Puis, nous l’exportons sous le même format que la base de donnée X.</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
@@ -666,7 +549,7 @@
 <p>Vérification du fichier :</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;groupe_1_predictions.csv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://www.data.mclavier.com/prj_datascience/groupe_1_predictions.csv&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

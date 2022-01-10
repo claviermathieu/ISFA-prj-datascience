@@ -442,11 +442,27 @@ print("avec balanced_subsample F1=",newF)
 
 # Nos résultats sont meilleurs avec l'option de balanced weight donc nous la conservons pour notre modèle.
 
-# ## Méthode tatonement aléatoire
+# ## Méthode par tâtonnement aléatoire
 # Afin d'améliorer notre tuning nous pouvons aussi utilisés des méthodes aléatoires, leurs intérêts résside dans le fait qu'elle permettents des modifications plus subtil ou au contraire plus imprévisible et désorganisé que celle pensé par un humain, et donc inexploré.
 # Cette version est relativement naive et ne  possède que peu d'itération mais il est possible d'en faire une méthode beaucoup plus poussé, ce code est présent uniquement à titre d'exemple.
 
-# In[71]:
+# Le principe de base de la méthode aléatoire programmé est de partir de paramètres choisit à l'avance (ici ceux du tuning déterministe), paramètres "parents", et de les modifier de manière aléatoire pour créer plusieurs enfants.
+# Une fois les enfants créer on evalut les enfants et les parents (via le F1 score ici) et on garde le meilleur, qui devient à son tour le parents de plusieurs enfant, permettant de réitérer le processus jusqu'à avoir un F1 score cible ou pendant une période temps donné.
+# 
+# Par soucis de complexité temporelle nous avons fait que 2 enfants par génération et nous n'avons fait tourner l'algorithme que quelques secondes mais il est recommandé de faire tourner l'algorithme plus longtemps avec plus d'enfant pour avoir de meilleurs résultats, même si cela peut durer plusieurs minutes/heure.
+# 
+# <br>
+# 
+# Nous avons aussi testé deux types de variations ne sachant laquelle choisir et n'ayant pas le temps de faire tourner les deux suffisamment longtemps :
+# La première effectue de "relativement petit chocs" et entraine des variations qui vont de -50% à +50% sur un des paramètres
+# La deuxième entraîne des changements plus conséquent, un paramètre peut ainsi varier du simple au triple.
+# Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants et le parent avant de recommencer.
+
+# <br>
+# 
+# Cliquer sur le + pour afficher les fonctions variations.
+
+# In[3]:
 
 
 def variation(param):
@@ -465,9 +481,6 @@ def variation(param):
     return(param,newF)
 
 
-# In[72]:
-
-
 def variation2(param):
     modif=np.random.randint(0,5)
     if modif==3:
@@ -477,8 +490,8 @@ def variation2(param):
     else:
         param[modif]=param[modif]*np.random.uniform(0.5,1.5)
     rfc = RandomForestClassifier(max_depth=param[0],min_samples_split=param[1],
-                             min_samples_leaf=param[2],min_impurity_decrease=param[3],
-                             n_estimators=param[4],max_features="log2", class_weight="balanced")
+                            min_samples_leaf=param[2],min_impurity_decrease=param[3],
+                            n_estimators=param[4],max_features="log2", class_weight="balanced")
     rfc.fit(X_train, Y_train)
     newF= F1(rfc, X_test, Y_test)
     return(param,newF)
@@ -487,7 +500,7 @@ def variation2(param):
 # In[73]:
 
 
-param=[max_depth_int,0.5,0.25,min_impurity_decrease_int,n_estimators_int]; param
+param = [max_depth_int,0.5,0.25,min_impurity_decrease_int,n_estimators_int]; param
 
 
 # In[75]:
@@ -522,18 +535,22 @@ for k in range(10): #ou 100 voir 2000 pendant la nuit
         break
 
 
-# In[76]:
-
-
-param
-
-
 # In[77]:
 
 
 plt.plot(T)
 plt.show()
 
+
+# Paramètres obtenus :
+
+# In[76]:
+
+
+param
+
+
+# Au final après avoir fait tourner l'algorithme on obtient :
 
 # In[78]:
 
@@ -545,10 +562,6 @@ rfc.fit(X_train, Y_train)
 F1(rfc, X_test, Y_test)
 
 
-# Au final le F1 score que nous obtenons est relativement correct sur cette base de test avec un résultat de 0.35 environ
-
-# Afin d'avoir une meilleur vision sur notre modèle dans un cas plus généralnous pouvons effectuer une cross validation qui prends plus de variété dans ses tests et évalutation.
-
 # In[79]:
 
 
@@ -556,25 +569,6 @@ scores = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
 print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
 
 
-# In[82]:
+# Il est important de noter que si vous faites tourner cette algorithme de votre côté vous n'obtiendrez pas forcément les mêmes résultats, il peuvent être meilleur ou moins bon...
 
-
-param
-
-
-# In[80]:
-
-
-rfc = RandomForestClassifier(min_samples_split=param[1],
-                             min_samples_leaf=param[2],min_impurity_decrease=param[3],
-                             n_estimators=param[4], class_weight="balanced")
-rfc.fit(X_train, Y_train)
-F1(rfc, X_test, Y_test)
-
-
-# In[81]:
-
-
-scores = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
-print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores.mean(), scores.std()))
-
+# <br><br><br><br><br>
