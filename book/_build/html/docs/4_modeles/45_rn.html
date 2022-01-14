@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neuronal Network* &#8212; G1 - Apprentissage statistique</title>
+    <title>Neuronal Network &#8212; G1 - Apprentissage statistique</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -140,7 +140,7 @@
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     Neuronal Network*
+     Neuronal Network
     </a>
    </li>
    <li class="toctree-l2">
@@ -250,42 +250,13 @@
         
               <div>
                 
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span><span class="n">accuracy_score</span><span class="p">,</span><span class="n">r2_score</span><span class="p">,</span> <span class="n">matthews_corrcoef</span><span class="p">,</span> <span class="n">make_scorer</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-
-<span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">f1_aff</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">Y_model</span> <span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">f1</span><span class="p">:</span>
-        <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">f1_aff</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">f1_scor</span><span class="p">)</span>
-        
-        
-    <span class="c1"># Matrice de confusion</span>
-    <span class="k">if</span> <span class="n">mat</span><span class="p">:</span>
-        <span class="n">cm_model</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_model</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm_model</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    
-</pre></div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="neuronal-network">
-<h1>Neuronal Network*<a class="headerlink" href="#neuronal-network" title="Permalink to this headline">¶</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="neuronal-network">
+<h1>Neuronal Network<a class="headerlink" href="#neuronal-network" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="telechargement-des-donnees">
 <h2>Téléchargement des données<a class="headerlink" href="#telechargement-des-donnees" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/train_v2.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://www.data.mclavier.com/prj_datascience/train_v2.csv&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -303,7 +274,7 @@
 </div>
 </div>
 <p>On sépare les données en train et test puis on les scale avec les méthodes de sklearn.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
@@ -327,9 +298,7 @@
 <p>On applique ensuite directement notre modèle :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
-
-<span class="n">clf</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scal_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_scal_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
 <span class="n">result_model</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_scal_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -395,7 +364,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">modelSimple</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 </pre></div>
@@ -421,9 +390,12 @@ None
 <p>En entrée du neurone de la couche de sortie, nous avons la combinaison linéaire suivante :
 $<span class="math notranslate nohighlight">\(d(X)=a_0+a_1X_1+a_2X_2\)</span>$
 Après application de la fonction d’activation sigmöïde.</p>
-<p>Nous avons en sortie du neurone de la couche de sortie :
-$<span class="math notranslate nohighlight">\(g(d)=\frac{1}{1+e^{-d}}\)</span><span class="math notranslate nohighlight">\(
-\)</span>g(d)<span class="math notranslate nohighlight">\( est une estimation de la probabilité conditionnelle \)</span>P(Y=pos|X_1,X_2)$ qui est déterminante dans les problèmatiques de classement.</p>
+<p>Nous avons en sortie du neurone de la couche de sortie :</p>
+<div class="math notranslate nohighlight">
+\[
+g(d)=\frac{1}{1+e^{-d}}
+\]</div>
+<p><span class="math notranslate nohighlight">\(g(d)\)</span> est une estimation de la probabilité conditionnelle <span class="math notranslate nohighlight">\(P(Y=pos|X_1,X_2)\)</span> qui est déterminante dans les problèmatiques de classement.</p>
 <p>L’étape suivante consiste à spécifier les caractéristiques de l’algorithme d’apprentissage : la fonction de perte à optimiser est l’entropie croisée binaire, elle correspond à la log-vraisemblance d’un échantillon où la probabilité conditionnelle d’appartenance aux classes est modélisée à l’aide de la loi binomiale.</p>
 <p>Le modèle est ajusté en utilisant la fonction binaire de perte d’entropie croisée et à travers l’utilisation de la version efficace d’ Adam  (algorithme d’optimisation) de la descente de gradient stochastique.
 La métrique utilisée pour mesurer la qualité de la modélisation est le taux de reconnaissance ou taux de succès.</p>
@@ -435,7 +407,7 @@ La métrique utilisée pour mesurer la qualité de la modélisation est le taux 
 </div>
 </div>
 <p>Le modèle à 150 époques d’apprentissage est adapté à la taille de lot par défaut de 200 échantillons. L’évaluation des performances du modèle est effectué à la fin de chaque époque d’apprentissage sur l’ensemble de données de test.</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">200</span>    
 <span class="n">nb_epoch</span> <span class="o">=</span> <span class="mi">150</span>
@@ -443,27 +415,13 @@ La métrique utilisée pour mesurer la qualité de la modélisation est le taux 
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:Model was constructed with shape (None, None, 15) for input KerasTensor(type_spec=TensorSpec(shape=(None, None, 15), dtype=tf.float32, name=&#39;dense_input&#39;), name=&#39;dense_input&#39;, description=&quot;created by layer &#39;dense_input&#39;&quot;), but it was called on an input with incompatible shape (None, 15).
-WARNING:tensorflow:Model was constructed with shape (None, None, 15) for input KerasTensor(type_spec=TensorSpec(shape=(None, None, 15), dtype=tf.float32, name=&#39;dense_input&#39;), name=&#39;dense_input&#39;, description=&quot;created by layer &#39;dense_input&#39;&quot;), but it was called on an input with incompatible shape (None, 15).
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;keras.callbacks.History at 0x1ed58e80880&gt;
-</pre></div>
-</div>
-</div>
 </div>
 <p>Prédiction</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y2_model</span> <span class="o">=</span> <span class="n">modelSimple</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X2_scal_test</span><span class="p">)</span>
 <span class="n">Y2_model</span> <span class="o">=</span><span class="n">Y2_model</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">Y2_model_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">Y2_model</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:Model was constructed with shape (None, None, 15) for input KerasTensor(type_spec=TensorSpec(shape=(None, None, 15), dtype=tf.float32, name=&#39;dense_input&#39;), name=&#39;dense_input&#39;, description=&quot;created by layer &#39;dense_input&#39;&quot;), but it was called on an input with incompatible shape (None, 15).
 </pre></div>
 </div>
 </div>
@@ -485,7 +443,7 @@ perte: 0.357551246881485, accuracy: 0.7966414093971252
 </div>
 </div>
 <p>Evaluation du F1-Score</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f1_scor2</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y2_test</span><span class="p">,</span><span class="n">Y2_model_classes</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor2</span><span class="p">)</span>
@@ -503,7 +461,7 @@ perte: 0.357551246881485, accuracy: 0.7966414093971252
 <h2>Perception multiple<a class="headerlink" href="#perception-multiple" title="Permalink to this headline">¶</a></h2>
 <p>Nous passons maintenant à un perceptron multicouche. Nous créons toujours structure Sequential, dans lequel nous ajoutons successivement deux objets Dense; le premier faisant la jonction entre la couche d’entrée et la couche caché.</p>
 <p>On sépare les données en train et test puis on les scale avec les méthodes de sklearn.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X3_train</span><span class="p">,</span> <span class="n">X3_test</span><span class="p">,</span> <span class="n">Y3_train</span><span class="p">,</span> <span class="n">Y3_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
 
@@ -536,12 +494,7 @@ perte: 0.357551246881485, accuracy: 0.7966414093971252
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">modelMc</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: &quot;sequential_1&quot;
 _________________________________________________________________
@@ -571,16 +524,11 @@ None
 </div>
 </div>
 <p>Le modèle à 150 époques d’apprentissage est adapté à la taille de lot par défaut de 200 échantillons. L’évaluation des performances du modèle est effectué à la fin de chaque époque d’apprentissage sur l’ensemble de données de test.</p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">200</span>
 <span class="n">nb_epoch</span> <span class="o">=</span> <span class="mi">150</span>
 <span class="n">modelSimple</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X3_scal_train</span><span class="p">,</span> <span class="n">Y3_train</span><span class="p">,</span><span class="n">epochs</span><span class="o">=</span><span class="n">nb_epoch</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;keras.callbacks.History at 0x1ed5a9f3250&gt;
 </pre></div>
 </div>
 </div>
@@ -607,7 +555,7 @@ None
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;perte: </span><span class="si">{}</span><span class="s2">, accuracy: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_loss</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">)</span>
 </pre></div>
@@ -620,13 +568,7 @@ None
 </div>
 </div>
 <p>Evaluation du F1-Score</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f1_scor3</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y3_test</span><span class="p">,</span><span class="n">Y3_model_classes</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.2253737064009199
 </pre></div>

@@ -70,26 +70,6 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv"
 
 train.head(3)
 
-train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v3.csv")
-test = pd.read_csv('../2_prep/ma_bdd_test.csv', index_col='Unnamed: 0')
-
-train_train, train_test = train_test_split(train, train_size = 0.85)
-
-X_train = train_train.drop(columns='Response')
-Y_train = train_train['Response']
-
-X_test = train_test.drop(columns='Response')
-Y_test = train_test['Response']
-
-from imblearn.under_sampling import RandomUnderSampler
-
-rus = RandomUnderSampler(sampling_strategy = 0.8333)
-X_train , Y_train = rus.fit_resample(X_train ,Y_train)
-
-rfc = RandomForestClassifier(**params_rf)
-rfc.fit(X_train, Y_train)
-result_model(rfc, X_test, Y_test)
-
 X = train.drop(columns='Response')
 Y = train['Response']
 

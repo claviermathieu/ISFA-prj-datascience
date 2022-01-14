@@ -146,8 +146,6 @@ my_xgb = xgb.XGBClassifier(**params_xgb)
 my_xgb.fit(X_rus, Y_rus)
 
 
-# Résultat simple puis cross-validé.
-
 # In[ ]:
 
 
@@ -266,57 +264,3 @@ pd.read_csv('https://www.data.mclavier.com/prj_datascience/groupe_1_predictions.
 # Vous pouvez télécharger le fichier [groupe_1_prediction.csv](https://www.data.mclavier.com/prj_datascience/groupe_1_predictions.csv) pour évaluer le modèle.
 
 # <br><br><br><br><br><br><br>
-
-# Nous utilisons donc le **Random Forest** pour nos prévisions finales. Nous avons sans doute été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d'entrainement bien moindres.
-
-# In[ ]:
-
-
-params_rf = {
-    'min_samples_split': 0.11959494750571721, 
-    'min_samples_leaf' : 0.08048576405844253,
-    'min_impurity_decrease' : 0.030792701550521537, 
-    'n_estimators' : 88, 
-    'class_weight' : 'balanced'
-}
-
-
-# Entrainement.
-
-# In[ ]:
-
-
-rfc = RandomForestClassifier(**params_rf)
-rfc.fit(X_train, Y_train)
-
-
-# Résultat simple puis cross-validé.
-
-# In[ ]:
-
-
-result_model(rfc, X_test, Y_test)
-
-
-# In[ ]:
-
-
-scores_rf = cross_val_score(rfc, X, Y, cv=5, scoring='f1')
-print("F1 moyen de %0.2f avec un écart type de %0.2f" % (scores_rf.mean(), scores_rf.std()))
-
-
-# In[ ]:
-
-
-importances = rfc.feature_importances_
-std = np.std([tree.feature_importances_ for tree in rfc.estimators_], axis=0)
-
-feature_names = [i for i in X.columns]
-forest_importances = pd.Series(importances, index=feature_names)
-
-fig, ax = plt.subplots(figsize = (10, 5))
-forest_importances.plot.bar(yerr=std, ax=ax)
-ax.set_title("Feature importances")
-ax.set_ylabel("Mean decrease in impurity")
-fig.tight_layout()
-

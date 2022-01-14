@@ -344,18 +344,12 @@
 </div>
 </div>
 </div>
-<p>Résultat simple puis cross-validé.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f1</span> <span class="o">=</span> <span class="n">result_model</span><span class="p">(</span><span class="n">my_xgb</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.5765681213827624
 </pre></div>
 </div>
-<img alt="../../_images/50_mod_final_16_1.png" src="../../_images/50_mod_final_16_1.png" />
+<img alt="../../_images/50_mod_final_15_1.png" src="../../_images/50_mod_final_15_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -366,7 +360,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/50_mod_final_17_0.png" src="../../_images/50_mod_final_17_0.png" />
+<img alt="../../_images/50_mod_final_16_0.png" src="../../_images/50_mod_final_16_0.png" />
 </div>
 </div>
 </div>
@@ -672,65 +666,6 @@
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
 <p>Vous pouvez télécharger le fichier <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/groupe_1_predictions.csv">groupe_1_prediction.csv</a> pour évaluer le modèle.</p>
 <p><br><br><br><br><br><br><br></p>
-<p>Nous utilisons donc le <strong>Random Forest</strong> pour nos prévisions finales. Nous avons sans doute été chanceux avec la méthode par tâtonnement car le random forest paraît très efficace avec des temps d’entrainement bien moindres.</p>
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_rf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="mf">0.11959494750571721</span><span class="p">,</span> 
-    <span class="s1">&#39;min_samples_leaf&#39;</span> <span class="p">:</span> <span class="mf">0.08048576405844253</span><span class="p">,</span>
-    <span class="s1">&#39;min_impurity_decrease&#39;</span> <span class="p">:</span> <span class="mf">0.030792701550521537</span><span class="p">,</span> 
-    <span class="s1">&#39;n_estimators&#39;</span> <span class="p">:</span> <span class="mi">88</span><span class="p">,</span> 
-    <span class="s1">&#39;class_weight&#39;</span> <span class="p">:</span> <span class="s1">&#39;balanced&#39;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Entrainement.</p>
-<div class="cell tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
-<span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Résultat simple puis cross-validé.</p>
-<div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.5596444938203027
-</pre></div>
-</div>
-<img alt="../../_images/50_mod_final_43_1.png" src="../../_images/50_mod_final_43_1.png" />
-</div>
-</div>
-<div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.56 avec un écart type de 0.00
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">importances</span> <span class="o">=</span> <span class="n">rfc</span><span class="o">.</span><span class="n">feature_importances_</span>
-<span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">([</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">rfc</span><span class="o">.</span><span class="n">estimators_</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-<span class="n">forest_importances</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">importances</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">forest_importances</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">yerr</span><span class="o">=</span><span class="n">std</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Feature importances&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Mean decrease in impurity&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/50_mod_final_45_0.png" src="../../_images/50_mod_final_45_0.png" />
-</div>
-</div>
 </div>
 </div>
 

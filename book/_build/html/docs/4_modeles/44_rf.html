@@ -52,7 +52,7 @@
     <link rel="shortcut icon" href="../../_static/logo.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Neuronal Network*" href="45_rn.html" />
+    <link rel="next" title="Neuronal Network" href="45_rn.html" />
     <link rel="prev" title="CART" href="43_cart.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -138,7 +138,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="45_rn.html">
-     Neuronal Network*
+     Neuronal Network
     </a>
    </li>
    <li class="toctree-l2">
@@ -318,12 +318,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">head</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_html"><table class="dataframe">
 <caption>A data.frame: 3 × 11</caption>
@@ -348,12 +343,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">head</span><span class="p">(</span><span class="n">dbr</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_html"><table class="dataframe">
 <caption>A data.frame: 3 × 11</caption>
@@ -379,16 +369,9 @@
 </div>
 </div>
 <p>Nous importons la librairie <em>randomForest</em></p>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">randomForest</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>randomForest 4.6-14
-
-Type rfNews() to see new features/changes/bug fixes.
 </pre></div>
 </div>
 </div>
@@ -402,7 +385,8 @@ Type rfNews() to see new features/changes/bug fixes.
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<p>Prédiction de la base test :</p>
+<div class="cell tag_hide-cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">xtest</span> <span class="o">=</span> <span class="n">dbr</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">(</span><span class="nf">ncol</span><span class="p">(</span><span class="n">db</span><span class="p">)</span><span class="m">-1</span><span class="p">)]</span>
 <span class="nf">head</span><span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
@@ -424,7 +408,6 @@ Type rfNews() to see new features/changes/bug fixes.
 </table>
 </div></div>
 </div>
-<p>Prédiction de la base test :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="nf">predict</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">xtest</span><span class="p">)</span>
@@ -433,13 +416,6 @@ Type rfNews() to see new features/changes/bug fixes.
 </div>
 </div>
 <p>Pour utiliser le F1_Score, nous faisons appel à la librairie <em>MLmetrics</em>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">MLmetrics</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">F1_Score</span><span class="p">(</span><span class="n">y_true</span> <span class="o">=</span> <span class="n">dbr</span><span class="o">$</span><span class="n">Response</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">positive</span> <span class="o">=</span> <span class="m">1</span> <span class="p">)</span>
@@ -538,59 +514,6 @@ Type rfNews() to see new features/changes/bug fixes.
   </tbody>
 </table>
 </div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="nf">pd.read_csv</span><span class="p">(</span><span class="s">&quot;https://www.data.mclavier.com/prj_datascience/train_v3.csv&quot;</span><span class="p">)</span>
-<span class="n">test</span> <span class="o">=</span> <span class="nf">pd.read_csv</span><span class="p">(</span><span class="s">&#39;../2_prep/ma_bdd_test.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s">&#39;Unnamed: 0&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train_train</span><span class="p">,</span> <span class="n">train_test</span> <span class="o">=</span> <span class="nf">train_test_split</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="m">0.85</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span> <span class="o">=</span> <span class="nf">train_train.drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s">&#39;Response&#39;</span><span class="p">)</span>
-<span class="n">Y_train</span> <span class="o">=</span> <span class="n">train_train</span><span class="p">[</span><span class="s">&#39;Response&#39;</span><span class="p">]</span>
-
-<span class="n">X_test</span> <span class="o">=</span> <span class="nf">train_test.drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s">&#39;Response&#39;</span><span class="p">)</span>
-<span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s">&#39;Response&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">from</span> <span class="n">imblearn.under_sampling</span> <span class="n">import</span> <span class="n">RandomUnderSampler</span>
-
-<span class="n">rus</span> <span class="o">=</span> <span class="nf">RandomUnderSampler</span><span class="p">(</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="m">0.8333</span><span class="p">)</span>
-<span class="n">X_train</span> <span class="p">,</span> <span class="n">Y_train</span> <span class="o">=</span> <span class="nf">rus.fit_resample</span><span class="p">(</span><span class="n">X_train</span> <span class="p">,</span><span class="n">Y_train</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="nf">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
-<span class="nf">rfc.fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-<span class="nf">result_model</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.5506756756756757
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5506756756756757
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="pre-processing">
@@ -780,7 +703,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.396364702433304
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_43_1.png" src="../../_images/44_rf_43_1.png" />
+<img alt="../../_images/44_rf_38_1.png" src="../../_images/44_rf_38_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -808,7 +731,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/44_rf_46_0.png" src="../../_images/44_rf_46_0.png" />
+<img alt="../../_images/44_rf_41_0.png" src="../../_images/44_rf_41_0.png" />
 </div>
 </div>
 </div>
@@ -872,7 +795,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>90 0.3939482106488216
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_53_1.png" src="../../_images/44_rf_53_1.png" />
+<img alt="../../_images/44_rf_48_1.png" src="../../_images/44_rf_48_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -924,7 +847,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 0.38874383521903105
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_58_1.png" src="../../_images/44_rf_58_1.png" />
+<img alt="../../_images/44_rf_53_1.png" src="../../_images/44_rf_53_1.png" />
 </div>
 </div>
 <p>Nous évaluons le f1-score actuellement.</p>
@@ -944,7 +867,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.3807580174927114
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_60_1.png" src="../../_images/44_rf_60_1.png" />
+<img alt="../../_images/44_rf_55_1.png" src="../../_images/44_rf_55_1.png" />
 </div>
 </div>
 </div>
@@ -973,7 +896,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3 0.4165727170236754
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_63_1.png" src="../../_images/44_rf_63_1.png" />
+<img alt="../../_images/44_rf_58_1.png" src="../../_images/44_rf_58_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -998,7 +921,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4060364464692483
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_65_1.png" src="../../_images/44_rf_65_1.png" />
+<img alt="../../_images/44_rf_60_1.png" src="../../_images/44_rf_60_1.png" />
 </div>
 </div>
 </div>
@@ -1027,7 +950,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 0.4119148936170213
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_68_1.png" src="../../_images/44_rf_68_1.png" />
+<img alt="../../_images/44_rf_63_1.png" src="../../_images/44_rf_63_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -1056,7 +979,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4146341463414634
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_72_1.png" src="../../_images/44_rf_72_1.png" />
+<img alt="../../_images/44_rf_67_1.png" src="../../_images/44_rf_67_1.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1081,7 +1004,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 0.4146341463414634
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_73_1.png" src="../../_images/44_rf_73_1.png" />
+<img alt="../../_images/44_rf_68_1.png" src="../../_images/44_rf_68_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -1105,7 +1028,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.41870949563257254
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_75_1.png" src="../../_images/44_rf_75_1.png" />
+<img alt="../../_images/44_rf_70_1.png" src="../../_images/44_rf_70_1.png" />
 </div>
 </div>
 </div>
@@ -1133,7 +1056,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50 0.41897685052872247
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_77_1.png" src="../../_images/44_rf_77_1.png" />
+<img alt="../../_images/44_rf_72_1.png" src="../../_images/44_rf_72_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -1188,7 +1111,7 @@ avec log2 F1= 0.41231822070145424
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4057724957555178
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_83_1.png" src="../../_images/44_rf_83_1.png" />
+<img alt="../../_images/44_rf_78_1.png" src="../../_images/44_rf_78_1.png" />
 </div>
 </div>
 </div>
@@ -1324,7 +1247,7 @@ Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants 
 </div>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<img alt="../../_images/44_rf_94_0.png" src="../../_images/44_rf_94_0.png" />
+<img alt="../../_images/44_rf_89_0.png" src="../../_images/44_rf_89_0.png" />
 </div>
 </div>
 <p>Paramètres obtenus :</p>
@@ -1394,7 +1317,7 @@ Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants 
     <a class='right-next' id="next-link" href="45_rn.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Neuronal Network*</p>
+        <p class="prev-next-title">Neuronal Network</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[6]:
+# In[1]:
 
+
+import pandas as pd
+import numpy as np
+from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix,accuracy_score,r2_score, matthews_corrcoef, make_scorer
 import matplotlib.pyplot as plt
@@ -28,14 +32,13 @@ def result_model(model,X,Y, f1 = True, f1_aff = True, mat = True) :
     
 
 
-# # Neuronal Network*
+# # Neuronal Network
 
 # ## Téléchargement des données
 
 # In[2]:
 
 
-import pandas as pd
 train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v2.csv")
 
 
@@ -75,8 +78,6 @@ X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
 # In[7]:
 
-
-from sklearn.neural_network import MLPClassifier
 
 clf = MLPClassifier(random_state=0).fit(X_scal_train, Y_train)
 result_model(clf, X_scal_test, Y_test)
@@ -145,7 +146,11 @@ print(modelSimple.summary())
 # Après application de la fonction d'activation sigmöïde.
 # 
 # Nous avons en sortie du neurone de la couche de sortie :
-# $$g(d)=\frac{1}{1+e^{-d}}$$
+# 
+# $$
+# g(d)=\frac{1}{1+e^{-d}}
+# $$
+# 
 # $g(d)$ est une estimation de la probabilité conditionnelle $P(Y=pos|X_1,X_2)$ qui est déterminante dans les problèmatiques de classement.
 # 
 # L'étape suivante consiste à spécifier les caractéristiques de l'algorithme d'apprentissage : la fonction de perte à optimiser est l'entropie croisée binaire, elle correspond à la log-vraisemblance d'un échantillon où la probabilité conditionnelle d'appartenance aux classes est modélisée à l'aide de la loi binomiale.
