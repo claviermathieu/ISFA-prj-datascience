@@ -76,7 +76,7 @@ clf = SVC(random_state=0).fit(X_scal_train, Y_train)
 result_model(clf, X_scal_test, Y_test)
 
 
-# En testant avec de la cross-validation les résultats ne sont améliorés.
+# En testant avec de la cross-validation les résultats ne sont pas améliorés.
 
 # In[6]:
 

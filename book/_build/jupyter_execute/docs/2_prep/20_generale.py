@@ -3,12 +3,10 @@
 
 # # Préparation des données
 
-# In[22]:
+# In[11]:
 
 
 # Bloc import des précédents notebook ---
-
-
 
 import numpy as np
 import pandas as pd
@@ -23,17 +21,17 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_train.cs
 train.head()
 
 
-# En fonction des modèles utilisées, il faut réaliser différentes préparation des données.
+# En fonction des modèles utilisées, il faut réaliser différentes préparations des données.
 # 
-# Par exemple, pour une régression logistique il faut transformer les variable en One-Hot variable alors que pour un modèle xgboost ce n'est pas obligatoire.
+# Par exemple, pour une régression logistique il faut transformer les variables en One-Hot variables alors que pour un modèle xgboost ce n'est pas obligatoire.
 # 
-# Ainsi, ce notebook a pour objectif d'exporter les différentes base de données avec le formalisme nécessaire à chaque type de modèle qui seront appliqués par la suite.
+# Ainsi, ce notebook a pour objectif d'exporter les différentes bases de données avec le formalisme nécessaire à chaque type de modèle qui seront appliqués par la suite.
 # 
 # <br><br>
 # 
 # **Traitement global**
 # 
-# Cependant, dans un premier temps, certains traitement sont communes à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d'obtenir une base de données plus lisible.
+# Cependant, dans un premier temps, certains traitement sont communs à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d'obtenir une base de données plus lisible.
 # 
 # ```{note} 
 # Le nettoyage et le regroupement des données résulte de la description statistique précédente.
@@ -43,7 +41,7 @@ train.head()
 # 
 # **Pour rappel**, voici la base de donnée d'origine
 
-# In[23]:
+# In[12]:
 
 
 train.head(3)
@@ -51,29 +49,54 @@ train.head(3)
 
 # ## Renommage
 
-# Nous remplaçons les *No* et *Yes* de la variable Vehicle_Damage par des booleans.
+# Nous remplaçons les *No* et *Yes* de la variable Vehicle_Damage par des booleans :
 
-# In[24]:
+# In[3]:
 
 
 dict_cat = {'No' : 0, 'Yes' : 1}
 train.Vehicle_Damage.replace(dict_cat, inplace = True)
 
 
-# Ensuite, nous remplaçons les *Male* et *Female* par respectivement 0 et 1.
+# Ensuite, nous remplaçons les *Male* et *Female* par respectivement 0 et 1 :
 
-# In[25]:
+# In[4]:
 
 
 dict_cat = {'Male' : 0, 'Female' : 1}
 train.replace(dict_cat, inplace = True)
 
 
+# Puis, nous modifions la variable *Vehicle_Age* pour la transformer en variable numérique.
+
+# In[5]:
+
+
+dict_age = {'1-2 Year' : 1, '< 1 Year' : 0, '> 2 Years' : 2}
+train.replace(dict_age, inplace = True)
+
+
+# Finalement, on obtient une base données comportant uniquement des variables de types int64.
+
+# In[6]:
+
+
+train.head(3)
+
+
+# ```{note} 
+# Ceci n'est pas obligatoire pour tous les modèles mais c'est une bonne pratique pour limiter le risque d'erreur.
+# 
+# Notons que les modèles issus de la librairie sklearn ne prennent pas de string en input.
+# ```
+
+# ## Agrégation
+
 # Nous avons constaté que la variable *Policy_Sales_Channel* comportait beaucoup de catégorie alors que seulement 3 catégories dominent toutes les autres.
 # 
 # 
 
-# In[26]:
+# In[ ]:
 
 
 train.Policy_Sales_Channel.value_counts(sort=True).head(5)
@@ -81,7 +104,7 @@ train.Policy_Sales_Channel.value_counts(sort=True).head(5)
 
 # Après agrégation, nous obtenons seulement 4 catégories de taille relativement homogènes.
 
-# In[27]:
+# In[ ]:
 
 
 dict_cat = {152 : 0, 26 : 1, 124 : 2}
@@ -99,32 +122,11 @@ train['Policy_Sales_Channel'] = new_damage
 train.Policy_Sales_Channel.value_counts(sort=True).head(5)
 
 
-# Enfin, nous modifions la variable *Vehicle_Age* pour la transformer en variable numérique.
-
-# In[30]:
-
-
-dict_age = {'1-2 Year' : 1, '< 1 Year' : 0, '> 2 Years' : 2}
-train.replace(dict_age, inplace = True)
-
-
-# Finalement, on obtient une base données comportant uniquement des variables de types int64.
-
-# In[38]:
-
-
-train.head(3)
-
-
-# ```{note} 
-# Ceci n'est pas obligatoire pour tous les modèles mais c'est une bonne pratique pour limiter le risque d'erreur.
-# ```
-
 # ## Filtre
 
-# Nous avons remarquer que certains âges étaient aberrant. Comme dans la base de données test l'âge maximum est de 84 ans, nous filtrons notre base de données d'entraînement à un âge proche : 85 ans.
+# Nous avons remarqué que certains âges étaient aberrants. Comme dans la base de données test l'âge maximum est de 84 ans, nous filtrons notre base de données d'entraînement à un âge proche : 85 ans.
 
-# In[45]:
+# In[13]:
 
 
 train = train[train.Age <= 85]
@@ -134,7 +136,7 @@ train = train[train.Age <= 85]
 
 # ## Export 1
 
-# La base de données obtenue avec les manipulations précédentes est suffisante pour 6 modèles que nous allons étudier par la suite.
+# La base de données obtenue avec les manipulations précédentes est suffisante pour 6 modèles que nous allons étudier par la suite :
 # 
 # - SVC
 # - CART
@@ -146,18 +148,12 @@ train = train[train.Age <= 85]
 # 
 # <br>
 # 
-# Nous exportons donc cette base de données que nous nommons *train_v1* et qui est héberger [sur serveur](https://www.data.mclavier.com/prj_datascience/) pour facilité l'accessibilité.
+# Nous exportons donc cette base de données que nous nommons *train_v1* et qui est hébergé [sur serveur](https://www.data.mclavier.com/prj_datascience/) pour facilité l'accessibilité.
 
 # In[54]:
 
 
 train.to_csv("train_v1.csv", index = False)
-
-
-# In[66]:
-
-
-train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v1.csv")
 
 
 # ## Export 2
@@ -226,13 +222,70 @@ train.head(3)
 train.to_csv("train_v2.csv", index = False)
 
 
+# ## Export 3
+
+# Après avoir réalisé nos premiers modèles, nous avons testés d'entraîner notre modèle XGBoost avec des données sans aucune perte d'information.
+# 
+# C'est à dire que nous exportons une troisième base de données sans réaliser les agrégations au niveau de la variable *Policy_Sales_Channel*. Nous verrons dans le notebook consacré au XGBoost que cette base de données permet d'améliorer le f1-score.
+
+# In[10]:
+
+
+train.head()
+
+
+# In[46]:
+
+
+train.to_csv("train_v3.csv", index = False)
+
+
+# ## Export 4
+
+# Enfin, lors de notre évaluation des différents modèles, nous avons souhaité tester un modèle Random Forest sans aucun tuning.
+# 
+# Nous faisons donc un autre export avec simplement le filtrage sur l'age. Les données ne sont pas renommées car le Random Forest de R n'en a pas besoin.
+
+# In[17]:
+
+
+from sklearn.model_selection import train_test_split
+bdd_train, bdd_test = train_test_split(train, train_size = 0.85)
+
+
+# In[18]:
+
+
+print(bdd_train.shape)
+bdd_train.head(3)
+
+
+# In[ ]:
+
+
+bdd_train.to_csv('r_ma_bdd_train.csv')
+
+
+# In[19]:
+
+
+print(bdd_test.shape)
+bdd_test.head(3)
+
+
+# In[ ]:
+
+
+bdd_test.to_csv('r_ma_bdd_test.csv')
+
+
 # ## Conclusion
 
-# Avec la création des bdd *train_v1.csv* et *train_v2.csv* le plus gros nettoyage a été réalisé.
+# Avec la création des bdd *train_v1.csv*, *train_v2.csv*, *train_v3.csv* et des bdd pour R, le plus gros nettoyage a été réalisé.
 # 
 # Il n'y aura plus que quelques travaux de pre-processing de format en fonction des modèles implémentés.
 # 
 # 
-# <br><br><br><br>
-
+# Toutes les bases de données sont disponibles <a href = "https://data.mclavier.com/prj_datascience/">ici</a>.
 # 
+# <br><br><br><br>

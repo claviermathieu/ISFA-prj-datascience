@@ -1,64 +1,110 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Réseau de neurones
-
-# In[1]:
+# In[6]:
 
 
-from sklearn import model_selection
+from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix,accuracy_score,r2_score, matthews_corrcoef, make_scorer
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def result_model(model,X,Y, f1 = True, f1_aff = True, mat = True) :
+    Y_model =model.predict(X)
+
+    if f1:
+        f1_scor = f1_score(Y,Y_model)
+        if f1_aff:
+            print('Le f1 score vaut',f1_scor)
+        return(f1_scor)
+        
+        
+    # Matrice de confusion
+    if mat:
+        cm_model = confusion_matrix(Y, Y_model)
+        plt.rcParams['figure.figsize'] = (5, 5)
+        sns.heatmap(cm_model, annot = True)
+        plt.title(str(model))
+        plt.show()
+    
+
+
+# # Neuronal Network*
+
+# ## Téléchargement des données
+
+# In[2]:
+
+
+import pandas as pd
+train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/train_v2.csv")
+
+
+# ## Pre-processing
+# 
+# On sépare la variable à expliquer des variables explicatives
+
+# In[4]:
+
+
+X = train.drop(columns = 'Response')
+Y = train['Response']
+
+
+# On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
+
+# In[5]:
+
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
+
+scaler=StandardScaler() 
+
+X_scal_train = scaler.fit_transform(X_train)
+X_scal_test = scaler.transform(X_test) 
+
+X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index)
+X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
+
+
+# ## Implémentation
+# 
+# On applique ensuite directement notre modèle :
+
+# In[7]:
+
+
 from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import LabelEncoder
-from sklearn.decomposition import PCA
 
-X = data.iloc[:, :-1]
-Y = data['Response']
-
-model = PCA(n_components=3)
-model.fit(data.drop(['Response'], axis=1))
-reduc = model.transform(data.drop(['Response'], axis=1))
-
-X2_train, X2_test, Y2_train, Y2_test = model_selection.train_test_split(reduc,Y,train_size=60000)
-#initialisation du classifieur
-rna = MLPClassifier(hidden_layer_sizes=(3,),activation="logistic",solver="lbfgs")
+clf = MLPClassifier(random_state=0).fit(X_scal_train, Y_train)
+result_model(clf, X_scal_test, Y_test)
 
 
-# In[ ]:
+# ## Perception simple
+
+# On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
+
+# In[8]:
 
 
-#apprentissage
-rna.fit(X2_train,Y2_train)
+from sklearn.preprocessing import StandardScaler
 
-#affichage des coefficients
-print(rna.coefs_)
-print(rna.intercepts_)
+X2_train, X2_test, Y2_train, Y2_test = train_test_split(X, Y,train_size = 0.85)
 
+scaler=StandardScaler() 
 
-# In[ ]:
+X2_scal_train = scaler.fit_transform(X2_train)
+X2_scal_test = scaler.transform(X2_test) 
 
+X2_scal_train = pd.DataFrame(X2_scal_train,index= X2_train.index)
+X2_scal_test = pd.DataFrame(X2_scal_test,index= X2_test.index)
 
-#prédiction sur la base train après retraitements
-pred = rna.predict(X2_test)
-print(pred)
-
-
-# In[ ]:
-
-
-#mesure des performances
-from sklearn import metrics
- 
-print(metrics.confusion_matrix(Y2_test,pred))
-print("Taux de reconnaissance = " + str(metrics.accuracy_score(Y2_test,pred)))
-
-
-# Taux de reconnaissance de 0.8
-
-# *Perception simple*
 
 # Nous importons les classes Sequential et Dense pour définir notre modèle et son architecture
 
-# In[ ]:
+# In[9]:
 
 
 from keras.models import Sequential
@@ -67,27 +113,31 @@ from keras.layers import Dense
 
 # La classe Sequential est une structure, initialement vide, qui permet de définir un empilement de couches de neurones
 
-# In[ ]:
+# In[10]:
 
 
-modelSimple=Sequential()
+modelSimple = Sequential()
 
 
-# Nous ajoutons une couche qui relie directement la couche d'entrée, input_dim: nombre de neurones = nombre de variables prédictives, avec la couche de sortie, units=1:une seule sorie puisque la variables cible est binaire, codée 1/0 avec une fonction d'activation sigmoïde.
+# Nous ajoutons une couche qui relie directement : 
+#  
 # 
+# 1.  la couche d'entrée, input_dim: nombre de neurones qui correspond au nombre de variables prédictives ;
+# 2.   la couche de sortie, units=1:une seule sortie puisque la variables cible est binaire, codée 1/0 ;
+# 3.    une fonction d'activation sigmoïde.
+# 
+# La fonction Dense permet de connecter tous les neurones de la couche précédente à tous les neurones de la couche suivante.
 
-# In[ ]:
-
-
-modelSimple.add(Dense(units=1,input_dim=3,activation="sigmoid"))
-
-
-# Dense : tous les neurones de la couche précédente seront connectés à tous les neurones de la couche suivante.
-
-# In[ ]:
+# In[11]:
 
 
-print(modelSimple.get_config())
+modelSimple.add(Dense(units=1,input_dim=3,activation="sigmoid",input_shape=(None,15)))
+
+
+# In[12]:
+
+
+print(modelSimple.summary())
 
 
 # En entrée du neurone de la couche de sortie, nous avons la combinaison linéaire suivante : 
@@ -96,86 +146,146 @@ print(modelSimple.get_config())
 # 
 # Nous avons en sortie du neurone de la couche de sortie :
 # $$g(d)=\frac{1}{1+e^{-d}}$$
-# $g(d)$ est une estimation de la probabilité conditionnelle $P(Y=pos/X_1,X_2)$ qui est déterminante dans les problèmatiques de classement.
+# $g(d)$ est une estimation de la probabilité conditionnelle $P(Y=pos|X_1,X_2)$ qui est déterminante dans les problèmatiques de classement.
 # 
-# L'étape suivante consiste à spécifier les caractéristiques de l'algorithme d'apprentissage : la fonction de perte à optimiser est l'entropie croisée binaire, elle correspond à la log-vraisemblance d'un échantillon où la probabilité conditionnelle d'appartenance aux classes est modélisée à l'aide de la loi binomiale. 
-# 
-# Adamax est l'algorithme d'optimisation, la métrique utilisée pour mesurer la qualité de la modélisation est le taux de reconnaissance ou taux de succès.
+# L'étape suivante consiste à spécifier les caractéristiques de l'algorithme d'apprentissage : la fonction de perte à optimiser est l'entropie croisée binaire, elle correspond à la log-vraisemblance d'un échantillon où la probabilité conditionnelle d'appartenance aux classes est modélisée à l'aide de la loi binomiale.
 
-# In[ ]:
+# Le modèle est ajusté en utilisant la fonction binaire de perte d'entropie croisée et à travers l'utilisation de la version efficace d' Adam  (algorithme d'optimisation) de la descente de gradient stochastique.
+# La métrique utilisée pour mesurer la qualité de la modélisation est le taux de reconnaissance ou taux de succès.
 
-
-modelSimple.compile(loss="binary_crossentropy",optimizer ="Adamax",metrics=["accuracy"])
+# In[13]:
 
 
-# Nous pouvons lancer l'estimation des poids synaptiques du réseau à partir des données étiquetées
-
-# In[ ]:
+modelSimple.compile(loss = "binary_crossentropy",optimizer = "Adamax",metrics = ["accuracy"])
 
 
-#subdivision en apprentissage et test
-from sklearn import model_selection
-X2_train,X2_test,Y2_train,Y2_test = model_selection.train_test_split(reduc,Y,train_size=60000)
-#apprentisage
-modelSimple.fit(X2_train,Y2_train,epochs=150,batch_size=100)
+# Le modèle à 150 époques d'apprentissage est adapté à la taille de lot par défaut de 200 échantillons. L'évaluation des performances du modèle est effectué à la fin de chaque époque d'apprentissage sur l'ensemble de données de test.
+
+# In[14]:
 
 
-# In[ ]:
+batch_size = 200    
+nb_epoch = 150
+modelSimple.fit(X2_scal_train, Y2_train,epochs=nb_epoch,batch_size=batch_size, verbose = False)
 
 
-print(modelSimple.get_weights())
+# Prédiction
+
+# In[15]:
 
 
-# L'approche usuelle d'évaluation consiste à réaliser la prédiction sur l'échantillon test, puis à la contronter avec les valeurs observées de la variable cible. 
-
-# In[ ]:
-
-
-predSimple=modelSimple.predict(X2_test) 
-classes_x=np.argmax(predSimple,axis=1)
-#predSimple = modelSimple.predict_classes(X2_test)
-
-print(metrics.confusion_matrix(Y2_test,classes_x))
-score = modelSimple.evaluate(X2_test,Y2_test)
-print(score)
+Y2_model = modelSimple.predict(X2_scal_test)
+Y2_model =Y2_model.reshape(-1)
+Y2_model_classes = (Y2_model > 0.5).astype("int")
 
 
-# Graphique
+# Métriques de précision de la classification et de la perte
 
-# In[ ]:
-
-
-import tensorflow as tf
-def get_callbacks():
-    return [tf.keras.callbacks.EarlyStopping(monitor='val_accuracy',patience=70,restore_best_weights=True)]
-
-history = modelSimple.fit(X2_train,Y2_train, validation_data=(X2_test, Y2_test), epochs=150, batch_size=100,   callbacks=get_callbacks(),verbose=0)
-
-plt.plot(history.history['accuracy']) 
-plt.plot(history.history['val_accuracy']) 
-plt.title('model accuracy') 
-plt.ylabel('accuracy')
-plt.xlabel('epoch') 
-plt.legend(['train', 'test'], loc='upper left') 
-plt.show() 
+# In[16]:
 
 
-# *Perception multiple*
+test_loss, test_acc = modelSimple.evaluate(X2_scal_test, Y2_test)
+print("perte: {}, accuracy: {}".format(test_loss, test_acc))
+
+
+# Evaluation du F1-Score
+
+# In[17]:
+
+
+f1_scor2 = f1_score(Y2_test,Y2_model_classes)
+print('Le f1 score vaut',f1_scor2)
+
+
+# ## Perception multiple
 
 # Nous passons maintenant à un perceptron multicouche. Nous créons toujours structure Sequential, dans lequel nous ajoutons successivement deux objets Dense; le premier faisant la jonction entre la couche d'entrée et la couche caché.
 
-# In[ ]:
+# On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
+
+# In[18]:
+
+
+X3_train, X3_test, Y3_train, Y3_test = train_test_split(X, Y,train_size = 0.85)
+
+scaler=StandardScaler() 
+
+X3_scal_train = scaler.fit_transform(X3_train)
+X3_scal_test = scaler.transform(X3_test) 
+
+X3_scal_train = pd.DataFrame(X3_scal_train,index= X3_train.index)
+X3_scal_test = pd.DataFrame(X3_scal_test,index= X3_test.index)
+
+
+# Initiation du modèle :
+
+# In[19]:
 
 
 modelMc = Sequential()
-modelMc.add(Dense(units=6,input_dim=3,activation="sigmoid"))
-modelMc.add(Dense(units=3,activation="sigmoid"))
-modelMc.add(Dense(units=1,activation="sigmoid"))
 
-modelMc.compile(loss="binary_crossentropy",optimizer="adam",metrics=["accuracy"])
-#apprentissage
-modelMc.fit(X2_train,Y2_train,epochs=150,batch_size=10)
 
-score = modelMc.evaluate(X2_test,Y2_test)
-print(score)
+# Nous ajoutons trois couches
 
+# In[20]:
+
+
+modelMc.add(Dense(units=6,input_dim=3,activation="sigmoid",input_shape=(None,15)))
+modelMc.add(Dense(units=3,input_dim=3, activation="sigmoid",input_shape=(None,15)))
+modelMc.add(Dense(units=1,input_dim=3,activation="sigmoid",input_shape=(None,15)))
+
+
+# In[21]:
+
+
+print(modelMc.summary())
+
+
+# In[22]:
+
+
+modelMc.compile(loss = "binary_crossentropy",optimizer = "adam", metrics = ["accuracy"])
+
+
+# Le modèle à 150 époques d'apprentissage est adapté à la taille de lot par défaut de 200 échantillons. L'évaluation des performances du modèle est effectué à la fin de chaque époque d'apprentissage sur l'ensemble de données de test.
+
+# In[23]:
+
+
+batch_size = 200
+nb_epoch = 150
+modelSimple.fit(X3_scal_train, Y3_train,epochs=nb_epoch,batch_size=batch_size, verbose = False)
+
+
+# In[24]:
+
+
+Y3_model = modelSimple.predict(X3_scal_test)
+Y3_model =Y3_model.reshape(-1)
+Y3_model_classes = (Y3_model > 0.5).astype("int")
+
+
+# Métriques de précision de la classification et de la perte
+
+# In[25]:
+
+
+test_loss, test_acc = modelSimple.evaluate(X3_scal_test, Y3_test)
+
+
+# In[26]:
+
+
+"perte: {}, accuracy: {}".format(test_loss, test_acc)
+
+
+# Evaluation du F1-Score
+
+# In[53]:
+
+
+f1_scor3 = f1_score(Y3_test,Y3_model_classes)
+print('Le f1 score vaut',f1_scor3)
+
+
+# <br><br><br><br>

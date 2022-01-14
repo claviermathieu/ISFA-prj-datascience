@@ -72,7 +72,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y,train_size = 0.85)
 
 # ## Implémentation
 
-# Nous n'allons pas rentrer dans le détail du tuning étant doné que nous verrons ensuite les random forest, nous allons donc simplement faire un appel pour voir les résultats que nous donne un arbre cart simple.
+# Nous n'allons pas rentrer dans le détail du tuning étant donné que nous verrons ensuite les random forest, nous allons donc simplement faire un appel pour voir les résultats que nous donne un arbre cart simple.
 
 # In[ ]:
 

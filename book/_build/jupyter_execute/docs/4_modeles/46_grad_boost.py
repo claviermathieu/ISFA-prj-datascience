@@ -53,12 +53,6 @@ def result_model(model,X,Y) :
     # return()
 
 
-# In[ ]:
-
-
-
-
-
 # ## Téléchargement des données
 
 # In[2]:

@@ -53,12 +53,12 @@ profile.to_file("data_desc.html")
 # Ce rapport permet de faire un état des lieux des variables et de se rendre compte de certains points à faire attention.
 # 
 # Notamment : 
-# - Des âges supérieur à 100 ans
+# - Des âges supérieurs à 100 ans
 # - Des personnes sans permis de conduire
-# - La prédominance de certaines région (sans doute urbaines et rurales)
+# - La prédominance de certaines régions (sans doute urbaines et rurales)
 # - La prédominance de certains canaux de vente sur d'autres 
 # - Le taux de réponse positive : 20.6 %
-# - La corrélation de la variable réponse à : Age, Previously_Insured et Policy_Sales_Channel
+# - La corrélation de la variable Response à : Age, Previously_Insured et Policy_Sales_Channel
 # 
 
 # ## Analyse manuelle
@@ -67,7 +67,7 @@ profile.to_file("data_desc.html")
 
 # ### Généralités
 
-# Voicil la liste des variables présentent dans le jeu de données
+# Voicil la liste des variables présentent dans le jeu de données :
 
 # In[ ]:
 

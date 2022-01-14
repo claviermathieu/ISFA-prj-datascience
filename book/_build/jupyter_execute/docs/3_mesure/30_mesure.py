@@ -15,7 +15,7 @@ import seaborn as sns
 
 # ## F1-Score
 
-# D'après les consignes pour le projet. Le critère quantitatif appliqué pour évaluer le pouvoir prédictif de nos modèles sera le F1-score : 
+# D'après les consignes du projet. Le critère quantitatif appliqué pour évaluer le pouvoir prédictif de nos modèles sera le F1-score : 
 # 
 # $$
 # F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} + \text{rappel}}
@@ -43,6 +43,10 @@ import seaborn as sns
 
 from sklearn.metrics import f1_score
 
+
+# ```{warning}
+# Sous R, la fonction F1_Score() mesure par défaut le nombre de 0 correcte. Il faut rajouter l'argument positive = 1 pour obtenir l'équivalent du f1_score de sklearn.
+# ```
 
 # Voici d'autres mesures disponibles avec le package *sklearn* 
 # 
@@ -73,11 +77,13 @@ from sklearn.metrics import confusion_matrix
 # In[7]:
 
 
-def result_model(model,X,Y, mat = True) :
+def result_model(model,X,Y, mat = True, f1 = True) :
     Y_model = model.predict(X)
 
-    f1_scor = f1_score(Y,Y_model)
-    print('Le f1 score vaut',f1_scor)
+    if f1:
+        f1_scor = f1_score(Y,Y_model)
+        print('Le f1 score vaut',f1_scor)
+        return(f1_scor)
     
     if mat:
     # Matrice de confusion
@@ -87,15 +93,12 @@ def result_model(model,X,Y, mat = True) :
         plt.title(str(model))
         plt.show()
     
-    return(Y_model)
 
 
 # On rappelle qu'une matrice de confusion donne abscisse les valeurs réelles et en ordonnées les prédites ce qui permet de connaître les faux positif, les vrais positifs etc...
 
 # ## Conclusion
 # 
-# Maintenant que nous avons les outils pour mesurer l'efficacité de nos modèles et les base de données préparées, nous pouvons passer à l'implémentation.
+# Maintenant que nous avons les outils pour mesurer l'efficacité de nos modèles et les bases de données préparées, nous pouvons passer à l'implémentation.
 # 
 # <br><br><br><br>
-
-# 

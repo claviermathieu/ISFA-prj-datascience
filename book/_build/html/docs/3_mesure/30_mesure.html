@@ -140,7 +140,7 @@
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../4_modeles/45_rn.html">
-     Réseau de neurones
+     Neuronal Network*
     </a>
    </li>
    <li class="toctree-l2">
@@ -244,7 +244,7 @@
 <h1>Mesure<a class="headerlink" href="#mesure" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="f1-score">
 <h2>F1-Score<a class="headerlink" href="#f1-score" title="Permalink to this headline">¶</a></h2>
-<p>D’après les consignes pour le projet. Le critère quantitatif appliqué pour évaluer le pouvoir prédictif de nos modèles sera le F1-score :</p>
+<p>D’après les consignes du projet. Le critère quantitatif appliqué pour évaluer le pouvoir prédictif de nos modèles sera le F1-score :</p>
 <div class="math notranslate nohighlight">
 \[
 F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} + \text{rappel}}
@@ -265,6 +265,10 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 </pre></div>
 </div>
 </div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sous R, la fonction F1_Score() mesure par défaut le nombre de 0 correcte. Il faut rajouter l’argument positive = 1 pour obtenir l’équivalent du f1_score de sklearn.</p>
 </div>
 <p>Voici d’autres mesures disponibles avec le package <em>sklearn</em></p>
 <ul class="simple">
@@ -294,11 +298,13 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 <p>Nous affichons par la même occation la matrice de confusion.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
     <span class="n">Y_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-    <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">f1</span><span class="p">:</span>
+        <span class="n">f1_scor</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_model</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Le f1 score vaut&#39;</span><span class="p">,</span><span class="n">f1_scor</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">f1_scor</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">mat</span><span class="p">:</span>
     <span class="c1"># Matrice de confusion</span>
@@ -308,7 +314,6 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     
-    <span class="k">return</span><span class="p">(</span><span class="n">Y_model</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -317,7 +322,7 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 </div>
 <div class="section" id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
-<p>Maintenant que nous avons les outils pour mesurer l’efficacité de nos modèles et les base de données préparées, nous pouvons passer à l’implémentation.</p>
+<p>Maintenant que nous avons les outils pour mesurer l’efficacité de nos modèles et les bases de données préparées, nous pouvons passer à l’implémentation.</p>
 <p><br><br><br><br></p>
 </div>
 </div>
