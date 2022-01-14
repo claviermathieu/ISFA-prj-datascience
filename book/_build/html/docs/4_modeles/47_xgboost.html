@@ -362,7 +362,7 @@
 <img alt="../../_images/47_xgboost_13_0.png" src="../../_images/47_xgboost_13_0.png" />
 </div>
 </div>
-<p>Visualisation du graphique <strong>Features importance</strong>.</p>
+<p>Visualisation du graphique de <strong>feature importance</strong>.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb</span><span class="o">.</span><span class="n">plot_importance</span><span class="p">(</span><span class="n">xgb0</span><span class="p">)</span>
@@ -376,7 +376,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Le graphe des features importance du modèle tuné se trouve à la fin de ce notebook.</p>
+<p>Le graphe des feature importance du modèle tuné se trouve à la fin de ce notebook.</p>
 </div>
 </div>
 <div class="section" id="tuning">
@@ -432,7 +432,7 @@ Nous utilisons la fonction GridSearchCV de <em>sklearn</em>.</p>
 </div>
 </div>
 </div>
-<p>On modifie quelques paramètres de base au regard des TP réalisés.</p>
+<p>On modifie quelques paramètres de base.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">27</span> <span class="c1"># Pour retrouver les résultats</span>
@@ -496,7 +496,7 @@ Nous utilisons la fonction GridSearchCV de <em>sklearn</em>.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Le F1-Score en sorti du grid_search ne peut pas être comparé complètement au f1 initiale car le grid_search utilise de la cross validation et donc pas le même jeu de données test.</p>
+<p>Le F1-Score en sortie du grid_search ne peut pas être comparé complètement au f1 initial car le grid_search utilise de la cross validation et donc pas le même jeu de données test.</p>
 </div>
 <p>Nous entrainons le modèle avec les nouveaux paramètres pour pouvoir comparer. Par la suite, cette étape ne sera pas tout le temps réalisée.</p>
 <p>Le f1-score s’est amélioré de 0.02 point. Nous continuons le tuning.</p>
@@ -1051,7 +1051,7 @@ Variable : reg_alpha (f1 : 0.5845674201091192 , param : 0 )
 </div>
 <div class="section" id="parametres-finaux">
 <h2>Paramètres finaux<a class="headerlink" href="#parametres-finaux" title="Permalink to this headline">¶</a></h2>
-<p>Au final, l’optimisation se fait à travers les paramètres et la base de données d’entrainement. La base de données d’entrainement doit être équilibrée avec un coefficient <span class="math notranslate nohighlight">\(\alpha = 0.833\)</span> et les paramètres sont :</p>
+<p>Finalement, l’optimisation se fait à travers les paramètres et la base de données d’entrainement. La base de données d’entrainement doit être équilibrée avec un coefficient <span class="math notranslate nohighlight">\(\alpha = 0.833\)</span> et les paramètres sont :</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;objective&#39;: &#39;binary:logistic&#39;,
@@ -1091,7 +1091,7 @@ Variable : reg_alpha (f1 : 0.5845674201091192 , param : 0 )
 </div>
 <div class="section" id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
-<p>Tuner un modèle XGBoost nécessite énormement de temps de calcul. Dans ce projet, nous avons restreint le nombre de paramètres. Bien sûr, avec davantage de puissance, nous aurions pu calibrer plus précisement les paramètres étudiés et tuner d’autres paramètres non traités dans ce notebook.</p>
+<p>Tuner un modèle XGBoost nécessite énormement de temps de calcul. Dans ce projet, nous avons restreint le nombre de paramètres. Bien sûr, avec davantage de puissance, nous aurions pu calibrer plus précisement les paramètres étudiés et tuner d’autres paramètres.</p>
 <p><br><br><br><br><br></p>
 </div>
 <div class="section" id="rappels-theoriques">

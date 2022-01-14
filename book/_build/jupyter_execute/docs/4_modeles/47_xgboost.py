@@ -103,7 +103,7 @@ f1_max = result_model(xgb0, X_test, Y_test, mat = False)
 result_model(xgb0, X_test, Y_test, mat = True, f1 = False)
 
 
-# Visualisation du graphique **Features importance**.
+# Visualisation du graphique de **feature importance**.
 
 # In[119]:
 
@@ -113,7 +113,7 @@ plt.show()
 
 
 # ```{note}
-# Le graphe des features importance du modèle tuné se trouve à la fin de ce notebook.
+# Le graphe des feature importance du modèle tuné se trouve à la fin de ce notebook.
 # ```
 
 # ## Tuning
@@ -170,7 +170,7 @@ params['n_estimators'] = 100
 params['verbosity'] = 0
 
 
-# On modifie quelques paramètres de base au regard des TP réalisés.
+# On modifie quelques paramètres de base.
 
 # In[48]:
 
@@ -228,7 +228,7 @@ params["n_estimators"] = 1000
 
 
 # ```{note}
-# Le F1-Score en sorti du grid_search ne peut pas être comparé complètement au f1 initiale car le grid_search utilise de la cross validation et donc pas le même jeu de données test.
+# Le F1-Score en sortie du grid_search ne peut pas être comparé complètement au f1 initial car le grid_search utilise de la cross validation et donc pas le même jeu de données test.
 # ```
 
 # Nous entrainons le modèle avec les nouveaux paramètres pour pouvoir comparer. Par la suite, cette étape ne sera pas tout le temps réalisée.
@@ -749,7 +749,7 @@ f1 = result_model(xgbf, X_test, Y_test)
 
 # ## Paramètres finaux
 
-# Au final, l'optimisation se fait à travers les paramètres et la base de données d'entrainement. La base de données d'entrainement doit être équilibrée avec un coefficient $\alpha = 0.833$ et les paramètres sont :
+# Finalement, l'optimisation se fait à travers les paramètres et la base de données d'entrainement. La base de données d'entrainement doit être équilibrée avec un coefficient $\alpha = 0.833$ et les paramètres sont :
 
 # In[132]:
 
@@ -761,7 +761,7 @@ params
 
 # ## Conclusion
 
-# Tuner un modèle XGBoost nécessite énormement de temps de calcul. Dans ce projet, nous avons restreint le nombre de paramètres. Bien sûr, avec davantage de puissance, nous aurions pu calibrer plus précisement les paramètres étudiés et tuner d'autres paramètres non traités dans ce notebook.
+# Tuner un modèle XGBoost nécessite énormement de temps de calcul. Dans ce projet, nous avons restreint le nombre de paramètres. Bien sûr, avec davantage de puissance, nous aurions pu calibrer plus précisement les paramètres étudiés et tuner d'autres paramètres.
 # 
 # <br><br><br><br><br>
 

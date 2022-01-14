@@ -598,7 +598,7 @@
 </div>
 </div>
 </div>
-<p>Afin d’avoir une meilleur compréhension de nos modèle on peut aussi observer quels sont les variables qui leurs apportent le plus d’informations et sont les plus importantes.</p>
+<p>Afin d’avoir une meilleure compréhension de nos modèles nous pouvons aussi observer quelles sont les variables qui leurs apportent le plus d’informations et sont les plus importantes.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">importances</span> <span class="o">=</span> <span class="n">rfc.feature_importances_</span>
@@ -625,18 +625,18 @@
 <p>Il y’a de nombreux paramètres à tuner :</p>
 <p>Nous allons intervenir sur les paramètres suivant et procéder dans l’ordre dans lesquels les paramètres sont présentés :</p>
 <ul class="simple">
-<li><p><strong>n_estimatorsint</strong>, default=100, ce paramètre correspond au nombre d’arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus</p></li>
-<li><p><strong>max_depthint</strong>, correspond à la profondeur maximal des arbres default=None</p></li>
+<li><p><strong>n_estimatorsint</strong>, default=100, ce paramètre correspond au nombre d’arbres, il est sans doute le plus important donc nous interviendrons deux fois dessus</p></li>
+<li><p><strong>max_depthint</strong>, correspond à la profondeur maximale des arbres default=None</p></li>
 <li><p><strong>min_samples_splitint</strong>, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2</p></li>
 <li><p><strong>min_samples_leafint</strong>, correspond au nombre minimum d’observations dans une feuille simple default=1</p></li>
 <li><p><strong>min_impurity_decreasefloat</strong>, correspond à l’apport minimum d’une feuille pour qu’elle soit conservée default=0.0</p></li>
-<li><p><strong>n_estimatorsint</strong>, le nombre d’arbre à nouveau, au cas où les paramètres modifiés modifié à leur tour le nombre d’arbre optimal, default=100</p></li>
+<li><p><strong>n_estimatorsint</strong>, le nombre d’arbre à nouveau, au cas où les paramètres modifiés modifient à leur tour le nombre d’arbre optimal, default=100</p></li>
 <li><p><strong>max_features</strong>{“auto”, “sqrt”, “log2”}, default= “auto”, les 3 modes de calculs de features max qu’il faut tester</p></li>
 <li><p><strong>class_weight</strong>{“balanced”, “balanced_subsample”}, default=None, les 2 options pour mettre des poids sur les observations</p></li>
 </ul>
 <div class="section" id="etape-1-initialisation">
 <h3>Étape 1 : Initialisation<a class="headerlink" href="#etape-1-initialisation" title="Permalink to this headline">¶</a></h3>
-<p>Rappelons, le F1 de base avant le tunning.</p>
+<p>Rappelons, le F1 de base avant le tuning.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="nf">RandomForestClassifier</span><span class="p">()</span>
@@ -654,7 +654,7 @@
 </div>
 <div class="section" id="etape-2-n-estimators">
 <h3>Étape 2 : n_estimators<a class="headerlink" href="#etape-2-n-estimators" title="Permalink to this headline">¶</a></h3>
-<p>La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus à avec les valeurs proches de l’optimum et en s’aidant de l’allure du graphe de nos F1 scores en fonction de nos paramêtre pour savoir dans quelle directions s’orienter.</p>
+<p>La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus avec les valeurs proches de l’optimum et en s’aidant de l’allure du graphe de nos F1 scores en fonction de nos paramètres pour savoir dans quelle direction s’orienter.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">maxi</span><span class="o">=</span><span class="nf">F1</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
@@ -696,7 +696,7 @@
 </div>
 </div>
 </div>
-<p>Nous n’observons pas de tendances sur le graphe donc nous pouvons nous arréter là, mais nous aurions aussi pû essayer de regarder aux alentours de 100 s’il y’avait de meilleurs prétendants.</p>
+<p>Nous n’observons pas de tendance sur le graphe donc nous pouvons nous arrêter. Nous aurions aussi pû essayer de regarder aux alentours de 100 s’il existait de meilleurs prétendants.</p>
 </div>
 <div class="section" id="etape-3-max-depth">
 <h3>Étape 3 : max_depth<a class="headerlink" href="#etape-3-max-depth" title="Permalink to this headline">¶</a></h3>
@@ -732,7 +732,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 0.38874383521903105
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_49_1.png" src="../../_images/44_rf_49_1.png" />
+<img alt="../../_images/44_rf_50_1.png" src="../../_images/44_rf_50_1.png" />
 </div>
 </div>
 <p>Nous évaluons le f1-score actuellement.</p>
@@ -752,7 +752,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.3807580174927114
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_51_1.png" src="../../_images/44_rf_51_1.png" />
+<img alt="../../_images/44_rf_52_1.png" src="../../_images/44_rf_52_1.png" />
 </div>
 </div>
 </div>
@@ -781,7 +781,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3 0.4165727170236754
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_54_1.png" src="../../_images/44_rf_54_1.png" />
+<img alt="../../_images/44_rf_55_1.png" src="../../_images/44_rf_55_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -806,7 +806,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4060364464692483
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_56_1.png" src="../../_images/44_rf_56_1.png" />
+<img alt="../../_images/44_rf_57_1.png" src="../../_images/44_rf_57_1.png" />
 </div>
 </div>
 </div>
@@ -835,7 +835,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 0.4119148936170213
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_59_1.png" src="../../_images/44_rf_59_1.png" />
+<img alt="../../_images/44_rf_60_1.png" src="../../_images/44_rf_60_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -864,7 +864,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4146341463414634
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_63_1.png" src="../../_images/44_rf_63_1.png" />
+<img alt="../../_images/44_rf_64_1.png" src="../../_images/44_rf_64_1.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -889,7 +889,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 0.4146341463414634
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_64_1.png" src="../../_images/44_rf_64_1.png" />
+<img alt="../../_images/44_rf_65_1.png" src="../../_images/44_rf_65_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -913,7 +913,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.41870949563257254
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_66_1.png" src="../../_images/44_rf_66_1.png" />
+<img alt="../../_images/44_rf_67_1.png" src="../../_images/44_rf_67_1.png" />
 </div>
 </div>
 </div>
@@ -941,7 +941,7 @@
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50 0.41897685052872247
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_68_1.png" src="../../_images/44_rf_68_1.png" />
+<img alt="../../_images/44_rf_69_1.png" src="../../_images/44_rf_69_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -996,7 +996,7 @@ avec log2 F1= 0.41231822070145424
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4057724957555178
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_74_1.png" src="../../_images/44_rf_74_1.png" />
+<img alt="../../_images/44_rf_75_1.png" src="../../_images/44_rf_75_1.png" />
 </div>
 </div>
 </div>
@@ -1034,7 +1034,7 @@ avec balanced_subsample F1= 0.43081081081081085
 </div>
 <div class="section" id="methode-par-algorithme-genetique">
 <h2>Méthode par algorithme génétique<a class="headerlink" href="#methode-par-algorithme-genetique" title="Permalink to this headline">¶</a></h2>
-<p>Afin d’améliorer notre tuning nous pouvons aussi utiliser des méthodes aléatoires, leur intérêt résside dans le fait qu’elles permettent des modifications plus subtiles ou au contraire plus imprévisibles et désorganisées que celles pensées par un humain ; et donc inexploré.
+<p>Afin d’améliorer notre tuning nous pouvons aussi utiliser des méthodes aléatoires, leur intérêt résside dans le fait qu’elles permettent des modifications plus subtiles ou au contraire plus imprévisibles et désorganisées que celles pensées par un humain ; et donc inexplorées.
 Cette version est relativement naïve et ne possède que peu d’itération mais il est possible d’en faire une méthode beaucoup plus poussée, ce code est présent uniquement à titre d’exemple.</p>
 <p>Le principe de base de la méthode aléatoire programmée est de partir de paramètres choisit à l’avance (ici ceux du tuning déterministe), paramètres “parents”, et de les modifier de manière aléatoire pour créer plusieurs enfants.
 Une fois les enfants créé nous evaluons les enfants et les parents (via le F1 score ici) et on garde le meilleur, qui devient à son tour le parent de plusieurs enfant, permettant de réitérer le processus jusqu’à avoir un F1 score cible ou pendant une période temps donnée.</p>
@@ -1132,7 +1132,7 @@ Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants 
 </div>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<img alt="../../_images/44_rf_85_0.png" src="../../_images/44_rf_85_0.png" />
+<img alt="../../_images/44_rf_86_0.png" src="../../_images/44_rf_86_0.png" />
 </div>
 </div>
 <p>Paramètres obtenus :</p>
@@ -1162,7 +1162,10 @@ Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants 
 </div>
 </div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>Il est important de noter que si vous faites tourner cet algorithme de votre côté vous n’obtiendrez pas forcément les mêmes résultats, il peuvent être meilleurs ou moins bons…</p>
+</div>
 <p><br><br><br><br><br></p>
 </div>
 </div>

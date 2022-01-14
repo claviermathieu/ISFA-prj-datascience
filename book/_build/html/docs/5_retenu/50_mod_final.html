@@ -272,7 +272,7 @@
 </div>
 </div>
 </div>
-<p>Le modèle final sera entrainé sur l’intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l’overfitting, nous séparons tout de même nos données.</p>
+<p>Le modèle final sera entrainé sur l’intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesurer le caractère prédictif de nos données et donc pour éviter l’overfitting, nous séparons tout de même nos données.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span><span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
@@ -286,7 +286,7 @@
 </div>
 <div class="section" id="modele">
 <h2>Modèle<a class="headerlink" href="#modele" title="Permalink to this headline">¶</a></h2>
-<p>Au final, nous avons tester 7 modèles. Voici leur F1-Score respectif :</p>
+<p>Au final, nous avons testé 7 modèles. Voici leur F1-Score respectif :</p>
 <ul class="simple">
 <li><p><strong>Logistique</strong> (sans tuning) : 0.22</p></li>
 <li><p><strong>SCV</strong> (sans tuning) : 0.13</p></li>
@@ -297,7 +297,7 @@
 <li><p><strong>XGBoost</strong> (avec tuning) : 0.58*</p></li>
 </ul>
 <p>* : <em>obtenu dans le notebook précédent.</em></p>
-<p>Nous utilisons donc le <strong>XGBoost</strong> pour nos prévisions finales avec des données équilibrées avec coefficient <span class="math notranslate nohighlight">\(\alpha = 0.844\)</span>.</p>
+<p>Nous utilisons donc le <strong>XGBoost</strong> pour nos prévisions finales avec des données équilibrées avec un coefficient <span class="math notranslate nohighlight">\(\alpha = 0.844\)</span>.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_xgb</span> <span class="o">=</span> <span class="p">{</span>
@@ -366,7 +366,7 @@
 </div>
 <div class="section" id="export-des-predictions">
 <h2>Export des prédictions<a class="headerlink" href="#export-des-predictions" title="Permalink to this headline">¶</a></h2>
-<p>Pour le rendu final, nous entrainons la base de données sur toute la bdd train.</p>
+<p>Pour le rendu final, nous entrainons la base de données sur toute la bdd train puis nous faisons les prévisions sur la bdd test.</p>
 <p><strong>Traitement de la bdd test</strong></p>
 <p>Nous appliquons le même traitement à la bdd test qu’à la bdd train.</p>
 <div class="cell tag_hide-input docutils container">
@@ -500,7 +500,7 @@
 </div>
 </div>
 </div>
-<p>Nous évaluons les prévisions finale :</p>
+<p>Nous évaluons les prévisions finales :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y_predict</span> <span class="o">=</span> <span class="n">xgb_final</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_to_predict</span><span class="p">)</span>

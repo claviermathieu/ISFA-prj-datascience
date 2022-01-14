@@ -73,7 +73,7 @@ X = train.drop(columns='Response')
 Y = train['Response']
 
 
-# Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesure le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
+# Le modèle final sera entrainé sur l'intégralité de la base que nous possédons. Mais actuellement, nous souhaitons mesurer le caractère prédictif de nos données et donc pour éviter l'overfitting, nous séparons tout de même nos données.
 
 # In[12]:
 
@@ -86,7 +86,7 @@ X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
 
 # ## Modèle
 
-# Au final, nous avons tester 7 modèles. Voici leur F1-Score respectif :
+# Au final, nous avons testé 7 modèles. Voici leur F1-Score respectif :
 # - **Logistique** (sans tuning) : 0.22
 # - **SCV** (sans tuning) : 0.13
 # - **CART** (sans tuning) : 0.43
@@ -99,7 +99,7 @@ X_rus , Y_rus = rus.fit_resample(X_train ,Y_train)
 # 
 # \* : *obtenu dans le notebook précédent.*
 
-# Nous utilisons donc le **XGBoost** pour nos prévisions finales avec des données équilibrées avec coefficient $\alpha = 0.844$.
+# Nous utilisons donc le **XGBoost** pour nos prévisions finales avec des données équilibrées avec un coefficient $\alpha = 0.844$.
 
 # In[13]:
 
@@ -161,7 +161,7 @@ plt.show()
 
 # ## Export des prédictions
 
-# Pour le rendu final, nous entrainons la base de données sur toute la bdd train.
+# Pour le rendu final, nous entrainons la base de données sur toute la bdd train puis nous faisons les prévisions sur la bdd test.
 
 # **Traitement de la bdd test**
 
@@ -223,7 +223,7 @@ xgb_final = XGBClassifier(**params_xgb)
 xgb_final.fit(X_f, Y_f)
 
 
-# Nous évaluons les prévisions finale :
+# Nous évaluons les prévisions finales :
 
 # In[24]:
 
