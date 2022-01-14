@@ -37,7 +37,7 @@ si la personne contactée sera intéressée par la souscription d’une assuranc
 Le rapport se décompose en 5 grandes parties :   
 1. Description des données
 2. Préparation des données
-3. Comparatif des modèles
+3. Mesure
 4. Implémentation des modèles
 5. Modèle retenu
 

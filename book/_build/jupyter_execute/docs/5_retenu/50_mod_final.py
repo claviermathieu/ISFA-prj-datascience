@@ -52,7 +52,7 @@ from matplotlib.pylab import rcParams
 rcParams['figure.figsize'] = 14, 6
 
 
-# # Modèle finale
+# # Modèle retenu
 
 # ## Téléchargement des données
 
