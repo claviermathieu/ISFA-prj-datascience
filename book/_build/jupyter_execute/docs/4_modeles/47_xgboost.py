@@ -160,7 +160,7 @@ def modelfit(alg, dtrain, predictors, useTrainCV = True, cv_folds=5, early_stopp
 
 # ### Étape 1 : Initialisation
 
-# Dans un premier temps, on récupère les paramètres de bases que l'on va tuner par la suite.
+# Dans un premier temps, on récupère les paramètres de base que l'on va tuner par la suite.
 
 # In[47]:
 
@@ -530,9 +530,9 @@ params["learning_rate"] = 0.1
 # ## Random Under Sampler
 # 
 
-# Une autre idée pour améliorer notre XGBoost est de travailler sur la forme des données d'entrainement. Actuellement le jeux de données est non balancé, c'est-à-dire que nous avons plus de Y ayant une valeur de 0 que de 1.
+# Une autre idée pour améliorer notre XGBoost est de travailler sur la forme des données d'entrainement. Actuellement le jeux de données est non équilibré, c'est-à-dire que nous avons plus de Y ayant une valeur de 0 que de 1.
 # 
-# Pour résoudre ce problème nous utilisons un librairie permettan de réaliser du **random under sampler** et réajustant à souhait la répartition des 1 et des 0 dans notre base de données d'entrainement.
+# Pour résoudre ce problème nous utilisons un librairie permettant de réaliser du **random under sampler** et réajustant à souhait la répartition des 1 et des 0 dans notre base de données d'entrainement.
 
 # In[63]:
 
@@ -599,7 +599,7 @@ max_index = score_alpha.index(max_value)
 print("On choisit donc alpha = ", np.round(list_alpha[max_index], 3))
 
 
-# Le F1-Score s'améliore grandement lorsque l'entrainement se fait sur des données balancées. Nous nous rappronchons des valeurs du random forest.
+# Le F1-Score s'améliore grandement lorsque l'entrainement se fait sur des données équilibrées. Nous nous rapprochons des valeurs du random forest.
 
 # In[68]:
 
@@ -757,7 +757,7 @@ f1 = result_model(xgbf, X_test, Y_test)
 params
 
 
-# Nous reprendons ces paramètres dans le prochains notebook concernant le modèle final utilisé pour générer les prédictions sur la base test.
+# Nous reprendons ces paramètres dans le prochain notebook concernant le modèle final utilisé pour générer les prédictions sur la base test.
 
 # ## Conclusion
 
@@ -786,7 +786,7 @@ params
 # 
 # $$ L(\theta) = \sum_i[ y_i\ln (1+e^{-\hat{y}_i}) + (1-y_i)\ln (1+e^{\hat{y}_i})]  $$
 # 
-# Le terme de régulation est assez souvent oublié; c'est pourtant lui qui contrôle la compléxité du modèle et nous empêche d'entrainer notre modèle en overfittant.
+# Le terme de régulation est assez souvent oublié; c'est pourtant lui qui contrôle la complexité du modèle et nous empêche d'entrainer notre modèle en overfittant.
 # 
 # ![Texte alternatif](https://drive.google.com/uc?id=1ks-oizjnu3-rThY-gecix6BpKFWy__FM)
 # 
@@ -806,11 +806,11 @@ params
 # $$ \text{obj}(\theta) = \sum_i^n l(y_i, \hat{y}_i) + \sum_{k=1}^K \Omega(f_k)$$
 # 
 # Mainteant que nous avons introduit le modèle, nous pouvons passer à l'entrainement de ce dernier. Nous allons définir une fonction d'objectif que nous optimiserons.\
-# Notre fonction d'objectif est défini comme étant :
+# Notre fonction d'objectif est définie comme étant :
 # 
 # $$ \text{obj} = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\Omega(f_i) $$
 # 
-# Nous devons chercher premièrement les paramètres de notre arbre. Les structures de nos arbres sont contenus dans les fonctions $f_i$. Il s'avère complexe d'optimiser la structure d'un arbre, il ne s'agit pas simplement de problèmes de gradients.\
+# Nous devons chercher premièrement les paramètres de notre arbre. Les structures de nos arbres sont contenues dans les fonctions $f_i$. Il s'avère complexe d'optimiser la structure d'un arbre, il ne s'agit pas simplement de problèmes de gradients.\
 # Ici nous fixons ce que nous avons à apprendre puis nous ajoutons un arbre à la fois. Notre valeur de prédiction avec un pas de $t$ pour la fonction $\hat{y}_i^{(t)}$ s'écrit : 
 # 
 
@@ -828,7 +828,7 @@ params
 # 
 # $$
 
-# La question qui se pose alors est : quel arbre ajouté après un pas ?. La réponse est l'arbre qui optimise le mieux notre prédiction.
+# La question qui se pose alors est : quel arbre ajouter après un pas ?. La réponse est l'arbre qui optimise le mieux notre prédiction.
 # 
 
 # $$
@@ -872,7 +872,7 @@ params
 # \end{split}
 # 
 # $$
-# Après supression de toutes les constantes, nous obtenons : 
+# Après suppression de toutes les constantes, nous obtenons : 
 # 
 # $$\sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)$$
 # 
@@ -884,15 +884,15 @@ params
 # $$f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} .$$
 # 
 # où $w$ est le  vecteur de score, $q$ est la fonction qui alloue la bonne feuille et $T$ le nombre de feuilles.
-# Pour la methode XGBoost, nous pouvons définir la complexité du modèle comme étant :
+# Pour la méthode XGBoost, nous pouvons définir la complexité du modèle comme étant :
 # 
 # $$ \Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2 $$
 # 
-# Il existe d'autres façons de définir la complexité du modèle; cependant celle énoncée précédemment s'avère être fonctionnelle et efficace. L'aspect de régulation est souvent sous-estimé voir même ingoré. En définissant la complexité de façon formelle, nous avons un meilleur aperçu de notre modèle et de son niveau de performance.
+# Il existe d'autres façons de définir la complexité du modèle; cependant celle énoncée précédemment s'avère être fonctionnelle et efficace. L'aspect de régulation est souvent sous-estimé voir même ignoré. En définissant la complexité de façon formelle, nous avons un meilleur aperçu de notre modèle et de son niveau de performance.
 # 
 # Structure du score :
 # 
-# Mainteant que nous avons défini notre modèle, notre valeur objectif peut s'écrire de la façon suivante :
+# Maintenant que nous avons défini notre modèle, notre valeur objectif peut s'écrire de la façon suivante :
 # 
 # $$
 # 
@@ -911,7 +911,7 @@ params
 # 
 # $$\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T$$
 # 
-# où les $w_j$ sont indépendants, $G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2$ est une expression de la forme quadratique. Pour le meilleur $w_j$ possible, nous pouvons ecrire : 
+# où les $w_j$ sont indépendants, $G_jw_j+\frac{1}{2}(H_j+\lambda)w_j^2$ est une expression de la forme quadratique. Pour le meilleur $w_j$ possible, nous pouvons écrire : 
 # 
 # $$
 # 
@@ -926,7 +926,7 @@ params
 # 
 # C'est la dernière expression qui va déterminer la qualité de notre modèle en évaluant la qualité de la prédiction.
 # 
-# Après avoir mesuré la qualité de notre modèle, nous allons énumerer le nombre d'arbres possibles afin de choisir le meilleur. C'est probablement impossible à réaliser avec l'infinité de combinaisons possibles. Il faut donc chercher à optimiser l'arbre niveau par niveau. Nous calculons de ce fait le gain entre un arbre et l'autre à l'aide de la formule suivante : 
+# Après avoir mesuré la qualité de notre modèle, nous allons énumérer le nombre d'arbres possibles afin de choisir le meilleur. C'est probablement impossible à réaliser avec l'infinité de combinaisons possibles. Il faut donc chercher à optimiser l'arbre niveau par niveau. Nous calculons de ce fait le gain entre un arbre et l'autre à l'aide de la formule suivante : 
 # 
 # $$ Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma $$
 # 

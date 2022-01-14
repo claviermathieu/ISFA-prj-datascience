@@ -21,17 +21,16 @@ train = pd.read_csv("https://www.data.mclavier.com/prj_datascience/brut_train.cs
 train.head()
 
 
-# En fonction des modèles utilisées, il faut réaliser différentes préparations des données.
+# En fonction des modèles utilisés, il faut réaliser différentes préparations des données.
 # 
-# Par exemple, pour une régression logistique il faut transformer les variables en One-Hot variables alors que pour un modèle xgboost ce n'est pas obligatoire.
+# Par exemple, pour une régression logistique il faut appliquer un encodage One-Hot sur les variables catégorielles, ce qui est moins important lorsqu'on utilise, par exemple, un modèle XGBoost.
 # 
-# Ainsi, ce notebook a pour objectif d'exporter les différentes bases de données avec le formalisme nécessaire à chaque type de modèle qui seront appliqués par la suite.
-# 
+# Ainsi, ce notebook a pour objectif d'exporter les différentes bases de données sous des formats adaptés aux modèles qui seront appliqués par la suite.
 # <br><br>
 # 
 # **Traitement global**
 # 
-# Cependant, dans un premier temps, certains traitement sont communs à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d'obtenir une base de données plus lisible.
+# Cependant, dans un premier temps, certains traitements sont communs à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d'obtenir une base de données plus lisible.
 # 
 # ```{note} 
 # Le nettoyage et le regroupement des données résulte de la description statistique précédente.
@@ -49,7 +48,7 @@ train.head(3)
 
 # ## Renommage
 
-# Nous remplaçons les *No* et *Yes* de la variable Vehicle_Damage par des booleans :
+# Nous remplaçons les *No* et *Yes* de la variable Vehicle_Damage par des booléens :
 
 # In[3]:
 
@@ -58,7 +57,7 @@ dict_cat = {'No' : 0, 'Yes' : 1}
 train.Vehicle_Damage.replace(dict_cat, inplace = True)
 
 
-# Ensuite, nous remplaçons les *Male* et *Female* par respectivement 0 et 1 :
+# Ensuite, nous remplaçons les *Male* et *Female* par 0 et 1 respectivement :
 
 # In[4]:
 
@@ -92,9 +91,7 @@ train.head(3)
 
 # ## Agrégation
 
-# Nous avons constaté que la variable *Policy_Sales_Channel* comportait beaucoup de catégorie alors que seulement 3 catégories dominent toutes les autres.
-# 
-# 
+# Nous avons constaté que la variable *Policy_Sales_Channel* comportait beaucoup de catégories  alors que 3 catégories regroupent la majorité des observations.
 
 # In[ ]:
 
@@ -102,7 +99,7 @@ train.head(3)
 train.Policy_Sales_Channel.value_counts(sort=True).head(5)
 
 
-# Après agrégation, nous obtenons seulement 4 catégories de taille relativement homogènes.
+# Après agrégation, nous obtenons seulement 4 catégories de tailles comparables.
 
 # In[ ]:
 
@@ -132,7 +129,7 @@ train.Policy_Sales_Channel.value_counts(sort=True).head(5)
 train = train[train.Age <= 85]
 
 
-# Le reste de la base de données étant très propre, aucun autre filtre ne parait nécessaire. Les lignes représentant des personnes sans permis pourraient paraître superflux mais quelques individus (peut-être des voitures de collections) ont tout de même une assurance. Ces personnes là existent aussi dans la base de données test. Nous ne faisons donc aucune manipulation dessus.
+# Le reste de la base de données étant très propre, aucun autre filtre ne parait nécessaire. Les lignes représentant des personnes sans permis pourraient paraître superflues mais quelques individus (peut-être des propriétaires de voitures de collections) ont tout de même une assurance. Ces personnes là existent aussi dans la base de données test. Nous ne faisons donc aucune manipulation dessus.
 
 # ## Export 1
 
@@ -148,7 +145,7 @@ train = train[train.Age <= 85]
 # 
 # <br>
 # 
-# Nous exportons donc cette base de données que nous nommons *train_v1* et qui est hébergé [sur serveur](https://www.data.mclavier.com/prj_datascience/) pour facilité l'accessibilité.
+# Nous exportons donc cette base de données que nous nommons *train_v1* et qui est hébergé [sur serveur](https://www.data.mclavier.com/prj_datascience/) pour faciliter l'accessibilité.
 
 # In[54]:
 
@@ -158,7 +155,7 @@ train.to_csv("train_v1.csv", index = False)
 
 # ## Export 2
 
-# Pour la régression logistique, il est fortement recommender de OneHot au maximum les variables pouvant l'être.
+# Pour la régression logistique, il est fortement recommandé de OneHot au maximum les variables pouvant l'être.
 # 
 # Pour cela nous utilisons sklearn.preprocessing.
 
@@ -214,7 +211,7 @@ train.head(3)
 # 
 # La base de données pour la régression logistique peut à présent être exportée.
 # 
-# Elle est nommée *train_v2* et est aussi hébergée [sur un serveur](https://www.data.mclavier.com/prj_datascience/) pour facilité l'accessibilité.
+# Elle est nommée *train_v2* et est aussi hébergée [sur un serveur](https://www.data.mclavier.com/prj_datascience/) pour faciliter l'accessibilité.
 
 # In[70]:
 
@@ -244,7 +241,7 @@ train.to_csv("train_v3.csv", index = False)
 
 # Enfin, lors de notre évaluation des différents modèles, nous avons souhaité tester un modèle Random Forest sans aucun tuning.
 # 
-# Nous faisons donc un autre export avec simplement le filtrage sur l'age. Les données ne sont pas renommées car le Random Forest de R n'en a pas besoin.
+# Nous faisons donc un autre export avec simplement le filtrage sur l'âge. Les données ne sont pas renommées car le Random Forest de R n'en a pas besoin.
 
 # In[17]:
 

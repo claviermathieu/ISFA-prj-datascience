@@ -268,7 +268,7 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Sous R, la fonction F1_Score() mesure par défaut le nombre de 0 correcte. Il faut rajouter l’argument positive = 1 pour obtenir l’équivalent du f1_score de sklearn.</p>
+<p>Sous R, la fonction F1_Score() mesure par défaut le nombre de 0 correctement identifiés. Il faut rajouter l’argument positive = 1 pour obtenir l’équivalent du f1_score de sklearn.</p>
 </div>
 <p>Voici d’autres mesures disponibles avec le package <em>sklearn</em></p>
 <ul class="simple">
@@ -295,7 +295,7 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 <li><p>X test</p></li>
 <li><p>Y test</p></li>
 </ul>
-<p>Nous affichons par la même occation la matrice de confusion.</p>
+<p>Nous affichons par la même occasion la matrice de confusion.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
@@ -318,7 +318,7 @@ F_1 = 2 \times \frac{\text{précision} \times \text{rappel}}{\text{précision} +
 </div>
 </div>
 </div>
-<p>On rappelle qu’une matrice de confusion donne abscisse les valeurs réelles et en ordonnées les prédites ce qui permet de connaître les faux positif, les vrais positifs etc…</p>
+<p>On rappelle qu’une matrice de confusion donne en abscisse les valeurs réelles et en ordonnée les prédictions les faux positifs, les vrais positifs, etc.</p>
 </div>
 <div class="section" id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>

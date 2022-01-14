@@ -45,7 +45,7 @@ from sklearn.metrics import f1_score
 
 
 # ```{warning}
-# Sous R, la fonction F1_Score() mesure par défaut le nombre de 0 correcte. Il faut rajouter l'argument positive = 1 pour obtenir l'équivalent du f1_score de sklearn.
+# Sous R, la fonction F1_Score() mesure par défaut le nombre de 0 correctement identifiés. Il faut rajouter l'argument positive = 1 pour obtenir l'équivalent du f1_score de sklearn.
 # ```
 
 # Voici d'autres mesures disponibles avec le package *sklearn* 
@@ -72,7 +72,7 @@ from sklearn.metrics import confusion_matrix
 # - X test
 # - Y test
 # 
-# Nous affichons par la même occation la matrice de confusion.
+# Nous affichons par la même occasion la matrice de confusion.
 
 # In[7]:
 
@@ -95,7 +95,7 @@ def result_model(model,X,Y, mat = True, f1 = True) :
     
 
 
-# On rappelle qu'une matrice de confusion donne abscisse les valeurs réelles et en ordonnées les prédites ce qui permet de connaître les faux positif, les vrais positifs etc...
+# On rappelle qu'une matrice de confusion donne en abscisse les valeurs réelles et en ordonnée les prédictions les faux positifs, les vrais positifs, etc. 
 
 # ## Conclusion
 # 

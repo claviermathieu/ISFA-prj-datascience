@@ -48,7 +48,7 @@ profile = pp.ProfileReport(train, title = "ISFA - Groupe 1 | Insurance cross-sel
 profile.to_file("data_desc.html")
 
 
-# Le rapport de *pandas_profiling* est <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html">disponible ici</a>.
+# Le rapport de *pandas_profiling* est <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html" target = "_blank">disponible ici</a>.
 
 # Ce rapport permet de faire un état des lieux des variables et de se rendre compte de certains points à faire attention.
 # 
@@ -63,7 +63,7 @@ profile.to_file("data_desc.html")
 
 # ## Analyse manuelle
 
-# En complément de l'analyse du rapport <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html">pandas_profiling</a>, nous réalisons quelques graphes pour mieux comprendre le jeux de données.
+# En complément de l'analyse du rapport <a href = "https://www.data.mclavier.com/prj_datascience/data_desc.html" target = "_blank">pandas_profiling</a>, nous réalisons quelques graphes pour mieux comprendre le jeux de données.
 
 # ### Généralités
 
@@ -103,7 +103,7 @@ sns.catplot(data=train,
 plt.show()
 
 
-# On remarque que la distribution des primes est significativement différentes pour les véhicules ayant plus de deux ans d'age en fonction qu'ils aient déjà eu ou non un accident.
+# On remarque que la distribution des primes est significativement différente pour les véhicules ayant plus de deux ans d'age en fonction qu'ils aient déjà eu ou non un accident.
 
 # In[75]:
 

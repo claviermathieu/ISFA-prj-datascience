@@ -622,12 +622,12 @@
 </div>
 <div class="section" id="tuning">
 <h2>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h2>
-<p>Il y’a de nombreux paramètres à tuner :</p>
-<p>Nous allons intervenir sur les paramètres suivant et procéder dans l’ordre dans lesquels les paramètres sont présentés :</p>
+<p>Il y a de nombreux paramètres à tuner :</p>
+<p>Nous allons intervenir sur les paramètres suivants et procéder dans l’ordre dans lesquels les paramètres sont présentés :</p>
 <ul class="simple">
 <li><p><strong>n_estimatorsint</strong>, default=100, ce paramètre correspond au nombre d’arbres, il est sans doute le plus important donc nous interviendrons deux fois dessus</p></li>
 <li><p><strong>max_depthint</strong>, correspond à la profondeur maximale des arbres default=None</p></li>
-<li><p><strong>min_samples_splitint</strong>, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2</p></li>
+<li><p><strong>min_samples_splitint</strong>, correspond au nombre de divergences nécessaires pour créer un nouveau noeud default=2</p></li>
 <li><p><strong>min_samples_leafint</strong>, correspond au nombre minimum d’observations dans une feuille simple default=1</p></li>
 <li><p><strong>min_impurity_decreasefloat</strong>, correspond à l’apport minimum d’une feuille pour qu’elle soit conservée default=0.0</p></li>
 <li><p><strong>n_estimatorsint</strong>, le nombre d’arbre à nouveau, au cas où les paramètres modifiés modifient à leur tour le nombre d’arbre optimal, default=100</p></li>
@@ -654,7 +654,7 @@
 </div>
 <div class="section" id="etape-2-n-estimators">
 <h3>Étape 2 : n_estimators<a class="headerlink" href="#etape-2-n-estimators" title="Permalink to this headline">¶</a></h3>
-<p>La méthode que nous allons utiliser pour le tuning est très simple nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus avec les valeurs proches de l’optimum et en s’aidant de l’allure du graphe de nos F1 scores en fonction de nos paramètres pour savoir dans quelle direction s’orienter.</p>
+<p>La méthode que nous allons utiliser pour le tuning est très simple, nous allons tester des valeurs parmi une liste, gardant la meilleure valeur avant de répéter le processus avec les valeurs proches de l’optimum et en s’aidant de l’allure du graphe de nos F1 scores en fonction de nos paramètres pour savoir dans quelle direction s’orienter.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">maxi</span><span class="o">=</span><span class="nf">F1</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
@@ -981,7 +981,7 @@ avec log2 F1= 0.41231822070145424
 </div>
 </div>
 </div>
-<p>On observe de meilleur résultat avec la valeur par défaut qui correspond au mode automatique donc nous le conservons dans notre tuning.</p>
+<p>On observe de meilleurs résultats avec la valeur par défaut qui correspond au mode automatique donc nous le conservons dans notre tuning.</p>
 <p><strong>log2</strong> semble meilleur :</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1034,17 +1034,17 @@ avec balanced_subsample F1= 0.43081081081081085
 </div>
 <div class="section" id="methode-par-algorithme-genetique">
 <h2>Méthode par algorithme génétique<a class="headerlink" href="#methode-par-algorithme-genetique" title="Permalink to this headline">¶</a></h2>
-<p>Afin d’améliorer notre tuning nous pouvons aussi utiliser des méthodes aléatoires, leur intérêt résside dans le fait qu’elles permettent des modifications plus subtiles ou au contraire plus imprévisibles et désorganisées que celles pensées par un humain ; et donc inexplorées.
-Cette version est relativement naïve et ne possède que peu d’itération mais il est possible d’en faire une méthode beaucoup plus poussée, ce code est présent uniquement à titre d’exemple.</p>
-<p>Le principe de base de la méthode aléatoire programmée est de partir de paramètres choisit à l’avance (ici ceux du tuning déterministe), paramètres “parents”, et de les modifier de manière aléatoire pour créer plusieurs enfants.
-Une fois les enfants créé nous evaluons les enfants et les parents (via le F1 score ici) et on garde le meilleur, qui devient à son tour le parent de plusieurs enfant, permettant de réitérer le processus jusqu’à avoir un F1 score cible ou pendant une période temps donnée.</p>
-<p>Par soucis de complexité temporelle, nous avons fait que 2 enfants par génération et nous n’avons fait tourner l’algorithme que quelques minutes mais il est recommandé de faire tourner l’algorithme plus longtemps avec plus d’enfants pour avoir de meilleurs résultats, même si cela peut durer plusieurs minutes/heures.</p>
+<p>Afin d’améliorer notre tuning nous pouvons aussi utiliser des méthodes aléatoires, leur intérêt réside dans le fait qu’elles permettent des modifications plus subtiles ou au contraire plus imprévisibles et désorganisées que celles pensées par un humain ; et donc inexplorées.
+Cette version est relativement naïve et ne possède que peu d’itérations mais il est possible d’en faire une méthode beaucoup plus poussée, ce code est présent uniquement à titre d’exemple.</p>
+<p>Le principe de base de la méthode aléatoire programmée est de partir de paramètres choisis à l’avance (ici ceux du tuning déterministe), paramètres “parents”, et de les modifier de manière aléatoire pour créer plusieurs enfants.
+Une fois les enfants créés nous evaluons les enfants et les parents (via le F1 score ici) et on garde le meilleur, qui devient à son tour le parent de plusieurs enfant, permettant de réitérer le processus jusqu’à avoir un F1 score cible ou pendant une période temps donnée.</p>
+<p>Par souci de complexité temporelle, nous n’avons fait que 2 enfants par génération et nous n’avons fait tourner l’algorithme que quelques minutes mais il est recommandé de faire tourner l’algorithme plus longtemps avec plus d’enfants pour avoir de meilleurs résultats, même si cela peut durer plusieurs minutes/heures.</p>
 <br>
 <p>Nous avons aussi testé deux types de variations ne sachant laquelle choisir et n’ayant pas le temps de faire tourner les deux suffisamment longtemps :</p>
 <ul class="simple">
-<li><p>La première effectue de “relativement petit chocs” et entraine des variations qui vont de -50% à +50% sur un des paramètres</p></li>
+<li><p>La première effectue des “chocs relativements petits” et entraine des variations qui vont de -50% à +50% sur un des paramètres</p></li>
 <li><p>La deuxième entraîne des changements plus conséquents, un paramètre peut ainsi varier du simple au triple.
-Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants et le parent avant de recommencer.</p></li>
+Ensuite comme expliqué plus tôt on choisis le meilleur entre les deux enfants et le parent avant de recommencer.</p></li>
 </ul>
 <br>
 <p>Cliquer sur le + pour afficher les fonctions variations.</p>

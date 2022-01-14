@@ -164,7 +164,7 @@ print(modelSimple.summary())
 modelSimple.compile(loss = "binary_crossentropy",optimizer = "Adamax",metrics = ["accuracy"])
 
 
-# Le modèle à 150 époques d'apprentissage est adapté à la taille de lot par défaut de 200 échantillons. L'évaluation des performances du modèle est effectué à la fin de chaque époque d'apprentissage sur l'ensemble de données de test.
+# Le modèle à 150 époques d'apprentissage est adapté à la taille de lot par défaut de 200 échantillons. L'évaluation des performances du modèle est effectué à la fin de chaque époque d'apprentissage sur l'ensemble des données de test.
 
 # In[14]:
 
@@ -204,7 +204,7 @@ print('Le f1 score vaut',f1_scor2)
 
 # ## Perception multiple
 
-# Nous passons maintenant à un perceptron multicouche. Nous créons toujours structure Sequential, dans lequel nous ajoutons successivement deux objets Dense; le premier faisant la jonction entre la couche d'entrée et la couche caché.
+# Nous passons maintenant à un perceptron multicouche. Nous créons toujours structure Sequential, dans lequel nous ajoutons successivement deux objets Dense; le premier faisant la jonction entre la couche d'entrée et la couche cachée.
 
 # On sépare les données en train et test puis on les scale avec les méthodes de sklearn.
 

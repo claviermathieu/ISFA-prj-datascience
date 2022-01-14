@@ -265,12 +265,12 @@
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="preparation-des-donnees">
 <h1>Préparation des données<a class="headerlink" href="#preparation-des-donnees" title="Permalink to this headline">¶</a></h1>
-<p>En fonction des modèles utilisées, il faut réaliser différentes préparations des données.</p>
-<p>Par exemple, pour une régression logistique il faut transformer les variables en One-Hot variables alors que pour un modèle xgboost ce n’est pas obligatoire.</p>
-<p>Ainsi, ce notebook a pour objectif d’exporter les différentes bases de données avec le formalisme nécessaire à chaque type de modèle qui seront appliqués par la suite.</p>
-<p><br><br></p>
+<p>En fonction des modèles utilisés, il faut réaliser différentes préparations des données.</p>
+<p>Par exemple, pour une régression logistique il faut appliquer un encodage One-Hot sur les variables catégorielles, ce qui est moins important lorsqu’on utilise, par exemple, un modèle XGBoost.</p>
+<p>Ainsi, ce notebook a pour objectif d’exporter les différentes bases de données sous des formats adaptés aux modèles qui seront appliqués par la suite.
+<br><br></p>
 <p><strong>Traitement global</strong></p>
-<p>Cependant, dans un premier temps, certains traitement sont communs à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d’obtenir une base de données plus lisible.</p>
+<p>Cependant, dans un premier temps, certains traitements sont communs à tous les formalismes. Nous réalisons donc un nettoyage et le regroupement de certaines variables afin d’obtenir une base de données plus lisible.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Le nettoyage et le regroupement des données résulte de la description statistique précédente.</p>
@@ -359,7 +359,7 @@
 </div>
 <div class="section" id="renommage">
 <h2>Renommage<a class="headerlink" href="#renommage" title="Permalink to this headline">¶</a></h2>
-<p>Nous remplaçons les <em>No</em> et <em>Yes</em> de la variable Vehicle_Damage par des booleans :</p>
+<p>Nous remplaçons les <em>No</em> et <em>Yes</em> de la variable Vehicle_Damage par des booléens :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;No&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Yes&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
@@ -368,7 +368,7 @@
 </div>
 </div>
 </div>
-<p>Ensuite, nous remplaçons les <em>Male</em> et <em>Female</em> par respectivement 0 et 1 :</p>
+<p>Ensuite, nous remplaçons les <em>Male</em> et <em>Female</em> par 0 et 1 respectivement :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Male&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
@@ -480,7 +480,7 @@
 </div>
 <div class="section" id="agregation">
 <h2>Agrégation<a class="headerlink" href="#agregation" title="Permalink to this headline">¶</a></h2>
-<p>Nous avons constaté que la variable <em>Policy_Sales_Channel</em> comportait beaucoup de catégorie alors que seulement 3 catégories dominent toutes les autres.</p>
+<p>Nous avons constaté que la variable <em>Policy_Sales_Channel</em> comportait beaucoup de catégories  alors que 3 catégories regroupent la majorité des observations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">Policy_Sales_Channel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -498,7 +498,7 @@ Name: Policy_Sales_Channel, dtype: int64
 </div>
 </div>
 </div>
-<p>Après agrégation, nous obtenons seulement 4 catégories de taille relativement homogènes.</p>
+<p>Après agrégation, nous obtenons seulement 4 catégories de tailles comparables.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dict_cat</span> <span class="o">=</span> <span class="p">{</span><span class="mi">152</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">26</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">124</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
@@ -538,7 +538,7 @@ Name: Policy_Sales_Channel, dtype: int64
 </div>
 </div>
 </div>
-<p>Le reste de la base de données étant très propre, aucun autre filtre ne parait nécessaire. Les lignes représentant des personnes sans permis pourraient paraître superflux mais quelques individus (peut-être des voitures de collections) ont tout de même une assurance. Ces personnes là existent aussi dans la base de données test. Nous ne faisons donc aucune manipulation dessus.</p>
+<p>Le reste de la base de données étant très propre, aucun autre filtre ne parait nécessaire. Les lignes représentant des personnes sans permis pourraient paraître superflues mais quelques individus (peut-être des propriétaires de voitures de collections) ont tout de même une assurance. Ces personnes là existent aussi dans la base de données test. Nous ne faisons donc aucune manipulation dessus.</p>
 </div>
 <div class="section" id="export-1">
 <h2>Export 1<a class="headerlink" href="#export-1" title="Permalink to this headline">¶</a></h2>
@@ -552,7 +552,7 @@ Name: Policy_Sales_Channel, dtype: int64
 <li><p>XGBoost</p></li>
 </ul>
 <br>
-<p>Nous exportons donc cette base de données que nous nommons <em>train_v1</em> et qui est hébergé <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/">sur serveur</a> pour facilité l’accessibilité.</p>
+<p>Nous exportons donc cette base de données que nous nommons <em>train_v1</em> et qui est hébergé <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/">sur serveur</a> pour faciliter l’accessibilité.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;train_v1.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -563,7 +563,7 @@ Name: Policy_Sales_Channel, dtype: int64
 </div>
 <div class="section" id="export-2">
 <h2>Export 2<a class="headerlink" href="#export-2" title="Permalink to this headline">¶</a></h2>
-<p>Pour la régression logistique, il est fortement recommender de OneHot au maximum les variables pouvant l’être.</p>
+<p>Pour la régression logistique, il est fortement recommandé de OneHot au maximum les variables pouvant l’être.</p>
 <p>Pour cela nous utilisons sklearn.preprocessing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -798,7 +798,7 @@ Name: Policy_Sales_Channel, dtype: int64
 </div>
 <br>
 <p>La base de données pour la régression logistique peut à présent être exportée.</p>
-<p>Elle est nommée <em>train_v2</em> et est aussi hébergée <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/">sur un serveur</a> pour facilité l’accessibilité.</p>
+<p>Elle est nommée <em>train_v2</em> et est aussi hébergée <a class="reference external" href="https://www.data.mclavier.com/prj_datascience/">sur un serveur</a> pour faciliter l’accessibilité.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;train_v2.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -935,7 +935,7 @@ Name: Policy_Sales_Channel, dtype: int64
 <div class="section" id="export-4">
 <h2>Export 4<a class="headerlink" href="#export-4" title="Permalink to this headline">¶</a></h2>
 <p>Enfin, lors de notre évaluation des différents modèles, nous avons souhaité tester un modèle Random Forest sans aucun tuning.</p>
-<p>Nous faisons donc un autre export avec simplement le filtrage sur l’age. Les données ne sont pas renommées car le Random Forest de R n’en a pas besoin.</p>
+<p>Nous faisons donc un autre export avec simplement le filtrage sur l’âge. Les données ne sont pas renommées car le Random Forest de R n’en a pas besoin.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
