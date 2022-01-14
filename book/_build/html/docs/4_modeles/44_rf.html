@@ -546,135 +546,20 @@
 </div>
 <div class="section" id="implementation">
 <h2>Implémentation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<p>On fait un premier test avec les hyper-paramêtres par défaut</p>
+<p>On fait un premier test avec les hyper-paramètres par défaut</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">def</span> <span class="nf">my_gsearch</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">name_param</span><span class="p">)</span><span class="o">:</span>
-
-    <span class="n">best_param</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">name_param</span><span class="p">]</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="nf">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span><span class="nf">.fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-    
-    <span class="n">f1_max</span> <span class="o">=</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">False</span><span class="p">,</span> <span class="n">f1_aff</span> <span class="o">=</span> <span class="n">False</span><span class="p">)</span>
-
-    <span class="n">for</span> <span class="n">n_est</span> <span class="n">in</span> <span class="n">param_grid</span><span class="p">[</span><span class="n">name_param</span><span class="p">]</span><span class="o">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="n">name_param</span><span class="p">]</span> <span class="o">=</span> <span class="nf">float</span><span class="p">(</span><span class="n">n_est</span><span class="p">)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="nf">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
-        <span class="nf">model.fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-        <span class="n">f1_temp</span> <span class="o">=</span> <span class="nf">result_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">False</span><span class="p">,</span> <span class="n">f1_aff</span> <span class="o">=</span> <span class="n">False</span><span class="p">)</span>
-
-        <span class="n">if</span> <span class="n">f1_temp</span> <span class="o">&gt;</span> <span class="n">f1_max</span><span class="o">:</span>
-            <span class="n">best_param</span> <span class="o">=</span> <span class="n">n_est</span>
-            <span class="n">f1_max</span> <span class="o">=</span> <span class="n">f1_temp</span>
-
-    <span class="n">params</span><span class="p">[</span><span class="n">name_param</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_param</span>
-    <span class="nf">print</span><span class="p">(</span><span class="s">&#39;Variable :&#39;</span><span class="p">,</span> <span class="n">name_param</span><span class="p">,</span> <span class="s">&#39;(f1 :&#39;</span><span class="p">,</span> <span class="n">f1_max</span><span class="p">,</span> <span class="s">&#39;, param :&#39;</span><span class="p">,</span> <span class="n">best_param</span><span class="p">,</span> <span class="s">&#39;)&#39;</span><span class="p">)</span>
-    <span class="nf">return</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f1_max</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">params_rf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;min_samples_split&#39;</span><span class="o">:</span> <span class="m">0.11959494750571721</span><span class="p">,</span> 
-    <span class="s">&#39;min_samples_leaf&#39;</span> <span class="o">:</span> <span class="m">0.08048576405844253</span><span class="p">,</span>
-    <span class="s">&#39;min_impurity_decrease&#39;</span> <span class="o">:</span> <span class="m">0.030792701550521537</span><span class="p">,</span> 
-    <span class="s">&#39;n_estimators&#39;</span> <span class="o">:</span> <span class="m">36</span><span class="p">,</span> 
-    <span class="s">&#39;class_weight&#39;</span> <span class="o">:</span> <span class="s">&#39;balanced&#39;</span><span class="p">,</span> 
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">params_rf</span><span class="p">[</span><span class="s">&#39;n_estimators&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="m">36</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">params_test</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;min_samples_split&#39;</span><span class="o">:</span> <span class="nf">np.arange</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="m">0.03</span><span class="p">),</span> 
-    <span class="s">&#39;min_samples_leaf&#39;</span> <span class="o">:</span> <span class="nf">np.arange</span><span class="p">(</span><span class="m">0.01</span><span class="p">,</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="m">0.0005</span><span class="p">),</span>
-    <span class="s">&#39;min_impurity_decrease&#39;</span> <span class="o">:</span> <span class="nf">np.arange</span><span class="p">(</span><span class="m">0.01</span><span class="p">,</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="m">0.005</span><span class="p">),</span> 
-    <span class="s">&#39;n_estimators&#39;</span> <span class="o">:</span> <span class="nf">np.arange</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">200</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="m">5</span><span class="p">),</span> 
-    <span class="s">&#39;class_weight&#39;</span> <span class="o">:</span> <span class="s">&#39;balanced&#39;</span><span class="p">,</span> 
-<span class="p">}</span>
-<span class="n">params_rf</span><span class="p">,</span> <span class="n">f1_max</span> <span class="o">=</span> <span class="nf">my_gsearch</span><span class="p">(</span><span class="n">params_rf</span><span class="p">,</span> <span class="n">params_test</span><span class="p">,</span> <span class="s">&#39;min_samples_split&#39;</span><span class="p">)</span>
-<span class="n">params_rf</span><span class="p">,</span> <span class="n">f1_max</span> <span class="o">=</span> <span class="nf">my_gsearch</span><span class="p">(</span><span class="n">params_rf</span><span class="p">,</span> <span class="n">params_test</span><span class="p">,</span> <span class="s">&#39;min_samples_leaf&#39;</span><span class="p">)</span>
-<span class="n">params_rf</span><span class="p">,</span> <span class="n">f1_max</span> <span class="o">=</span> <span class="nf">my_gsearch</span><span class="p">(</span><span class="n">params_rf</span><span class="p">,</span> <span class="n">params_test</span><span class="p">,</span> <span class="s">&#39;min_impurity_decrease&#39;</span><span class="p">)</span>
-<span class="c1"># params_rf, f1_max = my_gsearch(params_rf, params_test, &#39;n_estimators&#39;)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;min_samples_split&#39;: 0.11959494750571721, &#39;min_samples_leaf&#39;: 0.08048576405844253, &#39;min_impurity_decrease&#39;: 0.030792701550521537, &#39;n_estimators&#39;: 36, &#39;class_weight&#39;: &#39;balanced&#39;}
-Variable : min_samples_split (f1 : 0.573738680465718 , param : 0.11959494750571721 )
-{&#39;min_samples_split&#39;: 0.11959494750571721, &#39;min_samples_leaf&#39;: 0.08048576405844253, &#39;min_impurity_decrease&#39;: 0.030792701550521537, &#39;n_estimators&#39;: 36, &#39;class_weight&#39;: &#39;balanced&#39;}
-Variable : min_samples_leaf (f1 : 0.573738680465718 , param : 0.027000000000000017 )
-{&#39;min_samples_split&#39;: 0.11959494750571721, &#39;min_samples_leaf&#39;: 0.027000000000000017, &#39;min_impurity_decrease&#39;: 0.030792701550521537, &#39;n_estimators&#39;: 36, &#39;class_weight&#39;: &#39;balanced&#39;}
-Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.019999999999999997 )
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="nf">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="nf">RandomForestClassifier</span><span class="p">()</span>
 <span class="nf">rfc.fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
 <span class="nf">result_model</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="o">~</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Temp</span><span class="o">/</span><span class="n">ipykernel_17368</span><span class="o">/</span><span class="mf">3802748006.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params_rf</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">rfc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">result_model</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">)</span>
-
-<span class="nn">~\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\sklearn\ensemble\_forest.py</span> in <span class="ni">fit</span><span class="nt">(self, X, y, sample_weight)</span>
-<span class="g g-Whitespace">    </span><span class="mi">325</span>         <span class="k">if</span> <span class="n">issparse</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">326</span>             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;sparse multilabel-indicator for y is not supported.&quot;</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">327</span>         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">328</span>             <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">multi_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="s2">&quot;csc&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">DTYPE</span>
-<span class="g g-Whitespace">    </span><span class="mi">329</span>         <span class="p">)</span>
-
-<span class="nn">~\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\sklearn\base.py</span> in <span class="ni">_validate_data</span><span class="nt">(self, X, y, reset, validate_separately, **check_params)</span>
-<span class="g g-Whitespace">    </span><span class="mi">574</span>                 <span class="n">y</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">check_y_params</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">575</span>             <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">576</span>                 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">check_params</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">577</span>             <span class="n">out</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
-<span class="g g-Whitespace">    </span><span class="mi">578</span> 
-
-<span class="nn">~\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\sklearn\utils\validation.py</span> in <span class="ni">check_X_y</span><span class="nt">(X, y, accept_sparse, accept_large_sparse, dtype, order, copy, force_all_finite, ensure_2d, allow_nd, multi_output, ensure_min_samples, ensure_min_features, y_numeric, estimator)</span>
-<span class="g g-Whitespace">    </span><span class="mi">954</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;y cannot be None&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">955</span> 
-<span class="ne">--&gt; </span><span class="mi">956</span>     <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">957</span>         <span class="n">X</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">958</span>         <span class="n">accept_sparse</span><span class="o">=</span><span class="n">accept_sparse</span><span class="p">,</span>
-
-<span class="nn">~\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\sklearn\utils\validation.py</span> in <span class="ni">check_array</span><span class="nt">(array, accept_sparse, accept_large_sparse, dtype, order, copy, force_all_finite, ensure_2d, allow_nd, ensure_min_samples, ensure_min_features, estimator)</span>
-<span class="g g-Whitespace">    </span><span class="mi">736</span>                     <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">casting</span><span class="o">=</span><span class="s2">&quot;unsafe&quot;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">737</span>                 <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">738</span>                     <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">739</span>             <span class="k">except</span> <span class="n">ComplexWarning</span> <span class="k">as</span> <span class="n">complex_warning</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">740</span>                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-
-<span class="nn">~\.virtualenvs\ISFA-prj-datascience-4Z2Vzt1R\lib\site-packages\pandas\core\generic.py</span> in <span class="ni">__array__</span><span class="nt">(self, dtype)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1991</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1992</span>     <span class="k">def</span> <span class="nf">__array__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">NpDtype</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1993</span>         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1994</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1995</span>     <span class="k">def</span> <span class="nf">__array_wrap__</span><span class="p">(</span>
-
-<span class="ne">ValueError</span>: could not convert string to float: &#39;Male&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.38379160636758325
 </pre></div>
 </div>
+<img alt="../../_images/44_rf_31_1.png" src="../../_images/44_rf_31_1.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -685,7 +570,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.37 avec un écart type de 0.01
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 moyen de 0.40 avec un écart type de 0.01
 </pre></div>
 </div>
 </div>
@@ -700,10 +585,10 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.396364702433304
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4036962171527577
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_38_1.png" src="../../_images/44_rf_38_1.png" />
+<img alt="../../_images/44_rf_34_1.png" src="../../_images/44_rf_34_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -731,21 +616,21 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/44_rf_41_0.png" src="../../_images/44_rf_41_0.png" />
+<img alt="../../_images/44_rf_37_0.png" src="../../_images/44_rf_37_0.png" />
 </div>
 </div>
 </div>
 <div class="section" id="tuning">
 <h2>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h2>
-<p>Il y’a de nombreux paramêtres à tuner :</p>
-<p>Nous allons intervenir sur les paramêtres suivant et procéder dans l’ordre dans lesquels les paramêtres sont présentés :</p>
+<p>Il y’a de nombreux paramètres à tuner :</p>
+<p>Nous allons intervenir sur les paramètres suivant et procéder dans l’ordre dans lesquels les paramètres sont présentés :</p>
 <ul class="simple">
 <li><p><strong>n_estimatorsint</strong>, default=100, ce paramètre correspond au nombre d’arbre, il est sans doute le plus important donc nous interviendrons deux fois dessus</p></li>
 <li><p><strong>max_depthint</strong>, correspond à la profondeur maximal des arbres default=None</p></li>
 <li><p><strong>min_samples_splitint</strong>, correspond au nombre de divergences nécessaire pour créer un nouveau noeud default=2</p></li>
 <li><p><strong>min_samples_leafint</strong>, correspond au nombre minimum d’observations dans une feuille simple default=1</p></li>
 <li><p><strong>min_impurity_decreasefloat</strong>, correspond à l’apport minimum d’une feuille pour qu’elle soit conservée default=0.0</p></li>
-<li><p><strong>n_estimatorsint</strong>, le nombre d’arbre à nouveau, au cas où les paramêtres modifiés modifié à leur tour le nombre d’arbre optimal, default=100</p></li>
+<li><p><strong>n_estimatorsint</strong>, le nombre d’arbre à nouveau, au cas où les paramètres modifiés modifié à leur tour le nombre d’arbre optimal, default=100</p></li>
 <li><p><strong>max_features</strong>{“auto”, “sqrt”, “log2”}, default= “auto”, les 3 modes de calculs de features max qu’il faut tester</p></li>
 <li><p><strong>class_weight</strong>{“balanced”, “balanced_subsample”}, default=None, les 2 options pour mettre des poids sur les observations</p></li>
 </ul>
@@ -795,7 +680,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>90 0.3939482106488216
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_48_1.png" src="../../_images/44_rf_48_1.png" />
+<img alt="../../_images/44_rf_44_1.png" src="../../_images/44_rf_44_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -847,7 +732,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 0.38874383521903105
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_53_1.png" src="../../_images/44_rf_53_1.png" />
+<img alt="../../_images/44_rf_49_1.png" src="../../_images/44_rf_49_1.png" />
 </div>
 </div>
 <p>Nous évaluons le f1-score actuellement.</p>
@@ -867,7 +752,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.3807580174927114
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_55_1.png" src="../../_images/44_rf_55_1.png" />
+<img alt="../../_images/44_rf_51_1.png" src="../../_images/44_rf_51_1.png" />
 </div>
 </div>
 </div>
@@ -896,7 +781,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3 0.4165727170236754
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_58_1.png" src="../../_images/44_rf_58_1.png" />
+<img alt="../../_images/44_rf_54_1.png" src="../../_images/44_rf_54_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -921,7 +806,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4060364464692483
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_60_1.png" src="../../_images/44_rf_60_1.png" />
+<img alt="../../_images/44_rf_56_1.png" src="../../_images/44_rf_56_1.png" />
 </div>
 </div>
 </div>
@@ -950,7 +835,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 0.4119148936170213
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_63_1.png" src="../../_images/44_rf_63_1.png" />
+<img alt="../../_images/44_rf_59_1.png" src="../../_images/44_rf_59_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -979,7 +864,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4146341463414634
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_67_1.png" src="../../_images/44_rf_67_1.png" />
+<img alt="../../_images/44_rf_63_1.png" src="../../_images/44_rf_63_1.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1004,7 +889,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 0.4146341463414634
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_68_1.png" src="../../_images/44_rf_68_1.png" />
+<img alt="../../_images/44_rf_64_1.png" src="../../_images/44_rf_64_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -1028,7 +913,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.41870949563257254
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_70_1.png" src="../../_images/44_rf_70_1.png" />
+<img alt="../../_images/44_rf_66_1.png" src="../../_images/44_rf_66_1.png" />
 </div>
 </div>
 </div>
@@ -1056,7 +941,7 @@ Variable : min_impurity_decrease (f1 : 0.5717566016073479 , param : 0.0199999999
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50 0.41897685052872247
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_72_1.png" src="../../_images/44_rf_72_1.png" />
+<img alt="../../_images/44_rf_68_1.png" src="../../_images/44_rf_68_1.png" />
 </div>
 </div>
 <div class="cell tag_remove-input docutils container">
@@ -1111,7 +996,7 @@ avec log2 F1= 0.41231822070145424
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Le f1 score vaut 0.4057724957555178
 </pre></div>
 </div>
-<img alt="../../_images/44_rf_78_1.png" src="../../_images/44_rf_78_1.png" />
+<img alt="../../_images/44_rf_74_1.png" src="../../_images/44_rf_74_1.png" />
 </div>
 </div>
 </div>
@@ -1247,7 +1132,7 @@ Ensuite comme expliqué plus tôt on choisit le meilleur entre les deux enfants 
 </div>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<img alt="../../_images/44_rf_89_0.png" src="../../_images/44_rf_89_0.png" />
+<img alt="../../_images/44_rf_85_0.png" src="../../_images/44_rf_85_0.png" />
 </div>
 </div>
 <p>Paramètres obtenus :</p>

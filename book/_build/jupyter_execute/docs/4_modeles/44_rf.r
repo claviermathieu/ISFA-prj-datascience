@@ -83,51 +83,7 @@ X_scal_test = scaler.transform(X_test)
 X_scal_train = pd.DataFrame(X_scal_train,index= X_train.index)
 X_scal_test = pd.DataFrame(X_scal_test,index= X_test.index)
 
-def my_gsearch(params, param_grid, name_param):
-
-    best_param = params[name_param]
-    print(params)
-    model = RandomForestClassifier(**params_rf).fit(X_train, Y_train)
-    
-    f1_max = result_model(model, X_test, Y_test, mat = False, f1_aff = False)
-
-    for n_est in param_grid[name_param]:
-        params[name_param] = float(n_est)
-        model = RandomForestClassifier(**params)
-        model.fit(X_train, Y_train)
-        f1_temp = result_model(model, X_test, Y_test, mat = False, f1_aff = False)
-
-        if f1_temp > f1_max:
-            best_param = n_est
-            f1_max = f1_temp
-
-    params[name_param] = best_param
-    print('Variable :', name_param, '(f1 :', f1_max, ', param :', best_param, ')')
-    return(params, f1_max)
-
-params_rf = {
-    'min_samples_split': 0.11959494750571721, 
-    'min_samples_leaf' : 0.08048576405844253,
-    'min_impurity_decrease' : 0.030792701550521537, 
-    'n_estimators' : 36, 
-    'class_weight' : 'balanced', 
-}
-
-params_rf['n_estimators'] = 36
-
-params_test = {
-    'min_samples_split': np.arange(0.1, 1, step = 0.03), 
-    'min_samples_leaf' : np.arange(0.01, 0.1, step = 0.0005),
-    'min_impurity_decrease' : np.arange(0.01, 0.1, step = 0.005), 
-    'n_estimators' : np.arange(1, 200, step = 5), 
-    'class_weight' : 'balanced', 
-}
-params_rf, f1_max = my_gsearch(params_rf, params_test, 'min_samples_split')
-params_rf, f1_max = my_gsearch(params_rf, params_test, 'min_samples_leaf')
-params_rf, f1_max = my_gsearch(params_rf, params_test, 'min_impurity_decrease')
-# params_rf, f1_max = my_gsearch(params_rf, params_test, 'n_estimators')
-
-rfc = RandomForestClassifier(**params_rf)
+rfc = RandomForestClassifier()
 rfc.fit(X_train, Y_train)
 result_model(rfc, X_test, Y_test)
 
